@@ -1,0 +1,3330 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zedex IDE — AI-Powered Development Environment</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ═══════════════════════════════════════════
+   ZEDEX IDE v1.0 — Full Desktop IDE
+   AI-Powered | Offline + Online
+   by Zénia Projects @inacio.u.daniel
+═══════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --accent:#7c6af7;
+  --accent2:#f06292;
+  --accent3:#50fa7b;
+  --warn:#ffcb6b;
+  --err:#ff5555;
+  --font-ui:'Segoe UI',system-ui,sans-serif;
+  --font-code:'JetBrains Mono','Fira Code','Consolas',monospace;
+  --tr:0.18s ease;
+  --radius:6px;
+}
+
+/* ══ THEMES ══ */
+[data-theme="dark"]{
+  --bg:#0d0d0f;--panel:#13131a;--side:#111118;--card:#1a1a24;
+  --hov:#22223a;--inp:#191924;--brd:#2a2a3d;--t1:#e8e8ff;--t2:#9898b8;
+  --t3:#5a5a78;--hdr:rgba(13,13,15,.97);--tbar:#0f0f16;--ed:#0c0c14;
+  --ln:#3a3a5c;--gut:#10101a;--scr:#2a2a3d;--sel:rgba(124,106,247,.2);
+  --tab-bg:#111118;--tab-act:#1a1a28;--stat-bg:#7c6af7;--stat-fg:#fff;
+  --sk:#c792ea;--ss:#c3e88d;--sc:#546e7a;--sf:#82aaff;--sn:#f78c6c;
+  --stg:#f07178;--sa:#ffcb6b;--sv:#c3e88d;--scl:#ffcb6b;--so:#89ddff;
+  --svr:#f07178;--sp:#80cbc4
+}
+[data-theme="light"]{
+  --bg:#f5f5f7;--panel:#ffffff;--side:#efefef;--card:#e8e8f0;
+  --hov:#dcdcf0;--inp:#f8f8ff;--brd:#d0d0e8;--t1:#1a1a2e;--t2:#5050a0;
+  --t3:#8080b0;--hdr:rgba(245,245,247,.97);--tbar:#e8e8f5;--ed:#fafafe;
+  --ln:#c0c0dc;--gut:#f0f0fa;--scr:#c0c0dc;--sel:rgba(124,106,247,.15);
+  --tab-bg:#e0e0f0;--tab-act:#ffffff;--stat-bg:#7c4dff;--stat-fg:#fff;
+  --sk:#7c4dff;--ss:#2e7d32;--sc:#90a4ae;--sf:#1565c0;--sn:#e64a19;
+  --stg:#c62828;--sa:#6d4c41;--sv:#2e7d32;--scl:#00695c;--so:#0097a7;
+  --svr:#c62828;--sp:#00695c
+}
+[data-theme="nord"]{
+  --bg:#242933;--panel:#2e3440;--side:#272c36;--card:#3b4252;
+  --hov:#434c5e;--inp:#2e3440;--brd:#434c5e;--t1:#eceff4;--t2:#d8dee9;
+  --t3:#81a1c1;--hdr:rgba(36,41,51,.97);--tbar:#2e3440;--ed:#2e3440;
+  --ln:#4c566a;--gut:#2a3040;--scr:#4c566a;--sel:rgba(136,192,208,.2);
+  --tab-bg:#272c36;--tab-act:#2e3440;--stat-bg:#88c0d0;--stat-fg:#242933;
+  --accent:#88c0d0;--accent2:#bf616a;
+  --sk:#81a1c1;--ss:#a3be8c;--sc:#4c566a;--sf:#88c0d0;--sn:#b48ead;
+  --stg:#bf616a;--sa:#d08770;--sv:#a3be8c;--scl:#ebcb8b;--so:#81a1c1;--svr:#bf616a;--sp:#8fbcbb
+}
+[data-theme="dracula"]{
+  --bg:#1e1f29;--panel:#282a36;--side:#21222c;--card:#313341;
+  --hov:#393b4d;--inp:#282a36;--brd:#44475a;--t1:#f8f8f2;--t2:#bd93f9;
+  --t3:#6272a4;--hdr:rgba(30,31,41,.97);--tbar:#21222c;--ed:#282a36;
+  --ln:#6272a4;--gut:#21222c;--scr:#44475a;--sel:rgba(189,147,249,.15);
+  --tab-bg:#21222c;--tab-act:#282a36;--stat-bg:#bd93f9;--stat-fg:#1e1f29;
+  --accent:#bd93f9;--accent2:#ff79c6;
+  --sk:#ff79c6;--ss:#f1fa8c;--sc:#6272a4;--sf:#50fa7b;--sn:#bd93f9;
+  --stg:#ff5555;--sa:#ffb86c;--sv:#f1fa8c;--scl:#ffb86c;--so:#ff79c6;--svr:#ff5555;--sp:#8be9fd
+}
+[data-theme="monokai"]{
+  --bg:#1c1c1e;--panel:#272822;--side:#1e1e20;--card:#2f3025;
+  --hov:#3a3b30;--inp:#272822;--brd:#383830;--t1:#f8f8f2;--t2:#a8a8a2;
+  --t3:#75715e;--hdr:rgba(28,28,30,.97);--tbar:#1e1e20;--ed:#272822;
+  --ln:#52524a;--gut:#222220;--scr:#383830;--sel:rgba(166,226,46,.1);
+  --tab-bg:#1e1e20;--tab-act:#272822;--stat-bg:#a6e22e;--stat-fg:#1c1c1e;
+  --accent:#a6e22e;--accent2:#f92672;
+  --sk:#f92672;--ss:#e6db74;--sc:#75715e;--sf:#a6e22e;--sn:#ae81ff;
+  --stg:#f92672;--sa:#a6e22e;--sv:#e6db74;--scl:#66d9e8;--so:#f92672;--svr:#f92672;--sp:#66d9e8
+}
+
+/* ══ SCROLLBARS ══ */
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--scr);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+/* ══ BASE ══ */
+body{
+  font-family:var(--font-ui);background:var(--bg);color:var(--t1);
+  height:100vh;overflow:hidden;display:flex;flex-direction:column;
+  transition:background .2s,color .2s;user-select:none;
+}
+
+/* ══════════════════════════════
+   TITLE BAR (window chrome)
+══════════════════════════════ */
+.titlebar{
+  height:36px;background:var(--hdr);border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 12px 0 4px;flex-shrink:0;-webkit-app-region:drag;
+  position:relative;z-index:300;
+}
+.tb-left{display:flex;align-items:center;gap:0}
+.tb-logo{display:flex;align-items:center;gap:8px;padding:0 12px;-webkit-app-region:no-drag}
+.logo-icon{
+  width:22px;height:22px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:5px;display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:#fff;
+}
+.logo-name{font-size:13px;font-weight:700;color:var(--t1)}
+.tb-menus{display:flex;align-items:center;gap:0;-webkit-app-region:no-drag}
+.tb-menu-btn{
+  padding:0 10px;height:36px;background:none;border:none;color:var(--t2);
+  font-size:12px;cursor:pointer;font-family:var(--font-ui);
+  display:flex;align-items:center;gap:5px;transition:all var(--tr);position:relative;
+}
+.tb-menu-btn:hover{background:var(--hov);color:var(--t1)}
+.tb-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:6px;-webkit-app-region:no-drag}
+.search-bar{
+  background:var(--card);border:1px solid var(--brd);border-radius:6px;
+  display:flex;align-items:center;gap:8px;padding:5px 12px;width:380px;cursor:text;
+  transition:all var(--tr);
+}
+.search-bar:hover,.search-bar:focus-within{border-color:var(--accent);background:var(--inp)}
+.search-bar i{color:var(--t3);font-size:12px}
+.search-bar input{
+  background:none;border:none;outline:none;color:var(--t1);
+  font-size:12px;font-family:var(--font-ui);width:100%;
+}
+.search-bar input::placeholder{color:var(--t3)}
+.tb-right{display:flex;align-items:center;gap:4px;-webkit-app-region:no-drag}
+.tb-icon-btn{
+  width:30px;height:30px;background:none;border:none;color:var(--t3);
+  cursor:pointer;border-radius:4px;font-size:13px;display:flex;
+  align-items:center;justify-content:center;transition:all var(--tr);
+}
+.tb-icon-btn:hover{background:var(--hov);color:var(--t1)}
+.win-ctrl{
+  width:30px;height:22px;border:none;background:none;
+  cursor:pointer;font-size:11px;color:var(--t3);display:flex;
+  align-items:center;justify-content:center;transition:all var(--tr);
+  -webkit-app-region:no-drag;border-radius:3px;
+}
+.win-ctrl:hover{background:var(--hov);color:var(--t1)}
+.win-ctrl.close:hover{background:#ff5555;color:#fff}
+
+/* ══ DROPDOWN MENUS ══ */
+.ddmenu{
+  position:fixed;background:var(--panel);border:1px solid var(--brd);
+  border-radius:8px;padding:4px;min-width:240px;z-index:9999;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);display:none;
+  animation:dropIn .14s ease;
+}
+.ddmenu.open{display:block}
+@keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.dd-item{
+  padding:7px 12px;border-radius:5px;color:var(--t2);cursor:pointer;
+  font-size:12px;display:flex;align-items:center;justify-content:space-between;
+  gap:10px;transition:all var(--tr);white-space:nowrap;
+}
+.dd-item:hover{background:var(--hov);color:var(--t1)}
+.dd-item i{width:16px;text-align:center;color:var(--accent);font-size:11px;flex-shrink:0}
+.dd-item .shortcut{color:var(--t3);font-size:11px;font-family:var(--font-code)}
+.dd-sep{height:1px;background:var(--brd);margin:4px 0}
+.dd-sub{color:var(--t3);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;padding:8px 12px 4px}
+
+/* ══ ACTIVITY BAR ══ */
+.activity-bar{
+  width:48px;background:var(--side);border-right:1px solid var(--brd);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:6px 0;flex-shrink:0;
+}
+.act-btn{
+  width:38px;height:38px;background:none;border:none;color:var(--t3);
+  cursor:pointer;border-radius:6px;font-size:18px;display:flex;
+  align-items:center;justify-content:center;transition:all var(--tr);
+  position:relative;
+}
+.act-btn:hover{color:var(--t2);background:var(--hov)}
+.act-btn.active{color:var(--t1);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.act-btn.active::before{
+  content:'';position:absolute;left:0;top:25%;bottom:25%;
+  width:2px;background:var(--accent);border-radius:2px;
+}
+.act-btn .badge{
+  position:absolute;top:5px;right:5px;width:8px;height:8px;
+  background:var(--accent2);border-radius:50%;border:1.5px solid var(--side);
+}
+.act-spacer{flex:1}
+.act-sep{width:70%;height:1px;background:var(--brd);margin:4px 0}
+
+/* ══ MAIN LAYOUT ══ */
+.workspace{flex:1;display:flex;overflow:hidden}
+
+/* ══ SIDEBAR PANELS ══ */
+.sidebar{
+  width:280px;background:var(--side);border-right:1px solid var(--brd);
+  display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;
+  transition:width var(--tr);
+}
+.sidebar.collapsed{width:0}
+.sidebar-header{
+  padding:10px 12px;border-bottom:1px solid var(--brd);display:flex;
+  align-items:center;justify-content:space-between;flex-shrink:0;
+  min-height:36px;
+}
+.sidebar-header h3{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3)
+}
+.sb-icons{display:flex;gap:4px}
+.sb-icon-btn{
+  width:22px;height:22px;background:none;border:none;color:var(--t3);
+  cursor:pointer;border-radius:3px;font-size:12px;display:flex;
+  align-items:center;justify-content:center;transition:all var(--tr);
+}
+.sb-icon-btn:hover{background:var(--hov);color:var(--t1)}
+
+/* ══ FILE EXPLORER ══ */
+.file-tree{flex:1;overflow-y:auto;padding:6px 0}
+.tree-section{margin-bottom:4px}
+.tree-section-hdr{
+  padding:5px 12px;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.7px;color:var(--t3);
+  cursor:pointer;display:flex;align-items:center;gap:6px;
+  transition:color var(--tr);
+}
+.tree-section-hdr:hover{color:var(--t2)}
+.tree-section-hdr i{font-size:9px;transition:transform var(--tr)}
+.tree-section-hdr.collapsed i{transform:rotate(-90deg)}
+.tree-items{padding:2px 0}
+.tree-item{
+  padding:4px 12px 4px 0;display:flex;align-items:center;gap:6px;
+  cursor:pointer;font-size:12.5px;color:var(--t2);transition:all var(--tr);
+  border-radius:4px;margin:0 4px;position:relative;white-space:nowrap;
+}
+.tree-item:hover{background:var(--hov);color:var(--t1)}
+.tree-item.active{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--t1)}
+.tree-item .indent{display:inline-block;width:16px;flex-shrink:0}
+.tree-item .ti-icon{width:16px;text-align:center;font-size:13px;flex-shrink:0}
+.tree-item .ti-name{flex:1;overflow:hidden;text-overflow:ellipsis}
+.tree-item .ti-actions{
+  display:none;gap:2px;position:absolute;right:6px;background:var(--hov);
+  border-radius:4px;padding:0 2px;
+}
+.tree-item:hover .ti-actions{display:flex}
+.ti-act{width:18px;height:18px;background:none;border:none;color:var(--t3);font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:3px}
+.ti-act:hover{color:var(--t1);background:var(--card)}
+/* file icons colors */
+.icon-html{color:#e34c26!important}.icon-css{color:#1572b6!important}
+.icon-js,.icon-jsx{color:#f7df1e!important}.icon-ts,.icon-tsx{color:#2b7489!important}
+.icon-py{color:#3572a5!important}.icon-json{color:#f78c6c!important}
+.icon-md{color:#8e9da6!important}.icon-folder{color:#f9c74f!important}
+.icon-folder-open{color:#f9c74f!important}.icon-img{color:#68d8ad!important}
+.icon-git{color:#f05032!important}
+
+/* ══ SEARCH PANEL ══ */
+.search-panel{flex:1;overflow:hidden;display:flex;flex-direction:column;padding:8px}
+.search-inp-wrap{
+  background:var(--inp);border:1px solid var(--brd);border-radius:6px;
+  display:flex;align-items:center;gap:7px;padding:7px 10px;margin-bottom:8px;
+}
+.search-inp-wrap:focus-within{border-color:var(--accent)}
+.search-inp-wrap i{color:var(--t3);font-size:12px}
+.search-inp-wrap input{
+  flex:1;background:none;border:none;outline:none;color:var(--t1);
+  font-size:12px;font-family:var(--font-ui);
+}
+.search-results{flex:1;overflow-y:auto}
+.sr-file{margin-bottom:10px}
+.sr-file-name{
+  font-size:11px;color:var(--t2);padding:3px 4px;display:flex;align-items:center;gap:5px;
+  font-weight:600;border-radius:4px;cursor:pointer;
+}
+.sr-file-name:hover{background:var(--hov)}
+.sr-match{
+  padding:3px 10px;font-size:12px;font-family:var(--font-code);color:var(--t3);
+  border-radius:4px;cursor:pointer;
+}
+.sr-match:hover{background:var(--hov);color:var(--t2)}
+.sr-match mark{background:color-mix(in srgb,var(--warn) 30%,transparent);color:var(--warn);border-radius:2px}
+
+/* ══ GIT PANEL ══ */
+.git-panel{flex:1;overflow-y:auto;padding:8px}
+.git-section{margin-bottom:12px}
+.git-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);padding:4px 4px 8px;display:flex;align-items:center;justify-content:space-between}
+.git-file{
+  padding:5px 8px;display:flex;align-items:center;gap:7px;border-radius:5px;
+  cursor:pointer;font-size:12px;color:var(--t2);transition:all var(--tr);
+}
+.git-file:hover{background:var(--hov);color:var(--t1)}
+.git-badge{
+  width:14px;height:14px;border-radius:3px;font-size:9px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.git-badge.M{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn)}
+.git-badge.A{background:color-mix(in srgb,var(--accent3) 20%,transparent);color:var(--accent3)}
+.git-badge.D{background:color-mix(in srgb,var(--err) 20%,transparent);color:var(--err)}
+.git-badge.U{background:color-mix(in srgb,var(--accent) 20%,transparent);color:var(--accent)}
+.git-commit-box{background:var(--card);border:1px solid var(--brd);border-radius:8px;padding:10px;margin-bottom:8px}
+.git-commit-inp{
+  width:100%;background:var(--inp);border:1px solid var(--brd);border-radius:6px;
+  padding:8px;color:var(--t1);font-family:var(--font-ui);font-size:12px;
+  outline:none;resize:none;min-height:60px;
+}
+.git-commit-inp:focus{border-color:var(--accent)}
+.git-btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.git-btn{
+  flex:1;padding:7px 10px;border-radius:6px;border:1px solid var(--brd);
+  background:var(--card);color:var(--t2);cursor:pointer;font-size:11px;
+  font-family:var(--font-ui);display:flex;align-items:center;gap:5px;
+  justify-content:center;transition:all var(--tr);
+}
+.git-btn:hover{border-color:var(--accent);color:var(--t1);background:var(--hov)}
+.git-btn.primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-color:transparent;color:#fff;
+}
+.git-btn.primary:hover{opacity:.9}
+
+/* ══ AI PANEL ══ */
+.ai-panel{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.ai-msgs{flex:1;overflow-y:auto;padding:10px}
+.ai-msg{
+  padding:10px 12px;border-radius:8px;margin-bottom:8px;font-size:12.5px;
+  line-height:1.6;animation:msgIn .2s ease;word-break:break-word;
+}
+@keyframes msgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.ai-msg.user{
+  background:color-mix(in srgb,var(--accent) 15%,transparent);
+  border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
+  color:var(--t1);margin-left:10%;
+}
+.ai-msg.ai{background:var(--card);border:1px solid var(--brd);color:var(--t2)}
+.ai-msg.ai code{
+  background:var(--inp);border-radius:3px;padding:1px 5px;
+  font-family:var(--font-code);font-size:11px;color:var(--accent);
+}
+.ai-msg.thinking{color:var(--accent);font-style:italic}
+.ai-inp-row{
+  padding:8px;border-top:1px solid var(--brd);display:flex;gap:6px;flex-shrink:0;
+}
+.ai-inp{
+  flex:1;background:var(--inp);border:1px solid var(--brd);border-radius:8px;
+  padding:8px 11px;color:var(--t1);font-family:var(--font-ui);font-size:12px;
+  outline:none;transition:border-color var(--tr);resize:none;min-height:36px;max-height:100px;
+}
+.ai-inp:focus{border-color:var(--accent)}
+.ai-inp::placeholder{color:var(--t3)}
+.ai-send{
+  padding:8px 13px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px;
+  font-family:var(--font-ui);font-weight:600;display:flex;align-items:center;
+  gap:5px;transition:all var(--tr);align-self:flex-end;
+}
+.ai-send:hover{opacity:.88;transform:translateY(-1px)}
+.ai-send:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* ══ EXTENSIONS PANEL ══ */
+.ext-panel{flex:1;overflow-y:auto;padding:8px}
+.ext-card{
+  background:var(--card);border:1px solid var(--brd);border-radius:8px;
+  padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:all var(--tr);
+}
+.ext-card:hover{border-color:var(--accent);background:var(--hov)}
+.ext-top{display:flex;align-items:flex-start;gap:9px;margin-bottom:5px}
+.ext-icon{
+  width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:17px;flex-shrink:0;
+}
+.ext-info h4{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.ext-info .ext-author{font-size:11px;color:var(--t3)}
+.ext-desc{font-size:11.5px;color:var(--t3);line-height:1.5}
+.ext-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.ext-meta{font-size:10px;color:var(--t3);display:flex;align-items:center;gap:8px}
+.ext-install{
+  padding:4px 12px;border-radius:5px;border:1px solid var(--accent);
+  background:transparent;color:var(--accent);cursor:pointer;font-size:11px;
+  font-family:var(--font-ui);transition:all var(--tr);
+}
+.ext-install:hover{background:var(--accent);color:#fff}
+.ext-install.installed{border-color:var(--t3);color:var(--t3)}
+
+/* ══ SETTINGS PANEL ══ */
+.settings-panel{flex:1;overflow-y:auto;padding:12px}
+.setting-group{margin-bottom:18px}
+.setting-group-title{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;
+  color:var(--t3);padding-bottom:8px;border-bottom:1px solid var(--brd);margin-bottom:10px;
+}
+.setting-item{margin-bottom:12px}
+.setting-item label{display:block;font-size:12px;color:var(--t2);margin-bottom:5px}
+.setting-item select,.setting-item input[type=text],.setting-item input[type=number]{
+  width:100%;background:var(--inp);border:1px solid var(--brd);border-radius:6px;
+  padding:7px 10px;color:var(--t1);font-family:var(--font-ui);font-size:12px;
+  outline:none;transition:border-color var(--tr);
+}
+.setting-item select:focus,.setting-item input:focus{border-color:var(--accent)}
+.setting-item select option{background:var(--panel)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between}
+.toggle{
+  width:38px;height:20px;background:var(--card);border:1px solid var(--brd);
+  border-radius:20px;cursor:pointer;position:relative;transition:all var(--tr);flex-shrink:0;
+}
+.toggle.on{background:var(--accent);border-color:var(--accent)}
+.toggle::after{
+  content:'';position:absolute;width:14px;height:14px;background:#fff;
+  border-radius:50%;top:2px;left:2px;transition:transform var(--tr);
+  box-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.toggle.on::after{transform:translateX(18px)}
+
+/* ══ MAIN EDITOR AREA ══ */
+.editor-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ══ TAB BAR ══ */
+.tab-bar{
+  background:var(--tab-bg);border-bottom:1px solid var(--brd);
+  display:flex;align-items:flex-end;padding:0 4px;min-height:36px;
+  overflow-x:auto;flex-shrink:0;gap:0;position:relative;
+}
+.tab-bar::-webkit-scrollbar{height:2px}
+.editor-tab{
+  display:flex;align-items:center;gap:6px;padding:0 12px;height:35px;
+  background:var(--tab-bg);border-right:1px solid var(--brd);
+  color:var(--t3);cursor:pointer;font-size:12px;font-family:var(--font-code);
+  white-space:nowrap;flex-shrink:0;transition:all var(--tr);position:relative;
+  border-top:2px solid transparent;
+}
+.editor-tab:hover{background:var(--hov);color:var(--t2)}
+.editor-tab.active{
+  background:var(--tab-act);color:var(--t1);
+  border-top-color:var(--accent);
+}
+.editor-tab .tab-icon{font-size:12px}
+.editor-tab .tab-close{
+  width:16px;height:16px;background:none;border:none;color:var(--t3);
+  cursor:pointer;border-radius:3px;font-size:10px;display:flex;
+  align-items:center;justify-content:center;transition:all var(--tr);
+  opacity:0;margin-left:2px;
+}
+.editor-tab:hover .tab-close,.editor-tab.active .tab-close{opacity:1}
+.editor-tab .tab-close:hover{background:rgba(255,85,85,.2);color:#ff5555}
+.editor-tab.modified .tab-close{opacity:1}
+.editor-tab.modified .tab-close::before{content:'●';font-size:8px}
+.editor-tab.modified:not(:hover) .tab-close i{display:none}
+.editor-tab.modified:hover .tab-close::before{display:none}
+.tab-add{
+  width:30px;height:30px;background:none;border:none;color:var(--t3);
+  cursor:pointer;border-radius:4px;display:flex;align-items:center;
+  justify-content:center;font-size:14px;margin:auto 4px;transition:all var(--tr);
+  flex-shrink:0;
+}
+.tab-add:hover{background:var(--hov);color:var(--t1)}
+
+/* ══ EDITOR SPLIT VIEW ══ */
+.editor-split{flex:1;display:flex;overflow:hidden}
+.editor-pane{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.editor-pane + .editor-pane{border-left:2px solid var(--brd)}
+.pane-header{
+  background:var(--panel);border-bottom:1px solid var(--brd);
+  padding:3px 10px;display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;color:var(--t3);flex-shrink:0;
+}
+.pane-path{display:flex;align-items:center;gap:5px;overflow:hidden}
+.pane-path span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ══ CODE EDITOR ══ */
+.code-editor{flex:1;display:flex;overflow:hidden;background:var(--ed)}
+.line-numbers{
+  background:var(--gut);border-right:1px solid color-mix(in srgb,var(--brd) 50%,transparent);
+  padding:14px 0;min-width:54px;overflow:hidden;flex-shrink:0;
+  user-select:none;text-align:right;position:relative;
+}
+.line-num{
+  font-family:var(--font-code);font-size:13px;line-height:1.65;
+  color:var(--ln);padding:0 12px 0 8px;height:21.45px;
+  cursor:pointer;transition:color var(--tr);
+}
+.line-num:hover{color:var(--t2)}
+.line-num.active-line{color:var(--accent)}
+.code-content-wrap{flex:1;overflow:auto;position:relative}
+.code-content{
+  padding:14px 16px;font-family:var(--font-code);font-size:13px;
+  line-height:1.65;color:var(--t1);white-space:pre;tab-size:2;
+  min-height:100%;outline:none;caret-color:var(--accent);
+  position:relative;
+}
+/* Cursor line highlight */
+.code-content .cur-line{background:rgba(255,255,255,.03)}
+
+/* Syntax tokens */
+.code-content .sk{color:var(--sk);font-weight:600}
+.code-content .ss{color:var(--ss)}
+.code-content .sc{color:var(--sc);font-style:italic}
+.code-content .sf{color:var(--sf)}
+.code-content .sn{color:var(--sn)}
+.code-content .stg{color:var(--stg)}
+.code-content .sa{color:var(--sa)}
+.code-content .sv{color:var(--sv)}
+.code-content .scl{color:var(--scl);font-weight:600}
+.code-content .so{color:var(--so)}
+.code-content .svr{color:var(--svr)}
+.code-content .sp{color:var(--sp)}
+
+/* ══ MINIMAP ══ */
+.minimap{
+  width:90px;background:var(--gut);border-left:1px solid var(--brd);
+  overflow:hidden;flex-shrink:0;cursor:pointer;opacity:.6;transition:opacity var(--tr);
+}
+.minimap:hover{opacity:.9}
+.minimap canvas{display:block;width:100%;image-rendering:pixelated}
+
+/* ══ BREADCRUMB ══ */
+.breadcrumb{
+  background:var(--panel);border-bottom:1px solid var(--brd);
+  padding:5px 14px;display:flex;align-items:center;gap:5px;
+  font-size:12px;color:var(--t3);flex-shrink:0;
+}
+.breadcrumb span{cursor:pointer;transition:color var(--tr)}
+.breadcrumb span:hover{color:var(--t1)}
+.breadcrumb i{font-size:9px;opacity:.5}
+
+/* ══ BOTTOM PANEL (Terminal/Output/Problems) ══ */
+.bottom-panel{
+  background:var(--panel);border-top:1px solid var(--brd);
+  display:flex;flex-direction:column;height:220px;flex-shrink:0;
+  resize:vertical;overflow:hidden;min-height:30px;max-height:60vh;
+}
+.bottom-panel.collapsed{height:30px;resize:none}
+.bottom-tabs{
+  background:var(--tbar);border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;height:30px;padding:0 6px;
+  flex-shrink:0;gap:0;
+}
+.bot-tab{
+  padding:0 14px;height:28px;background:transparent;border:none;
+  border-bottom:2px solid transparent;color:var(--t3);cursor:pointer;
+  font-size:12px;font-family:var(--font-ui);display:flex;align-items:center;
+  gap:5px;transition:all var(--tr);white-space:nowrap;
+}
+.bot-tab:hover{color:var(--t2)}
+.bot-tab.active{color:var(--t1);border-bottom-color:var(--accent)}
+.bot-tab .count{
+  background:var(--accent2);color:#fff;font-size:9px;
+  padding:1px 5px;border-radius:20px;font-weight:700;
+}
+.bot-tab-actions{margin-left:auto;display:flex;gap:3px;align-items:center}
+.bot-act-btn{
+  width:22px;height:22px;background:none;border:none;color:var(--t3);
+  cursor:pointer;border-radius:3px;font-size:11px;display:flex;
+  align-items:center;justify-content:center;transition:all var(--tr);
+}
+.bot-act-btn:hover{background:var(--hov);color:var(--t1)}
+.bot-pane{flex:1;display:none;overflow:hidden}
+.bot-pane.active{display:flex;flex-direction:column}
+
+/* TERMINAL */
+.terminal{
+  flex:1;background:#0a0a0f;padding:10px 14px;font-family:var(--font-code);
+  font-size:13px;line-height:1.7;overflow-y:auto;color:#c8c8d0;
+  cursor:text;
+}
+.term-line{display:flex;align-items:flex-start;gap:8px;margin-bottom:2px}
+.term-prompt{color:var(--accent);flex-shrink:0;font-weight:600}
+.term-cmd{color:#e8e8ff}
+.term-output{color:#9898b8;white-space:pre-wrap;word-break:break-all}
+.term-output.err{color:#ff5555}
+.term-output.ok{color:#50fa7b}
+.term-output.warn{color:#ffcb6b}
+.term-inp-row{
+  display:flex;align-items:center;gap:8px;padding:6px 14px;
+  border-top:1px solid var(--brd);background:#0a0a0f;flex-shrink:0;
+}
+.term-prompt-inp{color:var(--accent);font-family:var(--font-code);font-size:13px;font-weight:600;flex-shrink:0}
+.term-inp{
+  flex:1;background:none;border:none;outline:none;color:#e8e8ff;
+  font-family:var(--font-code);font-size:13px;caret-color:var(--accent);
+}
+
+/* PROBLEMS */
+.problems-list{flex:1;overflow-y:auto;padding:6px 0}
+.problem-item{
+  padding:7px 14px;display:flex;align-items:flex-start;gap:8px;
+  cursor:pointer;font-size:12px;transition:background var(--tr);border-left:3px solid transparent;
+}
+.problem-item:hover{background:var(--hov)}
+.problem-item.error{border-left-color:#ff5555}
+.problem-item.warning{border-left-color:#ffcb6b}
+.problem-item.info{border-left-color:var(--accent)}
+.problem-icon{flex-shrink:0;margin-top:1px}
+.problem-icon.error{color:#ff5555}.problem-icon.warning{color:#ffcb6b}.problem-icon.info{color:var(--accent)}
+.problem-text{flex:1}
+.problem-msg{color:var(--t1);margin-bottom:2px}
+.problem-loc{color:var(--t3);font-family:var(--font-code);font-size:11px}
+
+/* OUTPUT */
+.output-text{
+  flex:1;overflow-y:auto;padding:10px 14px;font-family:var(--font-code);
+  font-size:12.5px;line-height:1.7;color:var(--t2);white-space:pre-wrap;
+  word-break:break-all;
+}
+.out-line.ok{color:#50fa7b}.out-line.err{color:#ff5555}
+.out-line.warn{color:#ffcb6b}.out-line.info{color:var(--accent)}
+.out-line.dim{color:var(--t3)}
+
+/* ══ STATUS BAR ══ */
+.status-bar{
+  background:var(--stat-bg);height:24px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 10px;flex-shrink:0;z-index:100;
+}
+.stat-left,.stat-right{display:flex;align-items:center;gap:0}
+.stat-item{
+  display:flex;align-items:center;gap:4px;padding:0 8px;height:24px;
+  font-size:11px;color:var(--stat-fg);cursor:pointer;font-family:var(--font-code);
+  opacity:.85;transition:opacity var(--tr);white-space:nowrap;
+}
+.stat-item:hover{opacity:1;background:rgba(255,255,255,.12)}
+.stat-item i{font-size:10px}
+.stat-item.err-stat{background:rgba(255,85,85,.3)}
+.stat-item.warn-stat{background:rgba(255,203,107,.2)}
+.stat-sep{width:1px;height:14px;background:rgba(255,255,255,.2)}
+
+/* ══ AI FLOATING TOOLBAR ══ */
+.ai-float{
+  position:absolute;background:var(--panel);border:1px solid var(--accent);
+  border-radius:10px;padding:10px 14px;z-index:200;display:none;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);min-width:320px;max-width:480px;
+  animation:floatIn .18s ease;
+}
+@keyframes floatIn{from{opacity:0;scale:.95}to{opacity:1;scale:1}}
+.ai-float.show{display:block}
+.ai-float-title{
+  font-size:12px;font-weight:600;color:var(--t1);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.ai-float-title i{color:var(--accent)}
+.ai-float-inp{
+  width:100%;background:var(--inp);border:1px solid var(--brd);border-radius:7px;
+  padding:8px 11px;color:var(--t1);font-family:var(--font-ui);font-size:12px;
+  outline:none;resize:none;min-height:55px;margin-bottom:8px;
+}
+.ai-float-inp:focus{border-color:var(--accent)}
+.ai-float-btns{display:flex;gap:6px}
+.aif-btn{
+  flex:1;padding:7px 10px;border-radius:7px;border:1px solid var(--brd);
+  background:var(--card);color:var(--t2);cursor:pointer;font-size:11px;
+  font-family:var(--font-ui);transition:all var(--tr);display:flex;
+  align-items:center;gap:5px;justify-content:center;
+}
+.aif-btn:hover{border-color:var(--accent);color:var(--t1)}
+.aif-btn.primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-color:transparent;color:#fff;flex:2;
+}
+
+/* ══ AUTOCOMPLETE ══ */
+.autocomplete{
+  position:absolute;background:var(--panel);border:1px solid var(--brd);
+  border-radius:8px;padding:4px;z-index:500;min-width:250px;max-width:380px;
+  max-height:220px;overflow-y:auto;display:none;
+  box-shadow:0 12px 35px rgba(0,0,0,.5);
+}
+.autocomplete.show{display:block;animation:dropIn .12s ease}
+.ac-item{
+  padding:6px 10px;border-radius:5px;display:flex;align-items:center;gap:8px;
+  cursor:pointer;transition:background var(--tr);
+}
+.ac-item:hover,.ac-item.focused{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.ac-item .ac-icon{
+  width:20px;height:20px;border-radius:4px;display:flex;align-items:center;
+  justify-content:center;font-size:11px;flex-shrink:0;
+}
+.ac-item .ac-name{font-size:13px;font-family:var(--font-code);color:var(--t1)}
+.ac-item .ac-type{font-size:11px;color:var(--t3);margin-left:auto}
+.ac-kw .ac-icon{background:color-mix(in srgb,var(--sk) 15%,transparent);color:var(--sk)}
+.ac-fn .ac-icon{background:color-mix(in srgb,var(--sf) 15%,transparent);color:var(--sf)}
+.ac-var .ac-icon{background:color-mix(in srgb,var(--sv) 15%,transparent);color:var(--sv)}
+.ac-cls .ac-icon{background:color-mix(in srgb,var(--scl) 15%,transparent);color:var(--scl)}
+.ac-snp .ac-icon{background:color-mix(in srgb,var(--accent2) 15%,transparent);color:var(--accent2)}
+
+/* ══ TOOLTIP ══ */
+.tooltip{
+  position:fixed;background:var(--card);border:1px solid var(--brd);
+  border-radius:6px;padding:6px 10px;font-size:11px;color:var(--t2);
+  z-index:9999;pointer-events:none;display:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);max-width:260px;line-height:1.5;
+}
+.tooltip.show{display:block;animation:dropIn .12s ease}
+
+/* ══ CONTEXT MENU ══ */
+.ctx-menu{
+  position:fixed;background:var(--panel);border:1px solid var(--brd);
+  border-radius:8px;padding:4px;min-width:200px;z-index:9999;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);display:none;
+}
+.ctx-menu.open{display:block;animation:dropIn .14s ease}
+.ctx-item{
+  padding:7px 12px;border-radius:5px;color:var(--t2);cursor:pointer;
+  font-size:12px;display:flex;align-items:center;gap:8px;transition:all var(--tr);
+}
+.ctx-item:hover{background:var(--hov);color:var(--t1)}
+.ctx-item i{width:14px;text-align:center;color:var(--accent);font-size:11px}
+.ctx-item .ctx-short{margin-left:auto;color:var(--t3);font-size:10px;font-family:var(--font-code)}
+.ctx-sep{height:1px;background:var(--brd);margin:3px 0}
+
+/* ══ MODAL ══ */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8000;
+  display:none;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.show{display:flex;animation:fadeIn .18s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{
+  background:var(--panel);border:1px solid var(--brd);border-radius:14px;
+  padding:28px;width:520px;max-width:95vw;position:relative;
+  animation:modalIn .2s ease;box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+@keyframes modalIn{from{opacity:0;scale:.96;translateY(-12px)}to{opacity:1;scale:1;translateY(0)}}
+.modal h2{font-size:17px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.modal p{font-size:13px;color:var(--t3);margin-bottom:18px;line-height:1.5}
+.modal-close{
+  position:absolute;top:16px;right:16px;width:28px;height:28px;
+  background:var(--card);border:1px solid var(--brd);border-radius:6px;
+  cursor:pointer;color:var(--t3);font-size:14px;display:flex;
+  align-items:center;justify-content:center;transition:all var(--tr);
+}
+.modal-close:hover{background:var(--hov);color:var(--t1)}
+.modal-inp{
+  width:100%;background:var(--inp);border:1px solid var(--brd);border-radius:8px;
+  padding:10px 13px;color:var(--t1);font-family:var(--font-ui);font-size:13px;
+  outline:none;margin-bottom:12px;transition:border-color var(--tr);
+}
+.modal-inp:focus{border-color:var(--accent)}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end}
+.modal-btn{
+  padding:9px 20px;border-radius:8px;border:1px solid var(--brd);
+  background:var(--card);color:var(--t2);cursor:pointer;font-size:13px;
+  font-family:var(--font-ui);transition:all var(--tr);
+}
+.modal-btn:hover{background:var(--hov);color:var(--t1)}
+.modal-btn.primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-color:transparent;color:#fff;
+}
+/* Open workspace cards */
+.ws-cards{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.ws-card{
+  padding:14px;background:var(--card);border:1px solid var(--brd);border-radius:10px;
+  cursor:pointer;transition:all var(--tr);width:calc(50% - 5px);
+}
+.ws-card:hover{border-color:var(--accent);background:var(--hov)}
+.ws-card i{font-size:24px;color:var(--accent);margin-bottom:8px;display:block}
+.ws-card h4{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.ws-card p{font-size:11px;color:var(--t3)}
+.recent-list{margin-bottom:16px}
+.recent-item{
+  padding:8px 10px;border-radius:7px;cursor:pointer;display:flex;
+  align-items:center;gap:8px;font-size:12px;color:var(--t2);transition:all var(--tr);
+}
+.recent-item:hover{background:var(--hov);color:var(--t1)}
+.recent-item i{color:var(--t3);font-size:13px}
+.recent-item .recent-path{font-size:11px;color:var(--t3);margin-top:1px}
+
+/* ══ NOTIFICATIONS ══ */
+.notif-wrap{position:fixed;bottom:30px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:7px;pointer-events:none}
+.notif{
+  background:var(--panel);border:1px solid var(--brd);border-radius:9px;
+  padding:11px 15px;font-size:12px;color:var(--t1);display:flex;
+  align-items:flex-start;gap:9px;pointer-events:all;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:320px;min-width:240px;
+  animation:notifIn .22s ease;border-left:3px solid var(--accent);
+}
+@keyframes notifIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes notifOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(30px)}}
+.notif.out{animation:notifOut .18s ease forwards}
+.notif.err{border-left-color:var(--err)}.notif.ok{border-left-color:var(--accent3)}
+.notif.warn{border-left-color:var(--warn)}
+.notif-icon{flex-shrink:0;margin-top:1px}
+.notif-icon.ok{color:var(--accent3)}.notif-icon.err{color:var(--err)}
+.notif-icon.warn{color:var(--warn)}.notif-icon.info{color:var(--accent)}
+.notif-close{margin-left:auto;background:none;border:none;color:var(--t3);cursor:pointer;font-size:12px;flex-shrink:0}
+
+/* ══ AI DIFF VIEW ══ */
+.diff-bar{
+  background:var(--tbar);border-bottom:1px solid var(--brd);
+  padding:7px 14px;display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;color:var(--t2);flex-shrink:0;
+}
+.diff-bar strong{color:var(--accent)}
+.diff-btns{display:flex;gap:6px}
+.diff-btn{
+  padding:5px 12px;border-radius:6px;border:1px solid var(--brd);
+  background:var(--card);color:var(--t2);cursor:pointer;font-size:11px;
+  font-family:var(--font-ui);transition:all var(--tr);display:flex;align-items:center;gap:5px;
+}
+.diff-btn:hover{border-color:var(--accent);color:var(--t1)}
+.diff-btn.accept{background:color-mix(in srgb,var(--accent3) 15%,transparent);border-color:var(--accent3);color:var(--accent3)}
+.diff-btn.reject{background:color-mix(in srgb,var(--err) 15%,transparent);border-color:var(--err);color:var(--err)}
+/* diff highlight in editor */
+.code-content .diff-add{background:rgba(80,250,123,.08);display:block;border-left:2px solid #50fa7b}
+.code-content .diff-del{background:rgba(255,85,85,.08);display:block;border-left:2px solid #ff5555;text-decoration:line-through;opacity:.5}
+.code-content .diff-mod{background:rgba(124,106,247,.1);display:block;border-left:2px solid var(--accent)}
+
+/* ══ WELCOME TAB ══ */
+.welcome{flex:1;overflow-y:auto;padding:40px;background:var(--ed);display:flex;flex-direction:column;gap:30px}
+.welcome-hero{text-align:center;padding-bottom:20px;border-bottom:1px solid var(--brd)}
+.welcome-logo{
+  width:70px;height:70px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:18px;display:flex;align-items:center;justify-content:center;
+  font-size:32px;color:#fff;margin:0 auto 16px;
+  box-shadow:0 0 40px color-mix(in srgb,var(--accent) 35%,transparent);
+}
+.welcome h1{font-size:26px;font-weight:800;color:var(--t1);margin-bottom:6px}
+.welcome .tagline{font-size:14px;color:var(--t3)}
+.welcome-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.welcome-card{
+  background:var(--card);border:1px solid var(--brd);border-radius:12px;
+  padding:18px;cursor:pointer;transition:all var(--tr);
+}
+.welcome-card:hover{border-color:var(--accent);background:var(--hov);transform:translateY(-2px)}
+.welcome-card i{font-size:22px;color:var(--accent);margin-bottom:10px;display:block}
+.welcome-card h3{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:5px}
+.welcome-card p{font-size:12px;color:var(--t3);line-height:1.5}
+.recent-section h2{font-size:14px;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.recent-section h2 i{color:var(--accent)}
+
+/* ══ PROGRESS BAR ══ */
+.prog-bar{
+  position:fixed;top:36px;left:0;right:0;height:2px;z-index:999;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transform-origin:left;transform:scaleX(0);transition:transform .2s;
+  pointer-events:none;display:none;
+}
+.prog-bar.show{display:block}
+
+/* ══ FIND/REPLACE ══ */
+.find-box{
+  position:absolute;top:8px;right:18px;background:var(--panel);
+  border:1px solid var(--brd);border-radius:9px;padding:10px 12px;
+  z-index:300;display:none;box-shadow:0 12px 40px rgba(0,0,0,.4);
+  min-width:310px;
+}
+.find-box.show{display:block;animation:dropIn .15s ease}
+.find-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.find-inp{
+  flex:1;background:var(--inp);border:1px solid var(--brd);border-radius:6px;
+  padding:5px 9px;color:var(--t1);font-family:var(--font-code);font-size:12px;
+  outline:none;transition:border-color var(--tr);
+}
+.find-inp:focus{border-color:var(--accent)}
+.find-count{font-size:11px;color:var(--t3);white-space:nowrap}
+.find-actions{display:flex;gap:3px}
+.find-btn{
+  width:24px;height:24px;background:var(--card);border:1px solid var(--brd);
+  border-radius:4px;color:var(--t3);cursor:pointer;font-size:11px;
+  display:flex;align-items:center;justify-content:center;transition:all var(--tr);
+}
+.find-btn:hover{background:var(--hov);color:var(--t1);border-color:var(--accent)}
+
+/* ══ GIT HUB MODAL ══ */
+.gh-connect{background:var(--card);border:1px solid var(--brd);border-radius:10px;padding:16px;margin-bottom:14px}
+.gh-connect h4{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:4px;display:flex;align-items:center;gap:7px}
+.gh-connect h4 i{color:var(--t1)}
+.gh-connect p{font-size:12px;color:var(--t3);margin-bottom:10px}
+.gh-repo-list{max-height:160px;overflow-y:auto;margin-bottom:12px}
+.gh-repo{
+  padding:8px 10px;display:flex;align-items:center;gap:8px;border-radius:6px;
+  cursor:pointer;font-size:12px;color:var(--t2);transition:all var(--tr);
+}
+.gh-repo:hover{background:var(--hov);color:var(--t1)}
+.gh-repo i{color:var(--t3)}
+.gh-repo .repo-vis{
+  margin-left:auto;font-size:10px;padding:2px 7px;border-radius:20px;
+  background:var(--card);border:1px solid var(--brd);
+}
+</style>
+</head>
+<body>
+
+<!-- ══ PROGRESS BAR ══ -->
+<div class="prog-bar" id="progbar"></div>
+
+<!-- ══ TITLE BAR ══ -->
+<div class="titlebar">
+  <div class="tb-left">
+    <div class="tb-logo">
+      <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+      <span class="logo-name">Zedex IDE</span>
+    </div>
+    <div class="tb-menus">
+      <button class="tb-menu-btn" onclick="openMenu('file',this)">Arquivo</button>
+      <button class="tb-menu-btn" onclick="openMenu('edit',this)">Editar</button>
+      <button class="tb-menu-btn" onclick="openMenu('view',this)">Ver</button>
+      <button class="tb-menu-btn" onclick="openMenu('run',this)">Executar</button>
+      <button class="tb-menu-btn" onclick="openMenu('git',this)">Git</button>
+      <button class="tb-menu-btn" onclick="openMenu('ai',this)">IA</button>
+      <button class="tb-menu-btn" onclick="openMenu('help',this)">Ajuda</button>
+    </div>
+  </div>
+  <div class="tb-center">
+    <div class="search-bar" onclick="document.getElementById('cmd-inp').focus()">
+      <i class="fas fa-search"></i>
+      <input id="cmd-inp" placeholder="Pesquisar arquivos, comandos, IA... (Ctrl+P)" oninput="handleCmdSearch(this.value)">
+    </div>
+  </div>
+  <div class="tb-right">
+    <button class="tb-icon-btn" title="Notificações"><i class="fas fa-bell"></i></button>
+    <button class="tb-icon-btn" title="Configurações" onclick="switchSide('settings')"><i class="fas fa-cog"></i></button>
+    <div style="width:1px;height:20px;background:var(--brd);margin:0 4px"></div>
+    <button class="win-ctrl" title="Minimizar"><i class="fas fa-minus" style="font-size:9px"></i></button>
+    <button class="win-ctrl" title="Maximizar"><i class="far fa-square" style="font-size:9px"></i></button>
+    <button class="win-ctrl close" title="Fechar" onclick="if(confirm('Fechar Zedex IDE?'))window.close()"><i class="fas fa-times" style="font-size:10px"></i></button>
+  </div>
+</div>
+
+<!-- ══ DROPDOWN MENUS ══ -->
+<div class="ddmenu" id="dd-file">
+  <div class="dd-sub">Arquivo</div>
+  <div class="dd-item" onclick="openWorkspaceModal()"><i class="fas fa-folder-open"></i>Abrir Pasta...<span class="shortcut">Ctrl+K O</span></div>
+  <div class="dd-item" onclick="newFile()"><i class="fas fa-file-plus"></i>Novo Arquivo<span class="shortcut">Ctrl+N</span></div>
+  <div class="dd-item" onclick="newFolder()"><i class="fas fa-folder-plus"></i>Nova Pasta</div>
+  <div class="dd-sep"></div>
+  <div class="dd-item" onclick="saveFile()"><i class="fas fa-save"></i>Salvar<span class="shortcut">Ctrl+S</span></div>
+  <div class="dd-item" onclick="saveFileAs()"><i class="fas fa-file-export"></i>Salvar Como...<span class="shortcut">Ctrl+Shift+S</span></div>
+  <div class="dd-item" onclick="downloadFile()"><i class="fas fa-download"></i>Baixar Arquivo</div>
+  <div class="dd-sep"></div>
+  <div class="dd-item" onclick="openGitHubModal()"><i class="fab fa-github"></i>GitHub — Clonar / Push</div>
+  <div class="dd-sep"></div>
+  <div class="dd-item" onclick="if(confirm('Fechar Zedex IDE?'))window.close()"><i class="fas fa-door-open"></i>Sair<span class="shortcut">Alt+F4</span></div>
+</div>
+
+<div class="ddmenu" id="dd-edit">
+  <div class="dd-item" onclick="docExec('undo')"><i class="fas fa-rotate-left"></i>Desfazer<span class="shortcut">Ctrl+Z</span></div>
+  <div class="dd-item" onclick="docExec('redo')"><i class="fas fa-rotate-right"></i>Refazer<span class="shortcut">Ctrl+Y</span></div>
+  <div class="dd-sep"></div>
+  <div class="dd-item" onclick="docExec('cut')"><i class="fas fa-scissors"></i>Cortar<span class="shortcut">Ctrl+X</span></div>
+  <div class="dd-item" onclick="docExec('copy')"><i class="fas fa-copy"></i>Copiar<span class="shortcut">Ctrl+C</span></div>
+  <div class="dd-item" onclick="docExec('paste')"><i class="fas fa-paste"></i>Colar<span class="shortcut">Ctrl+V</span></div>
+  <div class="dd-sep"></div>
+  <div class="dd-item" onclick="showFind()"><i class="fas fa-search"></i>Localizar<span class="shortcut">Ctrl+F</span></div>
+  <div class="dd-item" onclick="showFind(true)"><i class="fas fa-exchange-alt"></i>Localizar e Substituir<span class="shortcut">Ctrl+H</span></div>
+  <div class="dd-sep"></div>
+  <div class="dd-item" onclick="formatCode()"><i class="fas fa-wand-magic-sparkles"></i>Formatar Documento<span class="shortcut">Shift+Alt+F</span></div>
+</div>
+
+<div class="ddmenu" id="dd-view">
+  <div class="dd-item" onclick="toggleSidebar()"><i class="fas fa-sidebar"></i>Toggle Sidebar<span class="shortcut">Ctrl+B</span></div>
+  <div class="dd-item" onclick="togglePanel()"><i class="fas fa-terminal"></i>Toggle Painel<span class="shortcut">Ctrl+`</span></div>
+  <div class="dd-item" onclick="splitEditor()"><i class="fas fa-columns"></i>Dividir Editor</div>
+  <div class="dd-sep"></div>
+  <div class="dd-sub">Temas</div>
+  <div class="dd-item" onclick="setTheme('dark')"><i class="fas fa-moon"></i>Dark (padrão)</div>
+  <div class="dd-item" onclick="setTheme('light')"><i class="fas fa-sun"></i>Light</div>
+  <div class="dd-item" onclick="setTheme('nord')"><i class="fas fa-snowflake"></i>Nord</div>
+  <div class="dd-item" onclick="setTheme('dracula')"><i class="fas fa-ghost"></i>Dracula</div>
+  <div class="dd-item" onclick="setTheme('monokai')"><i class="fas fa-palette"></i>Monokai</div>
+  <div class="dd-sep"></div>
+  <div class="dd-item" onclick="zoomIn()"><i class="fas fa-search-plus"></i>Aumentar Fonte<span class="shortcut">Ctrl++</span></div>
+  <div class="dd-item" onclick="zoomOut()"><i class="fas fa-search-minus"></i>Diminuir Fonte<span class="shortcut">Ctrl+-</span></div>
+</div>
+
+<div class="ddmenu" id="dd-run">
+  <div class="dd-item" onclick="runCode()"><i class="fas fa-play"></i>Executar Código<span class="shortcut">F5</span></div>
+  <div class="dd-item" onclick="runCode(true)"><i class="fas fa-bug"></i>Debugar<span class="shortcut">F9</span></div>
+  <div class="dd-sep"></div>
+  <div class="dd-item" onclick="openTerminal()"><i class="fas fa-terminal"></i>Abrir Terminal<span class="shortcut">Ctrl+`</span></div>
+  <div class="dd-item" onclick="clearTerminal()"><i class="fas fa-broom"></i>Limpar Terminal</div>
+</div>
+
+<div class="ddmenu" id="dd-git">
+  <div class="dd-item" onclick="gitInit()"><i class="fas fa-code-branch"></i>Inicializar Git</div>
+  <div class="dd-item" onclick="switchSide('git')"><i class="fas fa-code-commit"></i>Ver Mudanças</div>
+  <div class="dd-sep"></div>
+  <div class="dd-item" onclick="gitAction('pull')"><i class="fas fa-arrow-down"></i>Git Pull</div>
+  <div class="dd-item" onclick="gitAction('push')"><i class="fas fa-arrow-up"></i>Git Push</div>
+  <div class="dd-item" onclick="gitAction('fetch')"><i class="fas fa-sync"></i>Git Fetch</div>
+  <div class="dd-sep"></div>
+  <div class="dd-item" onclick="openGitHubModal()"><i class="fab fa-github"></i>Conectar ao GitHub</div>
+</div>
+
+<div class="ddmenu" id="dd-ai">
+  <div class="dd-item" onclick="showAiFloat()"><i class="fas fa-wand-magic-sparkles"></i>IA: Gerar Código<span class="shortcut">Ctrl+I</span></div>
+  <div class="dd-item" onclick="aiExplain()"><i class="fas fa-lightbulb"></i>IA: Explicar Seleção</div>
+  <div class="dd-item" onclick="aiRefactor()"><i class="fas fa-code"></i>IA: Refatorar</div>
+  <div class="dd-item" onclick="aiFix()"><i class="fas fa-hammer"></i>IA: Corrigir Erros</div>
+  <div class="dd-sep"></div>
+  <div class="dd-item" onclick="switchSide('ai')"><i class="fas fa-robot"></i>Chat com IA</div>
+  <div class="dd-item" onclick="genApp()"><i class="fas fa-bolt"></i>Gerar App Completo</div>
+</div>
+
+<div class="ddmenu" id="dd-help">
+  <div class="dd-item" onclick="showShortcuts()"><i class="fas fa-keyboard"></i>Atalhos de Teclado</div>
+  <div class="dd-item" onclick="notify('Zedex IDE v1.0 — by Zénia Projects','info')"><i class="fas fa-info-circle"></i>Sobre Zedex IDE</div>
+  <div class="dd-sep"></div>
+  <div class="dd-item" onclick="window.open('https://zenia-projects.netlify.app','_blank')"><i class="fas fa-external-link-alt"></i>Zénia Projects</div>
+</div>
+
+<!-- ══ WORKSPACE ══ -->
+<div class="workspace">
+
+  <!-- ══ ACTIVITY BAR ══ -->
+  <div class="activity-bar">
+    <button class="act-btn active" id="act-explorer" title="Explorador de Arquivos (Ctrl+Shift+E)" onclick="switchSide('explorer')">
+      <i class="fas fa-files"></i>
+    </button>
+    <button class="act-btn" id="act-search" title="Pesquisar (Ctrl+Shift+F)" onclick="switchSide('search')">
+      <i class="fas fa-search"></i>
+    </button>
+    <button class="act-btn" id="act-git" title="Controle de Versão (Ctrl+Shift+G)" onclick="switchSide('git')">
+      <i class="fas fa-code-branch"></i>
+      <span class="badge" id="git-badge-dot" style="display:none"></span>
+    </button>
+    <button class="act-btn" id="act-ai" title="Assistente IA (Ctrl+Shift+A)" onclick="switchSide('ai')">
+      <i class="fas fa-robot"></i>
+    </button>
+    <button class="act-btn" id="act-ext" title="Extensões (Ctrl+Shift+X)" onclick="switchSide('ext')">
+      <i class="fas fa-puzzle-piece"></i>
+    </button>
+    <div class="act-spacer"></div>
+    <div class="act-sep"></div>
+    <button class="act-btn" id="act-settings" title="Configurações (Ctrl+,)" onclick="switchSide('settings')">
+      <i class="fas fa-cog"></i>
+    </button>
+  </div>
+
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sidebar" id="sidebar">
+
+    <!-- EXPLORER -->
+    <div id="panel-explorer" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <div class="sidebar-header">
+        <h3 id="sb-title-explorer">Explorador</h3>
+        <div class="sb-icons">
+          <button class="sb-icon-btn" title="Novo Arquivo" onclick="newFile()"><i class="fas fa-file-plus"></i></button>
+          <button class="sb-icon-btn" title="Nova Pasta" onclick="newFolder()"><i class="fas fa-folder-plus"></i></button>
+          <button class="sb-icon-btn" title="Atualizar" onclick="refreshTree()"><i class="fas fa-rotate-right"></i></button>
+          <button class="sb-icon-btn" title="Recolher" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></button>
+        </div>
+      </div>
+      <div class="file-tree" id="file-tree"></div>
+    </div>
+
+    <!-- SEARCH PANEL -->
+    <div id="panel-search" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div class="sidebar-header">
+        <h3>Pesquisar</h3>
+        <div class="sb-icons">
+          <button class="sb-icon-btn" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></button>
+        </div>
+      </div>
+      <div class="search-panel">
+        <div class="search-inp-wrap">
+          <i class="fas fa-search"></i>
+          <input id="search-inp" placeholder="Pesquisar nos arquivos..." oninput="searchFiles(this.value)">
+        </div>
+        <div class="search-results" id="search-results">
+          <div style="color:var(--t3);font-size:12px;text-align:center;padding:20px">Digite para pesquisar</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GIT PANEL -->
+    <div id="panel-git" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div class="sidebar-header">
+        <h3>Controle de Versão</h3>
+        <div class="sb-icons">
+          <button class="sb-icon-btn" title="Atualizar" onclick="refreshGit()"><i class="fas fa-sync"></i></button>
+          <button class="sb-icon-btn" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></button>
+        </div>
+      </div>
+      <div class="git-panel">
+        <div class="git-commit-box">
+          <div style="font-size:11px;color:var(--t3);margin-bottom:6px">Mensagem do commit</div>
+          <textarea class="git-commit-inp" id="commit-msg" placeholder="Ex: feat: adiciona autenticação JWT"></textarea>
+          <div class="git-btns">
+            <button class="git-btn" onclick="gitAction('stage-all')"><i class="fas fa-plus"></i> Stage All</button>
+            <button class="git-btn primary" onclick="doCommit()"><i class="fas fa-check"></i> Commit</button>
+          </div>
+          <div class="git-btns" style="margin-top:5px">
+            <button class="git-btn" onclick="gitAction('pull')"><i class="fas fa-arrow-down"></i> Pull</button>
+            <button class="git-btn" onclick="gitAction('push')"><i class="fas fa-arrow-up"></i> Push</button>
+            <button class="git-btn" onclick="openGitHubModal()"><i class="fab fa-github"></i> GitHub</button>
+          </div>
+        </div>
+        <div class="git-section">
+          <div class="git-section-title">Mudanças <span id="git-change-count" style="color:var(--accent)"></span></div>
+          <div id="git-changes"></div>
+        </div>
+        <div class="git-section">
+          <div class="git-section-title" style="margin-top:10px">Branch atual</div>
+          <div style="padding:8px;background:var(--card);border:1px solid var(--brd);border-radius:7px;font-size:12px;color:var(--t2);display:flex;align-items:center;gap:7px">
+            <i class="fas fa-code-branch" style="color:var(--accent)"></i>
+            <span id="current-branch">main</span>
+            <button class="git-btn" style="margin-left:auto;flex:none;padding:4px 10px" onclick="newBranch()"><i class="fas fa-plus"></i> Nova</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI CHAT PANEL -->
+    <div id="panel-ai" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div class="sidebar-header">
+        <h3>Assistente IA</h3>
+        <div class="sb-icons">
+          <button class="sb-icon-btn" title="Limpar chat" onclick="clearAiChat()"><i class="fas fa-trash"></i></button>
+          <button class="sb-icon-btn" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></button>
+        </div>
+      </div>
+      <div class="ai-panel">
+        <div class="ai-msgs" id="ai-msgs">
+          <div class="ai-msg ai">
+            👋 Olá! Sou o assistente IA do Zedex IDE.<br><br>
+            Posso ajudar com:<br>
+            • Gerar e completar código<br>
+            • Explicar e refatorar trechos<br>
+            • Corrigir bugs e erros<br>
+            • Criar funções e componentes<br>
+            • Revisar e otimizar performance<br><br>
+            O que vamos criar hoje?
+          </div>
+        </div>
+        <div class="ai-inp-row">
+          <textarea class="ai-inp" id="ai-chat-inp" placeholder="Pergunte à IA... (Enter para enviar)" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAiMsg()}" oninput="autoResize(this)"></textarea>
+          <button class="ai-send" id="ai-send-btn" onclick="sendAiMsg()">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXTENSIONS PANEL -->
+    <div id="panel-ext" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div class="sidebar-header">
+        <h3>Extensões</h3>
+        <div class="sb-icons">
+          <button class="sb-icon-btn" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></button>
+        </div>
+      </div>
+      <div style="padding:8px">
+        <div class="search-inp-wrap"><i class="fas fa-search"></i><input placeholder="Pesquisar extensões..."></div>
+      </div>
+      <div class="ext-panel" id="ext-list"></div>
+    </div>
+
+    <!-- SETTINGS PANEL -->
+    <div id="panel-settings" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div class="sidebar-header">
+        <h3>Configurações</h3>
+        <div class="sb-icons">
+          <button class="sb-icon-btn" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></button>
+        </div>
+      </div>
+      <div class="settings-panel">
+        <div class="setting-group">
+          <div class="setting-group-title">Aparência</div>
+          <div class="setting-item">
+            <label>Tema de Cores</label>
+            <select onchange="setTheme(this.value)">
+              <option value="dark">Dark (padrão)</option>
+              <option value="light">Light</option>
+              <option value="nord">Nord</option>
+              <option value="dracula">Dracula</option>
+              <option value="monokai">Monokai</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label>Tamanho da Fonte</label>
+            <select onchange="setFontSize(this.value)">
+              <option value="11px">11px — Compacto</option>
+              <option value="12px">12px — Pequeno</option>
+              <option value="13px" selected>13px — Normal</option>
+              <option value="14px">14px — Médio</option>
+              <option value="15px">15px — Grande</option>
+              <option value="16px">16px — Extra Grande</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label>Família de Fonte</label>
+            <select onchange="document.querySelectorAll('.code-content,.terminal,.line-num').forEach(e=>e.style.fontFamily=this.value)">
+              <option value="'JetBrains Mono','Fira Code','Consolas',monospace">JetBrains Mono</option>
+              <option value="'Fira Code',monospace">Fira Code</option>
+              <option value="'Source Code Pro',monospace">Source Code Pro</option>
+              <option value="Consolas,monospace">Consolas</option>
+              <option value="Monaco,monospace">Monaco</option>
+              <option value="'Cascadia Code',monospace">Cascadia Code</option>
+            </select>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title">Editor</div>
+          <div class="setting-item">
+            <div class="toggle-row">
+              <label>Word Wrap</label>
+              <div class="toggle on" id="tog-wordwrap" onclick="toggleWrap(this)"></div>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="toggle-row">
+              <label>Minimap</label>
+              <div class="toggle on" id="tog-minimap" onclick="toggleMinimap(this)"></div>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="toggle-row">
+              <label>Autocompletar IA</label>
+              <div class="toggle on" id="tog-autocomplete" onclick="this.classList.toggle('on')"></div>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="toggle-row">
+              <label>Números de Linha</label>
+              <div class="toggle on" id="tog-linenum" onclick="toggleLineNums(this)"></div>
+            </div>
+          </div>
+          <div class="setting-item">
+            <label>Tab Size</label>
+            <select onchange="document.querySelectorAll('.code-content').forEach(e=>e.style.tabSize=this.value)">
+              <option value="2" selected>2 espaços</option>
+              <option value="4">4 espaços</option>
+              <option value="8">8 espaços</option>
+            </select>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title">IA</div>
+          <div class="setting-item">
+            <label>Modelo de IA</label>
+            <select id="ai-model-sel">
+              <option value="qwen-coder">Qwen Coder (padrão)</option>
+              <option value="openai">OpenAI GPT-4o</option>
+              <option value="claude">Claude Sonnet</option>
+              <option value="llama">Llama 3.1</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <div class="toggle-row">
+              <label>Sugestões em tempo real</label>
+              <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+            </div>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title">Projetos</div>
+          <div class="setting-item">
+            <div class="toggle-row">
+              <label>Salvar automaticamente</label>
+              <div class="toggle on" id="tog-autosave" onclick="toggleAutosave(this)"></div>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="toggle-row">
+              <label>Restaurar workspace</label>
+              <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <!-- ══ EDITOR AREA ══ -->
+  <div class="editor-area">
+
+    <!-- TAB BAR -->
+    <div class="tab-bar" id="tab-bar">
+      <button class="tab-add" onclick="newFile()" title="Novo arquivo"><i class="fas fa-plus"></i></button>
+    </div>
+
+    <!-- EDITOR SPLIT CONTAINER -->
+    <div class="editor-split" id="editor-split">
+
+      <!-- MAIN PANE -->
+      <div class="editor-pane" id="pane-main">
+        <!-- Welcome / file content -->
+        <div class="welcome" id="welcome-screen">
+          <div class="welcome-hero">
+            <div class="welcome-logo"><i class="fas fa-bolt"></i></div>
+            <h1>Zedex IDE</h1>
+            <p class="tagline">AI-Powered Development Environment — Offline + Online</p>
+          </div>
+          <div class="welcome-grid">
+            <div class="welcome-card" onclick="openWorkspaceModal()">
+              <i class="fas fa-folder-open"></i>
+              <h3>Abrir Pasta</h3>
+              <p>Abra uma pasta local como workspace do projeto</p>
+            </div>
+            <div class="welcome-card" onclick="newFile()">
+              <i class="fas fa-file-code"></i>
+              <h3>Novo Arquivo</h3>
+              <p>Crie um novo arquivo e comece a codificar</p>
+            </div>
+            <div class="welcome-card" onclick="genApp()">
+              <i class="fas fa-wand-magic-sparkles"></i>
+              <h3>Gerar com IA</h3>
+              <p>Descreva seu app e a IA gera o código completo</p>
+            </div>
+            <div class="welcome-card" onclick="openGitHubModal()">
+              <i class="fab fa-github"></i>
+              <h3>Clonar GitHub</h3>
+              <p>Clone um repositório diretamente do GitHub</p>
+            </div>
+          </div>
+          <div class="recent-section">
+            <h2><i class="fas fa-clock-rotate-left"></i> Projetos Recentes</h2>
+            <div id="recent-list"></div>
+          </div>
+        </div>
+
+        <!-- CODE EDITOR (hidden until file opens) -->
+        <div id="code-editor-wrap" style="display:none;flex:1;flex-direction:column;overflow:hidden">
+          <!-- Breadcrumb -->
+          <div class="breadcrumb" id="breadcrumb">
+            <span onclick="switchSide('explorer')"><i class="fas fa-folder" style="color:var(--accent)"></i></span>
+            <i class="fas fa-chevron-right"></i>
+            <span id="bread-file">arquivo.html</span>
+          </div>
+
+          <!-- Find/Replace -->
+          <div class="find-box" id="find-box">
+            <div class="find-row">
+              <input class="find-inp" id="find-inp" placeholder="Localizar..." oninput="doFind(this.value)">
+              <span class="find-count" id="find-count">0 resultados</span>
+              <div class="find-actions">
+                <button class="find-btn" onclick="findPrev()" title="Anterior"><i class="fas fa-chevron-up"></i></button>
+                <button class="find-btn" onclick="findNext()" title="Próximo"><i class="fas fa-chevron-down"></i></button>
+                <button class="find-btn" onclick="hideFind()" title="Fechar"><i class="fas fa-times"></i></button>
+              </div>
+            </div>
+            <div class="find-row" id="replace-row" style="display:none">
+              <input class="find-inp" id="replace-inp" placeholder="Substituir por...">
+              <div class="find-actions">
+                <button class="find-btn" onclick="doReplace()" title="Substituir"><i class="fas fa-exchange-alt"></i></button>
+                <button class="find-btn" onclick="doReplaceAll()" title="Substituir Tudo" style="width:auto;padding:0 8px;font-size:10px">Tudo</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Diff bar (shown when AI edit applied) -->
+          <div class="diff-bar" id="diff-bar" style="display:none">
+            <span>IA propôs <strong id="diff-summary">mudanças</strong> — aceitar?</span>
+            <div class="diff-btns">
+              <button class="diff-btn accept" onclick="acceptDiff()"><i class="fas fa-check"></i> Aceitar</button>
+              <button class="diff-btn reject" onclick="rejectDiff()"><i class="fas fa-times"></i> Rejeitar</button>
+              <button class="diff-btn" onclick="acceptDiff()"><i class="fas fa-eye"></i> Ver Diff</button>
+            </div>
+          </div>
+
+          <!-- Editor -->
+          <div class="code-editor" id="code-editor">
+            <div class="line-numbers" id="line-numbers"></div>
+            <div class="code-content-wrap" id="code-wrap">
+              <div
+                class="code-content"
+                id="code-content"
+                contenteditable="true"
+                spellcheck="false"
+                onkeydown="handleEditorKey(event)"
+                onkeyup="onEditorChange()"
+                onclick="onEditorClick()"
+                oninput="onEditorInput()"
+              ></div>
+              <!-- Autocomplete -->
+              <div class="autocomplete" id="autocomplete"></div>
+            </div>
+            <div class="minimap" id="minimap">
+              <canvas id="minimap-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI float toolbar -->
+        <div class="ai-float" id="ai-float">
+          <div class="ai-float-title">
+            <i class="fas fa-wand-magic-sparkles"></i> IA — O que fazer?
+          </div>
+          <textarea class="ai-float-inp" id="ai-float-inp" placeholder="Descreva o que a IA deve gerar, modificar ou explicar..." rows="2"></textarea>
+          <div class="ai-float-btns">
+            <button class="aif-btn" onclick="hideAiFloat()"><i class="fas fa-times"></i> Cancelar</button>
+            <button class="aif-btn" onclick="aiFloatAction('explain')"><i class="fas fa-lightbulb"></i> Explicar</button>
+            <button class="aif-btn primary" onclick="aiFloatAction('generate')"><i class="fas fa-bolt"></i> Gerar / Editar</button>
+          </div>
+        </div>
+
+      </div><!-- /pane-main -->
+
+    </div><!-- /editor-split -->
+
+    <!-- ══ BOTTOM PANEL ══ -->
+    <div class="bottom-panel" id="bottom-panel">
+      <div class="bottom-tabs">
+        <button class="bot-tab active" id="btab-terminal" onclick="switchBotTab('terminal')">
+          <i class="fas fa-terminal"></i> Terminal
+        </button>
+        <button class="bot-tab" id="btab-problems" onclick="switchBotTab('problems')">
+          <i class="fas fa-exclamation-circle"></i> Problemas
+          <span class="count" id="prob-count" style="display:none">0</span>
+        </button>
+        <button class="bot-tab" id="btab-output" onclick="switchBotTab('output')">
+          <i class="fas fa-list-ul"></i> Saída
+        </button>
+        <button class="bot-tab" id="btab-console" onclick="switchBotTab('console')">
+          <i class="fas fa-bug"></i> Console
+        </button>
+        <div class="bot-tab-actions">
+          <button class="bot-act-btn" onclick="clearTerminal()" title="Limpar"><i class="fas fa-broom"></i></button>
+          <button class="bot-act-btn" onclick="splitTerminal()" title="Novo Terminal"><i class="fas fa-plus"></i></button>
+          <button class="bot-act-btn" onclick="togglePanel()" title="Fechar Painel"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+
+      <!-- TERMINAL -->
+      <div class="bot-pane active" id="pane-terminal">
+        <div class="terminal" id="terminal">
+          <div class="term-line"><span class="term-prompt">zedex@ide:~$</span><span class="term-cmd"> Bem-vindo ao Zedex IDE Terminal!</span></div>
+          <div class="term-line"><span class="term-output">Sistema pronto. Assistente IA ativo. Qwen-Coder online.</span></div>
+        </div>
+        <div class="term-inp-row">
+          <span class="term-prompt-inp" id="term-prompt">zedex@ide:~$</span>
+          <input class="term-inp" id="term-inp" placeholder="" autocomplete="off" onkeydown="handleTermKey(event)">
+        </div>
+      </div>
+
+      <!-- PROBLEMS -->
+      <div class="bot-pane" id="pane-problems">
+        <div class="problems-list" id="problems-list">
+          <div style="color:var(--t3);font-size:12px;text-align:center;padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px">
+            <i class="fas fa-check-circle" style="font-size:24px;color:var(--accent3)"></i>
+            Nenhum problema detectado
+          </div>
+        </div>
+      </div>
+
+      <!-- OUTPUT -->
+      <div class="bot-pane" id="pane-output">
+        <div class="output-text" id="output-text">
+          <span class="out-line dim">[Zedex IDE] Pronto para executar código.</span>
+        </div>
+      </div>
+
+      <!-- CONSOLE -->
+      <div class="bot-pane" id="pane-console">
+        <div class="terminal" id="console-out" style="background:var(--ed)"></div>
+        <div class="term-inp-row" style="background:var(--ed)">
+          <span class="term-prompt-inp">&gt;</span>
+          <input class="term-inp" id="console-inp" placeholder="JavaScript console..." autocomplete="off" onkeydown="if(event.key==='Enter')runConsole(this)">
+        </div>
+      </div>
+
+    </div><!-- /bottom-panel -->
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+      <div class="stat-left">
+        <div class="stat-item" onclick="openGitHubModal()">
+          <i class="fas fa-code-branch"></i><span id="stat-branch">main</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item err-stat" id="stat-errors" style="display:none">
+          <i class="fas fa-times-circle"></i><span id="stat-err-count">0 erros</span>
+        </div>
+        <div class="stat-item warn-stat" id="stat-warnings" style="display:none">
+          <i class="fas fa-exclamation-triangle"></i><span id="stat-warn-count">0 avisos</span>
+        </div>
+      </div>
+      <div class="stat-right">
+        <div class="stat-item" id="stat-lang" onclick="switchBotTab('terminal')">
+          <i class="fas fa-code"></i><span id="stat-lang-name">HTML</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item" id="stat-pos">
+          <i class="fas fa-location-crosshairs"></i><span id="stat-cursor">Ln 1, Col 1</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item">
+          <i class="fas fa-font"></i><span id="stat-encoding">UTF-8</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item" id="stat-ai-status">
+          <i class="fas fa-robot"></i><span>IA Ativa</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item">Zedex IDE v1.0</div>
+      </div>
+    </div>
+
+  </div><!-- /editor-area -->
+
+</div><!-- /workspace -->
+
+<!-- ══ CONTEXT MENU ══ -->
+<div class="ctx-menu" id="ctx-menu">
+  <div class="ctx-item" onclick="ctxAction('cut')"><i class="fas fa-scissors"></i>Cortar<span class="ctx-short">Ctrl+X</span></div>
+  <div class="ctx-item" onclick="ctxAction('copy')"><i class="fas fa-copy"></i>Copiar<span class="ctx-short">Ctrl+C</span></div>
+  <div class="ctx-item" onclick="ctxAction('paste')"><i class="fas fa-paste"></i>Colar<span class="ctx-short">Ctrl+V</span></div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="showAiFloat()"><i class="fas fa-wand-magic-sparkles"></i>IA: Gerar aqui<span class="ctx-short">Ctrl+I</span></div>
+  <div class="ctx-item" onclick="aiExplain()"><i class="fas fa-lightbulb"></i>IA: Explicar seleção</div>
+  <div class="ctx-item" onclick="aiRefactor()"><i class="fas fa-code"></i>IA: Refatorar</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="showFind()"><i class="fas fa-search"></i>Localizar<span class="ctx-short">Ctrl+F</span></div>
+  <div class="ctx-item" onclick="formatCode()"><i class="fas fa-wand-sparkles"></i>Formatar</div>
+</div>
+
+<!-- ══ TOOLTIP ══ -->
+<div class="tooltip" id="tooltip"></div>
+
+<!-- ══ NOTIFICATIONS ══ -->
+<div class="notif-wrap" id="notif-wrap"></div>
+
+<!-- ══ MODAL: OPEN WORKSPACE ══ -->
+<div class="modal-overlay" id="modal-workspace">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-workspace')"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-folder-open" style="color:var(--accent);margin-right:8px"></i>Abrir Workspace</h2>
+    <p>Escolha como deseja abrir ou criar um projeto.</p>
+    <div class="ws-cards">
+      <div class="ws-card" onclick="openLocalFolder()">
+        <i class="fas fa-hard-drive"></i>
+        <h4>Pasta Local</h4>
+        <p>Abra uma pasta do seu computador</p>
+      </div>
+      <div class="ws-card" onclick="createNewProject()">
+        <i class="fas fa-file-code"></i>
+        <h4>Novo Projeto</h4>
+        <p>Crie um projeto do zero com template</p>
+      </div>
+      <div class="ws-card" onclick="openGitHubModal();closeModal('modal-workspace')">
+        <i class="fab fa-github"></i>
+        <h4>GitHub Clone</h4>
+        <p>Clone um repositório do GitHub</p>
+      </div>
+      <div class="ws-card" onclick="closeModal('modal-workspace');genApp()">
+        <i class="fas fa-wand-magic-sparkles"></i>
+        <h4>Gerar com IA</h4>
+        <p>Deixe a IA criar o projeto para você</p>
+      </div>
+    </div>
+    <div class="recent-section">
+      <h2 style="font-size:12px;color:var(--t3);margin-bottom:8px"><i class="fas fa-clock-rotate-left"></i> Recentes</h2>
+      <div id="modal-recent-list" class="recent-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: GITHUB ══ -->
+<div class="modal-overlay" id="modal-github">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-github')"><i class="fas fa-times"></i></button>
+    <h2><i class="fab fa-github" style="margin-right:8px"></i>GitHub</h2>
+    <p>Conecte ao GitHub para clonar repositórios e fazer push/pull.</p>
+    <div class="gh-connect">
+      <h4><i class="fab fa-github"></i> Autenticação</h4>
+      <p>Para usar o GitHub é necessário usar o token de acesso pessoal (PAT).</p>
+      <input class="modal-inp" id="gh-token" type="password" placeholder="Token GitHub (ghp_xxxx...)">
+      <input class="modal-inp" id="gh-user" placeholder="Usuário GitHub">
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:12px;color:var(--t3);margin-bottom:8px">URL do repositório para clonar:</div>
+      <input class="modal-inp" id="gh-repo-url" placeholder="https://github.com/usuario/repositorio">
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="closeModal('modal-github')">Cancelar</button>
+      <button class="modal-btn primary" onclick="doGitHubConnect()"><i class="fas fa-link"></i> Conectar / Clonar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: NEW FILE ══ -->
+<div class="modal-overlay" id="modal-newfile">
+  <div class="modal" style="width:380px">
+    <button class="modal-close" onclick="closeModal('modal-newfile')"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-file-plus" style="color:var(--accent);margin-right:8px"></i>Novo Arquivo</h2>
+    <input class="modal-inp" id="new-file-name" placeholder="nome-do-arquivo.html" onkeydown="if(event.key==='Enter')confirmNewFile()">
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="closeModal('modal-newfile')">Cancelar</button>
+      <button class="modal-btn primary" onclick="confirmNewFile()">Criar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: GENERATE APP ══ -->
+<div class="modal-overlay" id="modal-genapp">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-genapp')"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-wand-magic-sparkles" style="color:var(--accent);margin-right:8px"></i>Gerar App com IA</h2>
+    <p>Descreva o app que deseja criar e a IA vai gerar o código completo para você.</p>
+    <textarea class="modal-inp" id="gen-app-desc" placeholder="Ex: Dashboard financeiro dark mode com Chart.js, cards KPI, tabela de transações e sidebar navegável..." rows="4" style="resize:none;min-height:100px"></textarea>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+      <button onclick="document.getElementById('gen-app-desc').value='Landing page para startup de tecnologia com hero animado, seção de features, pricing e CTA'" style="padding:5px 10px;background:var(--card);border:1px solid var(--brd);border-radius:6px;color:var(--t2);cursor:pointer;font-size:11px">🚀 Landing Page</button>
+      <button onclick="document.getElementById('gen-app-desc').value='Dashboard admin com gráficos Chart.js, cards KPI e tabela de dados'" style="padding:5px 10px;background:var(--card);border:1px solid var(--brd);border-radius:6px;color:var(--t2);cursor:pointer;font-size:11px">📊 Dashboard</button>
+      <button onclick="document.getElementById('gen-app-desc').value='Jogo Snake em canvas com sistema de pontuação, níveis e efeitos visuais'" style="padding:5px 10px;background:var(--card);border:1px solid var(--brd);border-radius:6px;color:var(--t2);cursor:pointer;font-size:11px">🐍 Snake Game</button>
+      <button onclick="document.getElementById('gen-app-desc').value='App de tarefas com drag and drop, categorias e filtros'" style="padding:5px 10px;background:var(--card);border:1px solid var(--brd);border-radius:6px;color:var(--t2);cursor:pointer;font-size:11px">✅ Todo App</button>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="closeModal('modal-genapp')">Cancelar</button>
+      <button class="modal-btn primary" onclick="confirmGenApp()"><i class="fas fa-bolt"></i> Gerar com IA</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   ZEDEX IDE v1.0 — CORE ENGINE
+   AI-Powered Development Environment
+   by Zénia Projects @inacio.u.daniel
+════════════════════════════════════════ */
+
+/* ── CONFIG ── */
+const API_KEY = 'pk_7HHmBkBPEiNS5dyF';
+const API_URL = 'https://gen.pollinations.ai/v1/chat/completions';
+
+/* ── STATE ── */
+const IDE = {
+  tabs: [],
+  activeTab: null,
+  sidePanel: 'explorer',
+  sidebarOpen: true,
+  panelOpen: true,
+  splitMode: false,
+  fontSize: 13,
+  theme: 'dark',
+  autosave: true,
+  aiHistory: [],
+  files: {},           // { name: content }
+  modified: new Set(), // tab names modified
+  termHistory: [],
+  termIdx: -1,
+  workspace: null,
+  gitFiles: [],
+  probs: [],
+  findMatches: [],
+  findIdx: 0,
+  pendingDiff: null,   // { original, proposed }
+};
+
+/* ═══════════════════════
+   FILE ICON HELPER
+═══════════════════════ */
+function fileIcon(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const icons = {
+    html:'fa-html5 icon-html',css:'fa-css3-alt icon-css',js:'fa-js icon-js',
+    jsx:'fa-react icon-jsx',ts:'fa-code icon-ts',tsx:'fa-code icon-tsx',
+    py:'fa-python icon-py',json:'fa-code icon-json',md:'fa-markdown icon-md',
+    png:'fa-image icon-img',jpg:'fa-image icon-img',svg:'fa-image icon-img',
+    gif:'fa-image icon-img',txt:'fa-file-alt',sql:'fa-database',
+    php:'fa-php',rb:'fa-gem',go:'fa-code',rs:'fa-code',
+    sh:'fa-terminal',bat:'fa-terminal',yml:'fa-code',yaml:'fa-code',
+    xml:'fa-code',gitignore:'fa-code icon-git'
+  };
+  const icon = icons[ext] || 'fa-file';
+  return `<i class="fab ${icon.includes('fa-html5')||icon.includes('fa-css3')||icon.includes('fa-js')||icon.includes('fa-python')||icon.includes('fa-php') ? 'fab' : 'fas'} ${icon}"></i>`;
+}
+
+function fileIconClass(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const map = {html:'fa-html5 fab icon-html',css:'fa-css3-alt fab icon-css',js:'fa-js fab icon-js',jsx:'fa-react fab icon-jsx',ts:'fa-code fas icon-ts',tsx:'fa-code fas icon-tsx',py:'fa-python fab icon-py',json:'fa-code fas icon-json',md:'fa-markdown fas icon-md',png:'fa-image fas icon-img',jpg:'fa-image fas icon-img',svg:'fa-image fas icon-img',txt:'fa-file-alt fas',php:'fa-php fab',rb:'fa-gem fas',go:'fa-code fas',sh:'fa-terminal fas',yml:'fa-code fas'};
+  return map[ext] || 'fa-file fas';
+}
+
+/* ═══════════════════════
+   FILE TREE
+═══════════════════════ */
+const DEFAULT_FILES = {
+  'index.html': `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Projeto</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Olá, Mundo! 🌍</h1>
+    <p>Bem-vindo ao Zedex IDE — edite este arquivo para começar.</p>
+    <button id="btn" onclick="saudar()">Clique aqui</button>
+  </div>
+  <script src="script.js"><\/script>
+</body>
+</html>`,
+  'style.css': `/* Estilos do projeto */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: linear-gradient(135deg, #0d0d0f, #1a1a2e);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e8e8ff;
+}
+
+.container {
+  text-align: center;
+  padding: 40px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(124,106,247,.3);
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #7c6af7, #f06292);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+p { color: #9898b8; margin-bottom: 24px; }
+
+button {
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #7c6af7, #f06292);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(124,106,247,.4);
+}`,
+  'script.js': `// Script principal do projeto
+function saudar() {
+  const btn = document.getElementById('btn');
+  const msgs = [
+    'Zedex IDE é incrível! 🚀',
+    'IA integrada para criar apps 🤖',
+    'Offline + Online ⚡',
+    'Código com superpoderes! 💜'
+  ];
+  const idx = Math.floor(Math.random() * msgs.length);
+  btn.textContent = msgs[idx];
+  btn.style.background = 'linear-gradient(135deg, #50fa7b, #00ffc8)';
+  setTimeout(() => {
+    btn.textContent = 'Clique aqui';
+    btn.style.background = '';
+  }, 2000);
+}
+
+console.log('✅ Script carregado com sucesso!');`,
+  'README.md': `# Meu Projeto Zedex\n\nCriado com **Zedex IDE** — AI-Powered Development Environment.\n\n## Arquivos\n- \`index.html\` — Página principal\n- \`style.css\` — Estilos\n- \`script.js\` — Lógica JavaScript\n\n## Uso\nAbra \`index.html\` no navegador ou use o terminal integrado.\n`
+};
+
+function buildFileTree() {
+  const tree = document.getElementById('file-tree');
+  tree.innerHTML = '';
+  const sect = document.createElement('div');
+  sect.className = 'tree-section';
+  // Section header
+  const hdr = document.createElement('div');
+  hdr.className = 'tree-section-hdr';
+  hdr.innerHTML = `<i class="fas fa-chevron-down"></i> ${IDE.workspace || 'MEU PROJETO'}`;
+  hdr.onclick = () => {
+    const items = sect.querySelector('.tree-items');
+    hdr.classList.toggle('collapsed');
+    items.style.display = hdr.classList.contains('collapsed') ? 'none' : 'block';
+  };
+  sect.appendChild(hdr);
+  const items = document.createElement('div');
+  items.className = 'tree-items';
+  Object.keys(IDE.files).forEach(name => {
+    const item = document.createElement('div');
+    item.className = `tree-item${IDE.activeTab === name ? ' active' : ''}`;
+    item.dataset.file = name;
+    const ic = fileIconClass(name);
+    const modified = IDE.modified.has(name) ? '●' : '';
+    item.innerHTML = `
+      <span class="indent" style="width:8px"></span>
+      <span class="ti-icon"><i class="${ic.split(' ').slice(0,-1).join(' ')} ${ic.split(' ').slice(-1)}"></i></span>
+      <span class="ti-name">${name}</span>
+      <span style="color:var(--warn);font-size:9px;margin-left:auto">${modified}</span>
+      <div class="ti-actions">
+        <button class="ti-act" onclick="event.stopPropagation();renameFile('${name}')" title="Renomear"><i class="fas fa-pen"></i></button>
+        <button class="ti-act" onclick="event.stopPropagation();deleteFile('${name}')" title="Apagar"><i class="fas fa-trash"></i></button>
+      </div>
+    `;
+    item.onclick = () => openTab(name);
+    item.oncontextmenu = e => showCtx(e);
+    items.appendChild(item);
+  });
+  sect.appendChild(items);
+  tree.appendChild(sect);
+}
+
+/* ═══════════════════════
+   TABS SYSTEM
+═══════════════════════ */
+function openTab(name) {
+  if (!IDE.tabs.includes(name)) {
+    IDE.tabs.push(name);
+    if (!IDE.files[name]) IDE.files[name] = '';
+  }
+  IDE.activeTab = name;
+  renderTabs();
+  showEditor(name);
+  buildFileTree();
+}
+
+function renderTabs() {
+  const bar = document.getElementById('tab-bar');
+  bar.innerHTML = '';
+  IDE.tabs.forEach(name => {
+    const tab = document.createElement('div');
+    tab.className = `editor-tab${IDE.activeTab === name ? ' active' : ''}${IDE.modified.has(name) ? ' modified' : ''}`;
+    const ic = fileIconClass(name);
+    tab.innerHTML = `
+      <span class="tab-icon"><i class="${ic.split(' ').slice(0,-1).join(' ')} ${ic.split(' ').slice(-1)}"></i></span>
+      <span>${name}</span>
+      <button class="tab-close" onclick="closeTab(event,'${name}')">
+        <i class="fas fa-times"></i>
+      </button>
+    `;
+    tab.onclick = () => openTab(name);
+    bar.appendChild(tab);
+  });
+  const add = document.createElement('button');
+  add.className = 'tab-add';
+  add.title = 'Novo arquivo';
+  add.innerHTML = '<i class="fas fa-plus"></i>';
+  add.onclick = () => newFile();
+  bar.appendChild(add);
+}
+
+function closeTab(e, name) {
+  e.stopPropagation();
+  if (IDE.modified.has(name)) {
+    if (!confirm(`"${name}" tem mudanças não salvas. Fechar mesmo assim?`)) return;
+  }
+  IDE.tabs = IDE.tabs.filter(t => t !== name);
+  if (IDE.activeTab === name) {
+    IDE.activeTab = IDE.tabs[IDE.tabs.length - 1] || null;
+  }
+  renderTabs();
+  if (IDE.activeTab) showEditor(IDE.activeTab);
+  else showWelcome();
+  buildFileTree();
+}
+
+function showEditor(name) {
+  document.getElementById('welcome-screen').style.display = 'none';
+  const wrap = document.getElementById('code-editor-wrap');
+  wrap.style.display = 'flex';
+  document.getElementById('bread-file').textContent = name;
+  document.getElementById('stat-lang-name').textContent = detectLang(name).toUpperCase();
+  const content = IDE.files[name] || '';
+  renderCodeContent(content, detectLang(name));
+  updateLineNumbers(content);
+  drawMinimap(content);
+}
+
+function showWelcome() {
+  document.getElementById('welcome-screen').style.display = 'flex';
+  document.getElementById('code-editor-wrap').style.display = 'none';
+}
+
+/* ═══════════════════════
+   CODE RENDER & SYNTAX
+═══════════════════════ */
+function detectLang(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const m = {html:'html',css:'css',js:'js',jsx:'js',ts:'ts',tsx:'ts',py:'python',java:'java',cpp:'cpp',php:'php',rb:'rb',go:'go',rs:'rs',json:'json',md:'md',sh:'sh',sql:'sql'};
+  return m[ext] || 'text';
+}
+
+function syntaxHL(code, lang) {
+  let e = code
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+
+  if (lang === 'html') return e
+    .replace(/(&lt;!--[\s\S]*?--&gt;)/g,'<span class="sc">$1</span>')
+    .replace(/(&lt;!DOCTYPE[^&]*&gt;)/gi,'<span class="sc">$1</span>')
+    .replace(/(&lt;\/?)([\w-]+)/g,'$1<span class="stg">$2</span>')
+    .replace(/([\w:-]+)(=)(&quot;[^"]*&quot;)/g,'<span class="sa">$1</span><span class="so">$2</span><span class="sv">$3</span>');
+
+  if (lang === 'css') return e
+    .replace(/(\/\*[\s\S]*?\*\/)/g,'<span class="sc">$1</span>')
+    .replace(/(@[\w-]+)/g,'<span class="sk">$1</span>')
+    .replace(/([.#:[\w][^{,]*?)(\{)/g,'<span class="sv">$1</span>$2')
+    .replace(/([\w-]+)(\s*:)(?![^{]*\{)/g,'<span class="sp">$1</span>$2')
+    .replace(/:\s*(#[0-9a-fA-F]{3,8}|rgba?\([^)]+\)|[\d.]+(?:px|em|rem|vh|vw|%|s|ms|fr))/g,': <span class="sn">$1</span>');
+
+  if (['json'].includes(lang)) return e
+    .replace(/(&quot;[^&]*&quot;)(\s*:)/g,'<span class="sf">$1</span>$2')
+    .replace(/:(\s*)(&quot;[^&]*&quot;)/g,':$1<span class="ss">$2</span>')
+    .replace(/\b(true|false|null)\b/g,'<span class="scl">$1</span>')
+    .replace(/\b(\d+\.?\d*)\b/g,'<span class="sn">$1</span>');
+
+  const jsLike = s => s
+    .replace(/(\/\/[^\n]*)/g,'<span class="sc">$1</span>')
+    .replace(/(\/\*[\s\S]*?\*\/)/g,'<span class="sc">$1</span>')
+    .replace(/(`[^`]*`)/g,'<span class="ss">$1</span>')
+    .replace(/(&quot;(?:[^&]|&(?!quot;))*&quot;)/g,'<span class="ss">$1</span>')
+    .replace(/\b(function|const|let|var|if|else|for|while|return|class|import|export|default|async|await|try|catch|throw|new|this|typeof|instanceof|switch|case|break|continue|extends|super|yield|static|get|set|from|of|in|do|delete|void)\b/g,'<span class="sk">$1</span>')
+    .replace(/\b(true|false|null|undefined|NaN|Infinity)\b/g,'<span class="scl">$1</span>')
+    .replace(/\b(\d+\.?\d*)\b/g,'<span class="sn">$1</span>')
+    .replace(/\b([A-Z][a-zA-Z0-9_]*)\b/g,'<span class="scl">$1</span>')
+    .replace(/\b([a-z_$][a-z0-9_$]*)(?=\s*\()/g,'<span class="sf">$1</span>');
+
+  if (['js','ts'].includes(lang)) return jsLike(e);
+
+  if (lang === 'python') return e
+    .replace(/(#[^\n]*)/g,'<span class="sc">$1</span>')
+    .replace(/("""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\')/g,'<span class="ss">$1</span>')
+    .replace(/\b(def|class|if|elif|else|for|while|return|import|from|try|except|finally|with|as|lambda|yield|async|await|pass|raise|global|nonlocal|del|assert|in|is|not|and|or|print)\b/g,'<span class="sk">$1</span>')
+    .replace(/\b(True|False|None|self|cls)\b/g,'<span class="scl">$1</span>')
+    .replace(/(&quot;[^&]*&quot;|&#x27;[^&#]*&#x27;)/g,'<span class="ss">$1</span>')
+    .replace(/\b(\d+\.?\d*)\b/g,'<span class="sn">$1</span>')
+    .replace(/\b([a-z_][a-z0-9_]*)(?=\s*\()/g,'<span class="sf">$1</span>');
+
+  return jsLike(e); // fallback
+}
+
+function renderCodeContent(code, lang) {
+  const el = document.getElementById('code-content');
+  el.innerHTML = syntaxHL(code, lang);
+  // Store raw for editing
+  el.dataset.raw = code;
+  el.dataset.lang = lang;
+}
+
+function updateLineNumbers(code) {
+  const lines = code.split('\n');
+  const ln = document.getElementById('line-numbers');
+  ln.innerHTML = lines.map((_, i) => `<div class="line-num" id="ln-${i+1}">${i+1}</div>`).join('');
+  document.getElementById('stat-cursor').textContent = `Ln 1, Col 1`;
+}
+
+/* ═══════════════════════
+   EDITOR EVENTS
+═══════════════════════ */
+let editorUpdateTimer = null;
+
+function onEditorInput() {
+  if (!IDE.activeTab) return;
+  const content = document.getElementById('code-content').innerText;
+  IDE.files[IDE.activeTab] = content;
+  IDE.modified.add(IDE.activeTab);
+  clearTimeout(editorUpdateTimer);
+  editorUpdateTimer = setTimeout(() => {
+    const lang = detectLang(IDE.activeTab);
+    renderCodeContent(content, lang);
+    updateLineNumbers(content);
+    drawMinimap(content);
+    buildFileTree();
+    if (IDE.autosave) autoSave();
+    lintCode(content, lang);
+  }, 600);
+}
+
+function onEditorChange() {
+  updateCursorPos();
+}
+
+function onEditorClick() {
+  updateCursorPos();
+  hideAutocomplete();
+}
+
+function updateCursorPos() {
+  try {
+    const sel = window.getSelection();
+    const range = sel.getRangeAt(0);
+    const text = document.getElementById('code-content').innerText;
+    const offset = range.startOffset;
+    const before = text.substring(0, offset);
+    const lines = before.split('\n');
+    const ln = lines.length;
+    const col = lines[lines.length - 1].length + 1;
+    document.getElementById('stat-cursor').textContent = `Ln ${ln}, Col ${col}`;
+    // Highlight current line number
+    document.querySelectorAll('.line-num').forEach(e => e.classList.remove('active-line'));
+    document.getElementById(`ln-${ln}`)?.classList.add('active-line');
+  } catch {}
+}
+
+function handleEditorKey(e) {
+  // Tab key — insert spaces
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    document.execCommand('insertText', false, '  ');
+    return;
+  }
+  // Ctrl+S — save
+  if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    saveFile();
+    return;
+  }
+  // Ctrl+I — AI float
+  if (e.key === 'i' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    showAiFloat();
+    return;
+  }
+  // Ctrl+F — find
+  if (e.key === 'f' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    showFind();
+    return;
+  }
+  // Auto brackets
+  const pairs = {'{':'}','[':']','(':')','"':'"',"'"  :"'",'`':'`'};
+  if (pairs[e.key]) {
+    e.preventDefault();
+    document.execCommand('insertText', false, e.key + pairs[e.key]);
+    // Move cursor left
+    const sel = window.getSelection();
+    const range = sel.getRangeAt(0);
+    range.setStart(range.startContainer, range.startOffset - 1);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+  // Autocomplete trigger
+  if (e.key.length === 1) {
+    setTimeout(() => triggerAutocomplete(), 100);
+  } else {
+    hideAutocomplete();
+  }
+}
+
+/* ═══════════════════════
+   MINIMAP
+═══════════════════════ */
+function drawMinimap(code) {
+  const canvas = document.getElementById('minimap-canvas');
+  const wrap = document.getElementById('minimap');
+  if (!wrap || wrap.style.display === 'none') return;
+  const W = wrap.offsetWidth || 90;
+  const lines = code.split('\n').slice(0, 300);
+  const H = Math.max(lines.length * 2, 20);
+  canvas.width = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  ctx.clearRect(0, 0, W, H);
+  lines.forEach((l, i) => {
+    const b = Math.min(l.length / 80, 1);
+    const r = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--accent').replace(/[^0-9,]/g,'').split(',')[0]) || 124;
+    const g = 106, bl = 247;
+    ctx.fillStyle = `rgba(${r},${g},${bl},${b * 0.55})`;
+    ctx.fillRect(0, i * 2, W * b, 1.5);
+  });
+}
+
+/* ═══════════════════════
+   FILE OPERATIONS
+═══════════════════════ */
+function newFile() {
+  closeAllMenus();
+  document.getElementById('new-file-name').value = '';
+  openModal('modal-newfile');
+  setTimeout(() => document.getElementById('new-file-name').focus(), 100);
+}
+
+function confirmNewFile() {
+  const name = document.getElementById('new-file-name').value.trim();
+  if (!name) { notify('Digite o nome do arquivo', 'err'); return; }
+  const fname = name.includes('.') ? name : name + '.txt';
+  IDE.files[fname] = getTemplate(fname);
+  buildFileTree();
+  openTab(fname);
+  closeModal('modal-newfile');
+  notify(`✓ "${fname}" criado`, 'ok');
+}
+
+function getTemplate(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const tpls = {
+    html: `<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>${name.replace('.html','')}</title>\n  <style>\n    body { font-family: sans-serif; }\n  </style>\n</head>\n<body>\n  <h1>Olá Mundo!</h1>\n  <script>\n    // JavaScript aqui\n  <\/script>\n</body>\n</html>`,
+    css: `/* Estilos de ${name} */\n\n* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: sans-serif;\n  background: #0d0d0f;\n  color: #e8e8ff;\n}\n`,
+    js: `// ${name}\n'use strict';\n\n// Seu código JavaScript aqui\nconsole.log('Hello from ${name}!');\n`,
+    ts: `// ${name}\n\ninterface Config {\n  name: string;\n  version: string;\n}\n\nconst config: Config = {\n  name: '${name.replace('.ts','')}',\n  version: '1.0.0'\n};\n\nconsole.log(config);\n`,
+    py: `#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\n"""${name} — Zedex IDE"""\n\ndef main():\n    print("Olá, Mundo!")\n\nif __name__ == "__main__":\n    main()\n`,
+    json: `{\n  "nome": "projeto",\n  "versão": "1.0.0",\n  "autor": ""\n}\n`,
+    md: `# ${name.replace('.md','')}\n\nDescrição do projeto.\n\n## Instalação\n\n\`\`\`bash\nnpm install\n\`\`\`\n\n## Uso\n\n...\n`
+  };
+  return tpls[ext] || '';
+}
+
+function newFolder() {
+  const name = prompt('Nome da pasta:');
+  if (name) notify(`Pasta "${name}" criada`, 'ok');
+}
+
+function saveFile() {
+  if (!IDE.activeTab) { notify('Nenhum arquivo aberto', 'warn'); return; }
+  IDE.modified.delete(IDE.activeTab);
+  const content = IDE.files[IDE.activeTab] || '';
+  // Try File System API
+  if (window._fsHandles && window._fsHandles[IDE.activeTab]) {
+    window._fsHandles[IDE.activeTab].createWritable().then(w => {
+      w.write(content); w.close();
+      notify(`✓ "${IDE.activeTab}" salvo`, 'ok');
+    });
+  } else {
+    // Fallback: localStorage
+    localStorage.setItem('zedex_file_' + IDE.activeTab, content);
+    notify(`✓ "${IDE.activeTab}" salvo`, 'ok');
+  }
+  renderTabs();
+  buildFileTree();
+}
+
+function autoSave() {
+  if (!IDE.activeTab) return;
+  localStorage.setItem('zedex_file_' + IDE.activeTab, IDE.files[IDE.activeTab] || '');
+  IDE.modified.delete(IDE.activeTab);
+  renderTabs();
+}
+
+function saveFileAs() {
+  if (!IDE.activeTab) return;
+  const name = prompt('Nome do arquivo:', IDE.activeTab);
+  if (!name) return;
+  const content = IDE.files[IDE.activeTab] || '';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain' }));
+  a.download = name;
+  a.click();
+  notify(`✓ "${name}" baixado`, 'ok');
+}
+
+function downloadFile() {
+  if (!IDE.activeTab) return;
+  const content = IDE.files[IDE.activeTab] || '';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain' }));
+  a.download = IDE.activeTab;
+  a.click();
+  notify(`✓ "${IDE.activeTab}" baixado`, 'ok');
+}
+
+function deleteFile(name) {
+  if (!confirm(`Apagar "${name}"?`)) return;
+  delete IDE.files[name];
+  IDE.modified.delete(name);
+  if (IDE.activeTab === name) {
+    IDE.tabs = IDE.tabs.filter(t => t !== name);
+    IDE.activeTab = IDE.tabs[IDE.tabs.length - 1] || null;
+    if (IDE.activeTab) showEditor(IDE.activeTab);
+    else showWelcome();
+  } else {
+    IDE.tabs = IDE.tabs.filter(t => t !== name);
+  }
+  renderTabs();
+  buildFileTree();
+  notify(`"${name}" apagado`, 'warn');
+}
+
+function renameFile(name) {
+  const newName = prompt('Novo nome:', name);
+  if (!newName || newName === name) return;
+  IDE.files[newName] = IDE.files[name];
+  delete IDE.files[name];
+  if (IDE.modified.has(name)) { IDE.modified.delete(name); IDE.modified.add(newName); }
+  const idx = IDE.tabs.indexOf(name);
+  if (idx >= 0) IDE.tabs[idx] = newName;
+  if (IDE.activeTab === name) IDE.activeTab = newName;
+  renderTabs();
+  buildFileTree();
+  if (IDE.activeTab === newName) showEditor(newName);
+  notify(`"${name}" → "${newName}"`, 'ok');
+}
+
+function refreshTree() { buildFileTree(); notify('Explorador atualizado', 'info'); }
+
+/* ═══════════════════════
+   OPEN WORKSPACE
+═══════════════════════ */
+function openWorkspaceModal() {
+  closeAllMenus();
+  renderRecentList('modal-recent-list');
+  openModal('modal-workspace');
+}
+
+function openLocalFolder() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.multiple = true;
+  input.webkitdirectory = true;
+  input.onchange = async (e) => {
+    const files = Array.from(e.target.files);
+    IDE.files = {};
+    IDE.tabs = [];
+    IDE.modified.clear();
+    window._fsHandles = {};
+    for (const f of files) {
+      if (f.size < 500000) { // skip large files
+        const text = await f.text().catch(() => '');
+        IDE.files[f.name] = text;
+      }
+    }
+    IDE.workspace = files[0]?.webkitRelativePath?.split('/')[0] || 'Projeto';
+    buildFileTree();
+    const first = Object.keys(IDE.files)[0];
+    if (first) openTab(first);
+    closeModal('modal-workspace');
+    notify(`✓ "${IDE.workspace}" aberto — ${files.length} arquivos`, 'ok');
+    saveToRecent(IDE.workspace);
+  };
+  input.click();
+}
+
+function createNewProject() {
+  const name = prompt('Nome do projeto:', 'meu-projeto') || 'meu-projeto';
+  IDE.workspace = name;
+  IDE.files = {};
+  Object.entries(DEFAULT_FILES).forEach(([k,v]) => IDE.files[k] = v);
+  IDE.tabs = [];
+  IDE.modified.clear();
+  buildFileTree();
+  openTab('index.html');
+  closeModal('modal-workspace');
+  notify(`✓ Projeto "${name}" criado`, 'ok');
+  saveToRecent(name);
+}
+
+function saveToRecent(name) {
+  const recents = JSON.parse(localStorage.getItem('zedex_recents') || '[]');
+  if (!recents.includes(name)) recents.unshift(name);
+  if (recents.length > 5) recents.pop();
+  localStorage.setItem('zedex_recents', JSON.stringify(recents));
+  renderRecentList('recent-list');
+}
+
+function renderRecentList(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const recents = JSON.parse(localStorage.getItem('zedex_recents') || '[]');
+  if (!recents.length) {
+    el.innerHTML = '<div style="color:var(--t3);font-size:12px;padding:8px">Nenhum projeto recente</div>';
+    return;
+  }
+  el.innerHTML = recents.map(r => `
+    <div class="recent-item" onclick="loadRecent('${r}')">
+      <i class="fas fa-folder icon-folder"></i>
+      <div>
+        <div>${r}</div>
+        <div class="recent-path">Projeto local</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadRecent(name) {
+  closeModal('modal-workspace');
+  openLocalFolder();
+}
+
+/* ═══════════════════════
+   GITHUB
+═══════════════════════ */
+function openGitHubModal() {
+  closeAllMenus();
+  openModal('modal-github');
+}
+
+function doGitHubConnect() {
+  const token = document.getElementById('gh-token').value.trim();
+  const user = document.getElementById('gh-user').value.trim();
+  const url = document.getElementById('gh-repo-url').value.trim();
+  if (!token) { notify('Insira o token GitHub', 'err'); return; }
+  if (url) {
+    // Simulate clone
+    const repo = url.split('/').pop();
+    IDE.workspace = repo;
+    IDE.files = Object.fromEntries(Object.entries(DEFAULT_FILES));
+    buildFileTree();
+    openTab('index.html');
+    closeModal('modal-github');
+    notify(`✓ "${repo}" clonado com sucesso (simulado)`, 'ok');
+    addTermLine(`Clonando ${url}...`, 'ok');
+    addTermLine(`✓ Repositório clonado em /${repo}`, 'ok');
+  } else {
+    notify('✓ GitHub conectado', 'ok');
+    closeModal('modal-github');
+  }
+}
+
+/* ═══════════════════════
+   GIT OPERATIONS
+═══════════════════════ */
+function refreshGit() {
+  const changed = Object.keys(IDE.files).slice(0, 3);
+  IDE.gitFiles = changed.map(f => ({ name: f, status: IDE.modified.has(f) ? 'M' : 'A' }));
+  const cnt = document.getElementById('git-change-count');
+  cnt.textContent = IDE.gitFiles.length ? `(${IDE.gitFiles.length})` : '';
+  const el = document.getElementById('git-changes');
+  if (!IDE.gitFiles.length) {
+    el.innerHTML = '<div style="color:var(--t3);font-size:12px;padding:8px 4px">Sem mudanças</div>';
+    document.getElementById('git-badge-dot').style.display = 'none';
+    return;
+  }
+  el.innerHTML = IDE.gitFiles.map(f => `
+    <div class="git-file">
+      <div class="git-badge ${f.status}">${f.status}</div>
+      <span>${f.name}</span>
+      <button onclick="openTab('${f.name}')" style="margin-left:auto;background:none;border:none;color:var(--t3);cursor:pointer;font-size:10px" title="Abrir"><i class="fas fa-arrow-right"></i></button>
+    </div>
+  `).join('');
+  document.getElementById('git-badge-dot').style.display = 'block';
+}
+
+function gitInit() {
+  closeAllMenus();
+  addTermLine('$ git init', 'dim');
+  addTermLine('Initialized empty Git repository in ./.git/', 'ok');
+  notify('✓ Repositório Git inicializado', 'ok');
+}
+
+function gitAction(action) {
+  closeAllMenus();
+  const actions = {
+    pull: ['$ git pull origin main', '✓ Already up to date.'],
+    push: ['$ git push origin main', '✓ Branch main pushed to origin.'],
+    fetch: ['$ git fetch', '✓ Fetched from origin.'],
+    'stage-all': ['$ git add .', '✓ All changes staged.']
+  };
+  const [cmd, out] = actions[action] || ['', ''];
+  switchBotTab('terminal');
+  addTermLine(cmd, 'dim');
+  setTimeout(() => addTermLine(out, 'ok'), 400);
+  notify(`Git ${action} executado`, 'ok');
+}
+
+function doCommit() {
+  const msg = document.getElementById('commit-msg').value.trim();
+  if (!msg) { notify('Digite uma mensagem de commit', 'err'); return; }
+  switchBotTab('terminal');
+  addTermLine(`$ git commit -m "${msg}"`, 'dim');
+  setTimeout(() => {
+    addTermLine(`[main] ${msg}`, 'ok');
+    IDE.modified.clear();
+    renderTabs();
+    buildFileTree();
+    document.getElementById('commit-msg').value = '';
+    refreshGit();
+    notify('✓ Commit realizado', 'ok');
+  }, 500);
+}
+
+function newBranch() {
+  const name = prompt('Nome da nova branch:', 'feature/nova-feature');
+  if (!name) return;
+  document.getElementById('current-branch').textContent = name;
+  document.getElementById('stat-branch').textContent = name;
+  addTermLine(`$ git checkout -b ${name}`, 'dim');
+  addTermLine(`Switched to a new branch '${name}'`, 'ok');
+  notify(`✓ Branch "${name}" criada`, 'ok');
+}
+
+/* ═══════════════════════
+   RUN CODE
+═══════════════════════ */
+function runCode(debug = false) {
+  closeAllMenus();
+  if (!IDE.activeTab) { notify('Abra um arquivo primeiro', 'warn'); return; }
+  const lang = detectLang(IDE.activeTab);
+  const content = IDE.files[IDE.activeTab] || '';
+  switchBotTab('output');
+  const out = document.getElementById('output-text');
+  out.innerHTML = '';
+  const addOut = (msg, cls='') => {
+    const d = document.createElement('div');
+    d.className = `out-line ${cls}`;
+    d.textContent = msg;
+    out.appendChild(d);
+  };
+  addOut(`[Zedex] Executando "${IDE.activeTab}"...`, 'dim');
+
+  if (lang === 'html') {
+    const w = window.open('', '_blank', 'width=900,height=700');
+    w.document.write(content);
+    w.document.close();
+    addOut('✓ HTML aberto em nova janela', 'ok');
+    notify('✓ HTML executado', 'ok');
+    return;
+  }
+  if (lang === 'js') {
+    switchBotTab('console');
+    const origLog = console.log;
+    const logs = [];
+    console.log = (...args) => { logs.push(args.join(' ')); origLog(...args); };
+    try {
+      // eslint-disable-next-line no-new-func
+      new Function(content)();
+      logs.forEach(l => addConsole(l, 'ok'));
+      if (!logs.length) addConsole('Código executado sem saída', 'dim');
+    } catch(e) {
+      addConsole('Erro: ' + e.message, 'err');
+    }
+    console.log = origLog;
+    return;
+  }
+  if (lang === 'python') {
+    addOut('Python: Execução simulada no terminal', 'warn');
+    addOut(`$ python3 ${IDE.activeTab}`, 'dim');
+    setTimeout(() => {
+      addOut('Olá, Mundo!', 'ok');
+      notify('Python simulado (instale Node.js para execução real)', 'info');
+    }, 500);
+    return;
+  }
+  addOut(`Execução de "${lang}" não suportada neste ambiente`, 'warn');
+  addOut('Use o terminal para executar com o runtime correto.', 'dim');
+  notify('Tipo de arquivo não suportado para execução direta', 'warn');
+}
+
+/* ═══════════════════════
+   TERMINAL
+═══════════════════════ */
+function addTermLine(text, cls = '') {
+  const term = document.getElementById('terminal');
+  const line = document.createElement('div');
+  line.className = 'term-line';
+  if (cls === 'dim') {
+    line.innerHTML = `<span class="term-prompt">zedex@ide:~$</span><span class="term-cmd"> ${text.replace(/^\$ /,'')}</span>`;
+  } else {
+    line.innerHTML = `<span class="term-output ${cls}">${text}</span>`;
+  }
+  term.appendChild(line);
+  term.scrollTop = term.scrollHeight;
+}
+
+function addConsole(text, cls = '') {
+  const el = document.getElementById('console-out');
+  const line = document.createElement('div');
+  line.className = 'term-line';
+  line.innerHTML = `<span class="term-output ${cls}">${text}</span>`;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+function openTerminal() {
+  document.getElementById('bottom-panel').classList.remove('collapsed');
+  IDE.panelOpen = true;
+  switchBotTab('terminal');
+  document.getElementById('term-inp').focus();
+}
+
+function handleTermKey(e) {
+  const inp = document.getElementById('term-inp');
+  if (e.key === 'Enter') {
+    const cmd = inp.value.trim();
+    if (!cmd) return;
+    IDE.termHistory.unshift(cmd);
+    IDE.termIdx = -1;
+    inp.value = '';
+    processTermCmd(cmd);
+  }
+  if (e.key === 'ArrowUp') {
+    IDE.termIdx = Math.min(IDE.termIdx + 1, IDE.termHistory.length - 1);
+    inp.value = IDE.termHistory[IDE.termIdx] || '';
+  }
+  if (e.key === 'ArrowDown') {
+    IDE.termIdx = Math.max(IDE.termIdx - 1, -1);
+    inp.value = IDE.termIdx >= 0 ? IDE.termHistory[IDE.termIdx] : '';
+  }
+}
+
+function processTermCmd(cmd) {
+  addTermLine(cmd, 'dim');
+  const parts = cmd.split(' ');
+  const c = parts[0].toLowerCase();
+  const responses = {
+    help: () => {
+      addTermLine('Comandos disponíveis:', '');
+      addTermLine('  ls / dir — listar arquivos', '');
+      addTermLine('  clear — limpar terminal', '');
+      addTermLine('  pwd — diretório atual', '');
+      addTermLine('  node <file> — executar JavaScript', '');
+      addTermLine('  python <file> — executar Python (simulado)', '');
+      addTermLine('  git [init|add|commit|push|pull]', '');
+      addTermLine('  new <nome.ext> — criar novo arquivo', '');
+      addTermLine('  open <nome> — abrir arquivo no editor', '');
+    },
+    clear: () => {
+      document.getElementById('terminal').innerHTML = '';
+    },
+    ls: () => {
+      Object.keys(IDE.files).forEach(f => addTermLine(f, ''));
+    },
+    dir: () => {
+      Object.keys(IDE.files).forEach(f => addTermLine(f, ''));
+    },
+    pwd: () => addTermLine(`/${IDE.workspace || 'projeto'}`, ''),
+    git: () => {
+      const sub = parts[1];
+      if (sub === 'init') { addTermLine('Initialized empty Git repository', 'ok'); return; }
+      if (sub === 'add') { addTermLine('Changes staged', 'ok'); return; }
+      if (sub === 'status') { addTermLine(`On branch ${document.getElementById('current-branch').textContent}\nModified files: ${[...IDE.modified].join(', ') || 'none'}`, ''); return; }
+      if (sub === 'commit') { const msg = parts.slice(3).join(' ').replace(/"/g,''); doCommit(); return; }
+      if (sub === 'push') { addTermLine('✓ Pushed to origin/main', 'ok'); return; }
+      if (sub === 'pull') { addTermLine('✓ Already up to date', 'ok'); return; }
+      if (sub === 'log') { addTermLine('commit a1b2c3d (HEAD -> main)', ''); addTermLine('Author: Zedex User', ''); addTermLine('    Initial commit', ''); return; }
+      addTermLine(`git: '${sub}' is not a git command`, 'err');
+    },
+    node: () => {
+      const fname = parts[1];
+      if (!fname || !IDE.files[fname]) { addTermLine(`Cannot find module '${fname}'`, 'err'); return; }
+      try {
+        const orig = console.log; const out = [];
+        console.log = (...a) => out.push(a.join(' '));
+        // eslint-disable-next-line no-new-func
+        new Function(IDE.files[fname])();
+        console.log = orig;
+        out.forEach(l => addTermLine(l, 'ok'));
+        if (!out.length) addTermLine('(sem saída)', 'dim');
+      } catch(e) { addTermLine('Error: ' + e.message, 'err'); }
+    },
+    python: () => {
+      const fname = parts[1];
+      addTermLine(`Simulando Python: ${fname}`, 'warn');
+      setTimeout(() => addTermLine('Olá, Mundo!', 'ok'), 300);
+    },
+    new: () => {
+      const fname = parts[1];
+      if (!fname) { addTermLine('Uso: new <nome.ext>', 'err'); return; }
+      IDE.files[fname] = getTemplate(fname);
+      buildFileTree(); openTab(fname);
+      addTermLine(`✓ "${fname}" criado`, 'ok');
+    },
+    open: () => {
+      const fname = parts[1];
+      if (!fname || !IDE.files[fname]) { addTermLine(`"${fname}" não encontrado`, 'err'); return; }
+      openTab(fname);
+      addTermLine(`✓ Abrindo "${fname}"`, 'ok');
+    },
+    npm: () => {
+      addTermLine(`npm ${parts.slice(1).join(' ')}`, 'dim');
+      setTimeout(() => addTermLine('✓ Operação simulada (npm não disponível offline)', 'warn'), 500);
+    },
+    echo: () => addTermLine(parts.slice(1).join(' '), ''),
+    date: () => addTermLine(new Date().toString(), ''),
+    whoami: () => addTermLine('zedex-user', ''),
+    version: () => addTermLine('Zedex IDE v1.0 — by Zénia Projects', ''),
+  };
+  const handler = responses[c];
+  if (handler) handler();
+  else addTermLine(`Comando não reconhecido: "${c}". Digite "help" para ver os comandos.`, 'err');
+}
+
+function clearTerminal() {
+  document.getElementById('terminal').innerHTML = '';
+  addTermLine('Terminal limpo.', 'dim');
+}
+
+function runConsole(inp) {
+  const code = inp.value.trim();
+  if (!code) return;
+  addConsole('> ' + code, 'dim');
+  inp.value = '';
+  try {
+    const result = eval(code); // eslint-disable-line no-eval
+    if (result !== undefined) addConsole(String(result), 'ok');
+  } catch(e) {
+    addConsole('Erro: ' + e.message, 'err');
+  }
+}
+
+function splitTerminal() {
+  notify('Múltiplos terminais em breve!', 'info');
+}
+
+/* ═══════════════════════
+   BOTTOM PANEL
+═══════════════════════ */
+function switchBotTab(name) {
+  document.querySelectorAll('.bot-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.bot-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById(`btab-${name}`)?.classList.add('active');
+  document.getElementById(`pane-${name}`)?.classList.add('active');
+  document.getElementById('bottom-panel').classList.remove('collapsed');
+  IDE.panelOpen = true;
+}
+
+function togglePanel() {
+  const panel = document.getElementById('bottom-panel');
+  IDE.panelOpen = !IDE.panelOpen;
+  panel.classList.toggle('collapsed', !IDE.panelOpen);
+}
+
+/* ═══════════════════════
+   LINTER (basic)
+═══════════════════════ */
+function lintCode(code, lang) {
+  IDE.probs = [];
+  const lines = code.split('\n');
+
+  if (lang === 'html') {
+    lines.forEach((l, i) => {
+      if (l.includes('onclick=') && !l.includes('"')) {
+        IDE.probs.push({ type: 'warning', msg: 'Evento onclick sem aspas', loc: `${IDE.activeTab}:${i+1}`, line: i+1 });
+      }
+    });
+  }
+  if (['js','ts'].includes(lang)) {
+    lines.forEach((l, i) => {
+      if (l.includes('var ')) {
+        IDE.probs.push({ type: 'info', msg: 'Prefira const/let ao invés de var', loc: `${IDE.activeTab}:${i+1}`, line: i+1 });
+      }
+      if (l.includes('console.log') && lang === 'ts') {
+        IDE.probs.push({ type: 'warning', msg: 'console.log não deve aparecer em produção', loc: `${IDE.activeTab}:${i+1}`, line: i+1 });
+      }
+    });
+  }
+
+  const errs = IDE.probs.filter(p => p.type === 'error').length;
+  const warns = IDE.probs.filter(p => p.type === 'warning').length;
+  const errEl = document.getElementById('stat-errors');
+  const warnEl = document.getElementById('stat-warnings');
+  errEl.style.display = errs ? 'flex' : 'none';
+  if (errs) document.getElementById('stat-err-count').textContent = `${errs} erro${errs > 1 ? 's' : ''}`;
+  warnEl.style.display = warns ? 'flex' : 'none';
+  if (warns) document.getElementById('stat-warn-count').textContent = `${warns} aviso${warns > 1 ? 's' : ''}`;
+  const probCount = document.getElementById('prob-count');
+  probCount.style.display = IDE.probs.length ? 'inline' : 'none';
+  probCount.textContent = IDE.probs.length;
+
+  const list = document.getElementById('problems-list');
+  if (!IDE.probs.length) {
+    list.innerHTML = '<div style="color:var(--t3);font-size:12px;text-align:center;padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px"><i class="fas fa-check-circle" style="font-size:24px;color:var(--accent3)"></i>Nenhum problema detectado</div>';
+    return;
+  }
+  list.innerHTML = IDE.probs.map(p => `
+    <div class="problem-item ${p.type}" onclick="openTab('${IDE.activeTab}')">
+      <i class="fas ${p.type==='error'?'fa-times-circle':'fa-exclamation-triangle'} problem-icon ${p.type}"></i>
+      <div class="problem-text">
+        <div class="problem-msg">${p.msg}</div>
+        <div class="problem-loc">${p.loc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ═══════════════════════
+   FIND / REPLACE
+═══════════════════════ */
+function showFind(withReplace = false) {
+  const box = document.getElementById('find-box');
+  box.classList.add('show');
+  document.getElementById('replace-row').style.display = withReplace ? 'flex' : 'none';
+  document.getElementById('find-inp').focus();
+}
+
+function hideFind() { document.getElementById('find-box').classList.remove('show'); }
+
+function doFind(q) {
+  document.getElementById('find-count').textContent = q ? '...' : '0 resultados';
+  if (!q || !IDE.activeTab) return;
+  const content = IDE.files[IDE.activeTab] || '';
+  const matches = [...content.matchAll(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi'))];
+  document.getElementById('find-count').textContent = `${matches.length} resultado${matches.length !== 1 ? 's' : ''}`;
+  IDE.findMatches = matches;
+  IDE.findIdx = 0;
+}
+
+function findNext() {
+  if (!IDE.findMatches.length) return;
+  IDE.findIdx = (IDE.findIdx + 1) % IDE.findMatches.length;
+  notify(`Resultado ${IDE.findIdx + 1} de ${IDE.findMatches.length}`, 'info');
+}
+
+function findPrev() {
+  if (!IDE.findMatches.length) return;
+  IDE.findIdx = (IDE.findIdx - 1 + IDE.findMatches.length) % IDE.findMatches.length;
+  notify(`Resultado ${IDE.findIdx + 1} de ${IDE.findMatches.length}`, 'info');
+}
+
+function doReplace() {
+  if (!IDE.activeTab) return;
+  const q = document.getElementById('find-inp').value;
+  const r = document.getElementById('replace-inp').value;
+  if (!q) return;
+  const content = IDE.files[IDE.activeTab] || '';
+  const idx = content.indexOf(q);
+  if (idx < 0) { notify('Não encontrado', 'warn'); return; }
+  IDE.files[IDE.activeTab] = content.substring(0, idx) + r + content.substring(idx + q.length);
+  showEditor(IDE.activeTab);
+  notify(`Substituído: "${q}" → "${r}"`, 'ok');
+}
+
+function doReplaceAll() {
+  if (!IDE.activeTab) return;
+  const q = document.getElementById('find-inp').value;
+  const r = document.getElementById('replace-inp').value;
+  if (!q) return;
+  const content = IDE.files[IDE.activeTab] || '';
+  const count = (content.match(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g')) || []).length;
+  IDE.files[IDE.activeTab] = content.split(q).join(r);
+  showEditor(IDE.activeTab);
+  notify(`${count} substituição${count !== 1 ? 'ões' : ''} feita${count !== 1 ? 's' : ''}`, 'ok');
+}
+
+/* ═══════════════════════
+   SEARCH FILES
+═══════════════════════ */
+function searchFiles(q) {
+  const el = document.getElementById('search-results');
+  if (!q.trim()) {
+    el.innerHTML = '<div style="color:var(--t3);font-size:12px;text-align:center;padding:20px">Digite para pesquisar</div>';
+    return;
+  }
+  let results = [];
+  Object.entries(IDE.files).forEach(([name, content]) => {
+    const lines = content.split('\n');
+    const matches = lines.reduce((acc, line, i) => {
+      if (line.toLowerCase().includes(q.toLowerCase())) {
+        acc.push({ line: i + 1, text: line.trim() });
+      }
+      return acc;
+    }, []);
+    if (matches.length) results.push({ name, matches });
+  });
+  if (!results.length) {
+    el.innerHTML = '<div style="color:var(--t3);font-size:12px;text-align:center;padding:20px">Nenhum resultado</div>';
+    return;
+  }
+  el.innerHTML = results.map(r => `
+    <div class="sr-file">
+      <div class="sr-file-name" onclick="openTab('${r.name}')">
+        <i class="fas fa-file" style="font-size:11px;color:var(--t3)"></i>
+        ${r.name} <span style="color:var(--t3);font-size:10px">(${r.matches.length})</span>
+      </div>
+      ${r.matches.slice(0,5).map(m => `
+        <div class="sr-match" onclick="openTab('${r.name}')">
+          ${m.line}: ${m.text.replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi'), '<mark>$&</mark>').substring(0, 80)}
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+/* ═══════════════════════
+   AUTOCOMPLETE
+═══════════════════════ */
+const AC_ITEMS = {
+  html: [{name:'div',type:'tag'},{name:'span',type:'tag'},{name:'section',type:'tag'},{name:'button',type:'tag'},{name:'input',type:'tag'},{name:'form',type:'tag'},{name:'header',type:'tag'},{name:'footer',type:'tag'},{name:'nav',type:'tag'},{name:'article',type:'tag'}],
+  js: [{name:'console.log',type:'fn'},{name:'document.getElementById',type:'fn'},{name:'addEventListener',type:'fn'},{name:'querySelector',type:'fn'},{name:'async function',type:'kw'},{name:'const',type:'kw'},{name:'let',type:'kw'},{name:'forEach',type:'fn'},{name:'Promise',type:'cls'},{name:'fetch',type:'fn'}],
+  css: [{name:'background',type:'prop'},{name:'display:flex',type:'val'},{name:'position:absolute',type:'val'},{name:'border-radius',type:'prop'},{name:'transition:all .3s',type:'val'},{name:'transform:translateY',type:'prop'},{name:'box-shadow',type:'prop'}],
+};
+
+let acVisible = false;
+
+function triggerAutocomplete() {
+  if (!IDE.activeTab) return;
+  const lang = detectLang(IDE.activeTab);
+  const items = AC_ITEMS[lang] || AC_ITEMS.js;
+  const el = document.getElementById('autocomplete');
+  // Get word at cursor
+  try {
+    const sel = window.getSelection();
+    const range = sel.getRangeAt(0).cloneRange();
+    range.setStart(range.startContainer, 0);
+    const text = range.toString();
+    const word = text.split(/[\s<>()\[\]{}|'"=;,+\-*/]/g).pop();
+    if (!word || word.length < 2) { hideAutocomplete(); return; }
+    const filtered = items.filter(i => i.name.toLowerCase().startsWith(word.toLowerCase())).slice(0, 8);
+    if (!filtered.length) { hideAutocomplete(); return; }
+    el.innerHTML = filtered.map((i, idx) => `
+      <div class="ac-item ac-${i.type === 'fn' ? 'fn' : i.type === 'kw' ? 'kw' : i.type === 'cls' ? 'cls' : 'var'}" 
+           onclick="insertCompletion('${i.name}')" data-idx="${idx}">
+        <div class="ac-icon"><i class="fas fa-${i.type==='fn'?'cube':i.type==='kw'?'code':i.type==='cls'?'copyright':'variable'}"></i></div>
+        <span class="ac-name">${i.name}</span>
+        <span class="ac-type">${i.type}</span>
+      </div>
+    `).join('');
+    el.classList.add('show');
+    acVisible = true;
+  } catch { hideAutocomplete(); }
+}
+
+function hideAutocomplete() {
+  document.getElementById('autocomplete').classList.remove('show');
+  acVisible = false;
+}
+
+function insertCompletion(text) {
+  hideAutocomplete();
+  document.getElementById('code-content').focus();
+  document.execCommand('insertText', false, text);
+}
+
+/* ═══════════════════════
+   AI INTEGRATION
+═══════════════════════ */
+async function callAI(messages, model = null) {
+  const m = model || document.getElementById('ai-model-sel')?.value || 'qwen-coder';
+  const r = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: m, messages, temperature: 0.5, max_tokens: 8000 })
+  });
+  if (!r.ok) throw new Error(`API error: ${r.status}`);
+  const j = await r.json();
+  return j.choices?.[0]?.message?.content || j.content || '';
+}
+
+/* AI SIDEBAR CHAT */
+async function sendAiMsg() {
+  const inp = document.getElementById('ai-chat-inp');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  inp.value = '';
+  inp.style.height = 'auto';
+  addAiMsg('user', msg);
+  const thinking = addAiMsg('ai', 'Processando...', 'thinking');
+  document.getElementById('ai-send-btn').disabled = true;
+
+  // Build context from current file
+  const ctx = IDE.activeTab
+    ? `\n\nARQUIVO ATUAL (${IDE.activeTab}):\n\`\`\`\n${(IDE.files[IDE.activeTab] || '').substring(0, 3000)}\n\`\`\``
+    : '';
+
+  IDE.aiHistory.push({ role: 'user', content: msg + ctx });
+  const sys = {
+    role: 'system',
+    content: `Você é o assistente de IA do Zedex IDE. Você é um expert em programação. Responda de forma direta e clara. Use markdown básico. Quando gerar código, use blocos \`\`\`linguagem. NUNCA reescreva o arquivo inteiro sem necessidade — aplique mudanças cirúrgicas. Quando o usuário pedir mudanças no arquivo aberto, diga: [EDIT:<nome_arquivo>] antes do bloco de código para indicar que é uma edição do arquivo atual.`
+  };
+
+  try {
+    const resp = await callAI([sys, ...IDE.aiHistory.slice(-10)]);
+    IDE.aiHistory.push({ role: 'assistant', content: resp });
+    thinking.className = 'ai-msg ai';
+    thinking.innerHTML = formatAiResponse(resp);
+
+    // Check for file edits
+    if (resp.includes('[EDIT:') && IDE.activeTab) {
+      const codeMatch = resp.match(/```[\w]*\n([\s\S]*?)```/);
+      if (codeMatch) {
+        const proposed = codeMatch[1].trim();
+        showDiff(proposed);
+      }
+    }
+  } catch(e) {
+    thinking.className = 'ai-msg ai';
+    thinking.textContent = '❌ Erro: ' + e.message;
+  } finally {
+    document.getElementById('ai-send-btn').disabled = false;
+  }
+}
+
+function addAiMsg(role, text, cls = '') {
+  const msgs = document.getElementById('ai-msgs');
+  const d = document.createElement('div');
+  d.className = `ai-msg ${role} ${cls}`;
+  d.textContent = text;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+  return d;
+}
+
+function formatAiResponse(text) {
+  return text
+    .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre style="background:var(--ed);border:1px solid var(--brd);border-radius:6px;padding:10px;margin:8px 0;overflow-x:auto;font-size:11px;font-family:var(--font-code)">$2</pre>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>');
+}
+
+function clearAiChat() {
+  IDE.aiHistory = [];
+  document.getElementById('ai-msgs').innerHTML = '<div class="ai-msg ai">Chat reiniciado. Como posso ajudar?</div>';
+}
+
+/* AI FLOAT */
+function showAiFloat() {
+  closeAllMenus();
+  const float = document.getElementById('ai-float');
+  float.classList.add('show');
+  float.style.bottom = '250px';
+  float.style.right = '20px';
+  document.getElementById('ai-float-inp').focus();
+}
+
+function hideAiFloat() { document.getElementById('ai-float').classList.remove('show'); }
+
+async function aiFloatAction(type) {
+  const inp = document.getElementById('ai-float-inp').value.trim();
+  if (!inp && type === 'generate') { notify('Descreva o que gerar', 'err'); return; }
+  const content = IDE.files[IDE.activeTab] || '';
+  const lang = IDE.activeTab ? detectLang(IDE.activeTab) : 'html';
+  hideAiFloat();
+
+  const btn = document.getElementById('ai-send-btn');
+  const thinkMsg = addAiMsg('ai', '⚡ IA processando...', 'thinking');
+  switchSide('ai');
+
+  const prompts = {
+    generate: [
+      { role: 'system', content: `Expert em ${lang}. Quando solicitado, gere ou edite código. Se for uma edição de arquivo existente, prefira mudanças mínimas e cirúrgicas. Retorne APENAS o código modificado ou gerado dentro de um bloco \`\`\`${lang}.` },
+      { role: 'user', content: `${inp}\n\nArquivo atual (${IDE.activeTab}):\n\`\`\`${lang}\n${content.substring(0,2000)}\n\`\`\`` }
+    ],
+    explain: [
+      { role: 'system', content: 'Expert em code review. Explique o código de forma clara e didática.' },
+      { role: 'user', content: `Explique este trecho de ${lang}:\n\`\`\`${lang}\n${window.getSelection().toString() || content.substring(0,500)}\n\`\`\`` }
+    ]
+  };
+
+  try {
+    const resp = await callAI(prompts[type] || prompts.generate);
+    thinkMsg.className = 'ai-msg ai';
+    thinkMsg.innerHTML = formatAiResponse(resp);
+
+    // Extract code and offer diff
+    const codeMatch = resp.match(/```[\w]*\n([\s\S]*?)```/);
+    if (codeMatch && IDE.activeTab && type === 'generate') {
+      showDiff(codeMatch[1].trim());
+    }
+  } catch(e) {
+    thinkMsg.className = 'ai-msg ai';
+    thinkMsg.textContent = '❌ ' + e.message;
+  }
+}
+
+function aiExplain() {
+  closeAllMenus();
+  document.getElementById('ai-float-inp').value = 'Explique o código selecionado / arquivo atual';
+  showAiFloat();
+}
+
+function aiRefactor() {
+  closeAllMenus();
+  document.getElementById('ai-float-inp').value = 'Refatore este código para ficar mais limpo, eficiente e seguir boas práticas';
+  showAiFloat();
+}
+
+function aiFix() {
+  closeAllMenus();
+  document.getElementById('ai-float-inp').value = 'Corrija todos os erros, bugs e problemas neste código';
+  showAiFloat();
+}
+
+/* AI DIFF */
+function showDiff(proposed) {
+  IDE.pendingDiff = { original: IDE.files[IDE.activeTab] || '', proposed };
+  const bar = document.getElementById('diff-bar');
+  const orig = IDE.pendingDiff.original.split('\n').length;
+  const prop = proposed.split('\n').length;
+  const diff = prop - orig;
+  document.getElementById('diff-summary').textContent = `${Math.abs(diff)} linha${Math.abs(diff) !== 1 ? 's' : ''} ${diff > 0 ? 'adicionadas' : diff < 0 ? 'removidas' : 'modificadas'}`;
+  bar.style.display = 'flex';
+}
+
+function acceptDiff() {
+  if (!IDE.pendingDiff || !IDE.activeTab) return;
+  IDE.files[IDE.activeTab] = IDE.pendingDiff.proposed;
+  IDE.modified.add(IDE.activeTab);
+  showEditor(IDE.activeTab);
+  buildFileTree();
+  renderTabs();
+  IDE.pendingDiff = null;
+  document.getElementById('diff-bar').style.display = 'none';
+  notify('✓ Mudanças da IA aceitas', 'ok');
+}
+
+function rejectDiff() {
+  IDE.pendingDiff = null;
+  document.getElementById('diff-bar').style.display = 'none';
+  notify('Mudanças rejeitadas', 'warn');
+}
+
+/* GENERATE APP */
+function genApp() {
+  closeAllMenus();
+  openModal('modal-genapp');
+  setTimeout(() => document.getElementById('gen-app-desc').focus(), 100);
+}
+
+async function confirmGenApp() {
+  const desc = document.getElementById('gen-app-desc').value.trim();
+  if (!desc) { notify('Descreva o app', 'err'); return; }
+  closeModal('modal-genapp');
+  showProgress();
+  notify('⚡ IA gerando app...', 'info');
+  switchSide('ai');
+  const thinking = addAiMsg('ai', `🚀 Gerando: "${desc.substring(0,60)}"...`, 'thinking');
+
+  try {
+    const resp = await callAI([
+      { role: 'system', content: 'Expert em web dev. Retorne APENAS código HTML puro completo, sem markdown, sem explicações. Design moderno, responsivo e funcional.' },
+      { role: 'user', content: `Crie um app web completo para: "${desc}"\n\nRetorne apenas código HTML.` }
+    ]);
+    let html = resp.trim().replace(/^```html\s*/i,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
+    if (!html.toLowerCase().includes('<!doctype')) html = '<!DOCTYPE html>\n' + html;
+    IDE.files['index.html'] = html;
+    openTab('index.html');
+    thinking.className = 'ai-msg ai';
+    thinking.innerHTML = `✅ App "<strong>${desc.substring(0,40)}</strong>" gerado!<br>Arquivo: <code>index.html</code><br><br>Use o Chat de IA para ajustar qualquer parte do código — descreva o que mudar e a IA aplica cirurgicamente!`;
+    notify('✓ App gerado! Veja index.html', 'ok');
+    buildFileTree();
+  } catch(e) {
+    thinking.className = 'ai-msg ai';
+    thinking.textContent = '❌ Erro: ' + e.message;
+    notify('Erro ao gerar', 'err');
+  } finally {
+    hideProgress();
+  }
+}
+
+/* ═══════════════════════
+   FORMAT CODE
+═══════════════════════ */
+function formatCode() {
+  if (!IDE.activeTab) { notify('Nenhum arquivo aberto', 'warn'); return; }
+  const content = IDE.files[IDE.activeTab] || '';
+  const lang = detectLang(IDE.activeTab);
+  // Basic indentation fix for JS/CSS
+  try {
+    if (['js','ts'].includes(lang)) {
+      // Simple pretty-print attempt
+      notify('Formatando...', 'info');
+    }
+    notify('✓ Documento formatado', 'ok');
+  } catch {
+    notify('Erro ao formatar', 'err');
+  }
+}
+
+/* ═══════════════════════
+   SETTINGS HELPERS
+═══════════════════════ */
+function setFontSize(size) {
+  document.querySelectorAll('.code-content,.terminal,.line-num,.ac-item').forEach(e => e.style.fontSize = size);
+}
+
+function toggleWrap(el) {
+  el.classList.toggle('on');
+  const wrap = el.classList.contains('on');
+  document.querySelectorAll('.code-content').forEach(e => e.style.whiteSpace = wrap ? 'pre-wrap' : 'pre');
+}
+
+function toggleMinimap(el) {
+  el.classList.toggle('on');
+  const mm = document.getElementById('minimap');
+  mm.style.display = el.classList.contains('on') ? 'block' : 'none';
+}
+
+function toggleLineNums(el) {
+  el.classList.toggle('on');
+  document.getElementById('line-numbers').style.display = el.classList.contains('on') ? 'block' : 'none';
+}
+
+function toggleAutosave(el) {
+  el.classList.toggle('on');
+  IDE.autosave = el.classList.contains('on');
+  notify(`Autosave ${IDE.autosave ? 'ativado' : 'desativado'}`, 'info');
+}
+
+function zoomIn() {
+  IDE.fontSize = Math.min(IDE.fontSize + 1, 22);
+  setFontSize(IDE.fontSize + 'px');
+}
+
+function zoomOut() {
+  IDE.fontSize = Math.max(IDE.fontSize - 1, 9);
+  setFontSize(IDE.fontSize + 'px');
+}
+
+function splitEditor() {
+  notify('Divisão de editor em breve!', 'info');
+}
+
+/* ═══════════════════════
+   THEME
+═══════════════════════ */
+function setTheme(t) {
+  closeAllMenus();
+  document.documentElement.setAttribute('data-theme', t);
+  IDE.theme = t;
+  localStorage.setItem('zedex_theme', t);
+  const sel = document.querySelector(`[data-theme="${t}"]`);
+  notify(`Tema "${t}" aplicado`, 'ok');
+  // Update settings dropdown
+  const el = document.querySelector('.settings-panel select');
+  if (el) el.value = t;
+}
+
+/* ═══════════════════════
+   SIDEBAR
+═══════════════════════ */
+function switchSide(panel) {
+  closeAllMenus();
+  IDE.sidePanel = panel;
+  // Show/hide panels
+  const panels = ['explorer','search','git','ai','ext','settings'];
+  panels.forEach(p => {
+    const el = document.getElementById(`panel-${p}`);
+    if (el) el.style.display = p === panel ? 'flex' : 'none';
+  });
+  // Update activity bar
+  document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`act-${panel}`)?.classList.add('active');
+  // Ensure sidebar visible
+  document.getElementById('sidebar').classList.remove('collapsed');
+  IDE.sidebarOpen = true;
+}
+
+function toggleSidebar() {
+  IDE.sidebarOpen = !IDE.sidebarOpen;
+  document.getElementById('sidebar').classList.toggle('collapsed', !IDE.sidebarOpen);
+}
+
+/* ═══════════════════════
+   PROGRESS
+═══════════════════════ */
+let progTimer = null;
+function showProgress() {
+  const pb = document.getElementById('progbar');
+  pb.classList.add('show');
+  let w = 0;
+  progTimer = setInterval(() => {
+    w = Math.min(w + Math.random() * 15, 90);
+    pb.style.transform = `scaleX(${w/100})`;
+  }, 200);
+}
+function hideProgress() {
+  clearInterval(progTimer);
+  const pb = document.getElementById('progbar');
+  pb.style.transform = 'scaleX(1)';
+  setTimeout(() => { pb.classList.remove('show'); pb.style.transform = 'scaleX(0)'; }, 300);
+}
+
+/* ═══════════════════════
+   NOTIFICATIONS
+═══════════════════════ */
+function notify(msg, type = 'info') {
+  const wrap = document.getElementById('notif-wrap');
+  const n = document.createElement('div');
+  n.className = `notif ${type}`;
+  const icons = { ok: 'fa-check-circle ok', err: 'fa-times-circle err', warn: 'fa-exclamation-triangle warn', info: 'fa-info-circle info' };
+  n.innerHTML = `
+    <i class="fas ${icons[type] || icons.info} notif-icon"></i>
+    <span>${msg}</span>
+    <button class="notif-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+  `;
+  wrap.appendChild(n);
+  setTimeout(() => { n.classList.add('out'); setTimeout(() => n.remove(), 200); }, 3500);
+}
+
+/* ═══════════════════════
+   MENUS
+═══════════════════════ */
+function openMenu(name, btn) {
+  const dd = document.getElementById(`dd-${name}`);
+  if (!dd) return;
+  closeAllMenus();
+  const rect = btn.getBoundingClientRect();
+  dd.style.left = rect.left + 'px';
+  dd.style.top = rect.bottom + 'px';
+  dd.classList.add('open');
+  event.stopPropagation();
+}
+
+function closeAllMenus() {
+  document.querySelectorAll('.ddmenu').forEach(d => d.classList.remove('open'));
+  document.getElementById('ctx-menu').classList.remove('open');
+}
+
+/* ═══════════════════════
+   CONTEXT MENU
+═══════════════════════ */
+function showCtx(e) {
+  e.preventDefault();
+  const menu = document.getElementById('ctx-menu');
+  menu.style.left = Math.min(e.clientX, window.innerWidth - 220) + 'px';
+  menu.style.top = Math.min(e.clientY, window.innerHeight - 220) + 'px';
+  menu.classList.add('open');
+}
+
+function ctxAction(action) {
+  closeAllMenus();
+  document.execCommand(action);
+}
+
+/* ═══════════════════════
+   MODALS
+═══════════════════════ */
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+/* ═══════════════════════
+   MISC HELPERS
+═══════════════════════ */
+function docExec(cmd) { closeAllMenus(); document.execCommand(cmd); }
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function showShortcuts() {
+  notify('Ctrl+S: Salvar | Ctrl+N: Novo | Ctrl+F: Buscar | Ctrl+I: IA | Ctrl+B: Sidebar | Ctrl+`: Terminal | F5: Executar', 'info');
+}
+
+/* ═══════════════════════
+   KEYBOARD SHORTCUTS
+═══════════════════════ */
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  const ctrl = e.ctrlKey || e.metaKey;
+  if (ctrl && e.key === 's') { e.preventDefault(); saveFile(); }
+  if (ctrl && e.key === 'n') { e.preventDefault(); newFile(); }
+  if (ctrl && e.key === 'b') { e.preventDefault(); toggleSidebar(); }
+  if (ctrl && e.key === '`') { e.preventDefault(); togglePanel(); }
+  if (ctrl && e.key === 'i') { e.preventDefault(); showAiFloat(); }
+  if (ctrl && e.key === 'f') { e.preventDefault(); showFind(); }
+  if (ctrl && e.key === ',') { e.preventDefault(); switchSide('settings'); }
+  if (ctrl && e.shiftKey && e.key === 'E') { e.preventDefault(); switchSide('explorer'); }
+  if (ctrl && e.shiftKey && e.key === 'F') { e.preventDefault(); switchSide('search'); }
+  if (ctrl && e.shiftKey && e.key === 'G') { e.preventDefault(); switchSide('git'); }
+  if (ctrl && e.shiftKey && e.key === 'A') { e.preventDefault(); switchSide('ai'); }
+  if (ctrl && e.shiftKey && e.key === 'X') { e.preventDefault(); switchSide('ext'); }
+  if (e.key === 'F5') { e.preventDefault(); runCode(); }
+  if (e.key === 'Escape') { closeAllMenus(); hideFind(); hideAiFloat(); hideAutocomplete(); }
+});
+
+// Click outside to close
+document.addEventListener('click', e => {
+  if (!e.target.closest('.ddmenu') && !e.target.closest('.tb-menu-btn')) closeAllMenus();
+  if (!e.target.closest('.ctx-menu')) document.getElementById('ctx-menu').classList.remove('open');
+});
+
+document.addEventListener('contextmenu', e => {
+  if (e.target.closest('.code-content') || e.target.closest('.file-tree')) {
+    e.preventDefault();
+    showCtx(e);
+  }
+});
+
+/* ═══════════════════════
+   EXTENSIONS (demo data)
+═══════════════════════ */
+const EXTENSIONS = [
+  { name: 'Prettier', author: 'Prettier', desc: 'Formatação automática de código para múltiplas linguagens.', icon: '✨', color: '#F7B93E', installed: true, dl: '28M' },
+  { name: 'GitLens', author: 'GitKraken', desc: 'Git supercharged — veja quem, por que e quando cada linha mudou.', icon: '🔍', color: '#DC5728', installed: false, dl: '15M' },
+  { name: 'Tailwind CSS IntelliSense', author: 'Tailwind Labs', desc: 'Autocompletar e lint avançado para Tailwind CSS.', icon: '💨', color: '#38BDF8', installed: false, dl: '10M' },
+  { name: 'ESLint', author: 'ESLint', desc: 'Análise estática de JavaScript e TypeScript em tempo real.', icon: '⚡', color: '#4B32C3', installed: true, dl: '25M' },
+  { name: 'Auto Rename Tag', author: 'Jun Han', desc: 'Renomeia automaticamente a tag HTML/XML correspondente.', icon: '🏷️', color: '#7C6AF7', installed: false, dl: '8M' },
+  { name: 'Path Intellisense', author: 'Christian Kohler', desc: 'Autocompletar para caminhos de arquivo no código.', icon: '📂', color: '#50FA7B', installed: false, dl: '12M' },
+];
+
+function renderExtensions() {
+  const el = document.getElementById('ext-list');
+  el.innerHTML = EXTENSIONS.map(e => `
+    <div class="ext-card">
+      <div class="ext-top">
+        <div class="ext-icon" style="background:${e.color}20">${e.icon}</div>
+        <div class="ext-info">
+          <h4>${e.name}</h4>
+          <div class="ext-author">${e.author}</div>
+        </div>
+      </div>
+      <div class="ext-desc">${e.desc}</div>
+      <div class="ext-footer">
+        <div class="ext-meta">
+          <i class="fas fa-download" style="font-size:9px"></i>${e.dl}
+        </div>
+        <button class="ext-install ${e.installed ? 'installed' : ''}" onclick="toggleExt(this,'${e.name}')">
+          ${e.installed ? '✓ Instalada' : 'Instalar'}
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleExt(btn, name) {
+  if (btn.classList.contains('installed')) {
+    btn.classList.remove('installed');
+    btn.textContent = 'Instalar';
+    notify(`"${name}" desinstalada`, 'warn');
+  } else {
+    btn.classList.add('installed');
+    btn.textContent = '✓ Instalada';
+    notify(`"${name}" instalada`, 'ok');
+  }
+}
+
+/* ═══════════════════════
+   INIT
+═══════════════════════ */
+(function init() {
+  // Load theme
+  const savedTheme = localStorage.getItem('zedex_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  const sel = document.querySelector('.settings-panel select');
+  if (sel) sel.value = savedTheme;
+
+  // Init default files
+  IDE.workspace = 'meu-projeto';
+  Object.entries(DEFAULT_FILES).forEach(([k, v]) => IDE.files[k] = v);
+
+  // Build UI
+  buildFileTree();
+  renderExtensions();
+  renderRecentList('recent-list');
+
+  // Restore saved files from localStorage
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('zedex_file_'));
+  keys.forEach(k => {
+    const fname = k.replace('zedex_file_', '');
+    if (!IDE.files[fname]) IDE.files[fname] = localStorage.getItem(k);
+  });
+  if (keys.length > 0) buildFileTree();
+
+  // Git init demo
+  setTimeout(refreshGit, 1000);
+
+  // Welcome message
+  setTimeout(() => notify('👋 Zedex IDE pronto! Ctrl+I para IA, F5 para executar', 'info'), 1200);
+})();
+</script>
+</body>
+</html>
