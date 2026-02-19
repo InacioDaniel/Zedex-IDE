@@ -1,68 +1,82 @@
 // app.js
 
-// Carregar a biblioteca TensorFlow.js
-import * as tf from '@tensorflow/tfjs';
+// Função para gerar código com base na descrição do usuário
+async function generateProgramCode(description) {
+    // Processamento da descrição para criar a estrutura do código
+    const lowerDesc = description.toLowerCase();
 
-// Função para treinar o modelo
-async function trainModel() {
-    // Exemplo simples de dados: (entradas e saídas)
-    const trainingData = [
-        { input: [1, 1], output: [2] },   // 1 + 1 = 2
-        { input: [2, 2], output: [4] },   // 2 + 2 = 4
-        { input: [3, 5], output: [8] },   // 3 + 5 = 8
-        { input: [4, 7], output: [11] },  // 4 + 7 = 11
-        { input: [6, 9], output: [15] },  // 6 + 9 = 15
-    ];
+    // Se a descrição inclui "botão", "click", "animação", cria um exemplo interativo
+    if (lowerDesc.includes("botão") && lowerDesc.includes("click")) {
+        const htmlCode = `
+            <button id="clickButton">Clique em mim</button>
+            <script>
+                document.getElementById("clickButton").addEventListener("click", function() {
+                    alert('Você clicou no botão!');
+                });
+            </script>
+        `;
 
-    // Preparando os dados
-    const inputs = trainingData.map(item => item.input);
-    const outputs = trainingData.map(item => item.output);
+        const cssCode = `
+            button {
+                background-color: #0ff;
+                color: #121212;
+                padding: 20px;
+                font-size: 18px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 0 10px #0ff;
+            }
 
-    const inputTensor = tf.tensor2d(inputs);
-    const outputTensor = tf.tensor2d(outputs);
+            button:hover {
+                background-color: #fff;
+                color: #0ff;
+                box-shadow: 0 0 20px #0ff;
+            }
+        `;
 
-    // Criar um modelo sequencial
-    const model = tf.sequential();
-    model.add(tf.layers.dense({ units: 10, activation: 'relu', inputShape: [2] }));
-    model.add(tf.layers.dense({ units: 1 }));
+        return { htmlCode, cssCode, jsCode: htmlCode };
+    }
+    
+    // Caso contrário, se a descrição incluir "imagem", gera uma página simples
+    if (lowerDesc.includes("imagem")) {
+        const htmlCode = `
+            <h1>Imagem Criada</h1>
+            <img src="https://via.placeholder.com/300" alt="Imagem Exemplo" />
+        `;
 
-    // Compilar o modelo
-    model.compile({
-        optimizer: 'adam',
-        loss: 'meanSquaredError',
-        metrics: ['mae'],
-    });
+        const cssCode = `
+            body {
+                background-color: #121212;
+                color: #fff;
+                text-align: center;
+            }
 
-    // Treinar o modelo
-    await model.fit(inputTensor, outputTensor, { epochs: 100 });
+            img {
+                border-radius: 15px;
+                box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+                margin-top: 20px;
+            }
+        `;
 
-    return model;
+        return { htmlCode, cssCode, jsCode: '' };
+    }
+
+    // Caso não encontre correspondência, retorna um template básico
+    return {
+        htmlCode: '<h1>Bem-vindo ao Gerador de Códigos</h1>',
+        cssCode: '',
+        jsCode: ''
+    };
 }
 
-// Função para prever e gerar código
-async function generateCode(inputValues) {
-    const model = await trainModel();
-
-    // Gerar o resultado da previsão
-    const inputTensor = tf.tensor2d([inputValues]);
-    const result = model.predict(inputTensor).dataSync()[0];
-
-    // Gerar código de adição com base na previsão
-    return `// Código gerado: ${inputValues[0]} + ${inputValues[1]} = ${result.toFixed(2)}`;
-}
-
-// Exemplo de uso: Gerar código para a soma de 5 e 7
-generateCode([5, 7]).then(generatedCode => {
-    console.log(generatedCode);  // Exemplo de saída: // Código gerado: 5 + 7 = 12.000
-});
-
-// Captura o clique do botão e gera o código
+// Função que gera o código no clique do botão
 document.getElementById("generateCodeButton").addEventListener("click", function() {
-    const inputCode = document.getElementById("inputCode").value;
+    const description = document.getElementById("inputCode").value;
 
-    // Gera o código criativo com base na entrada
-    generateCode(inputCode.split(' ').map(Number)).then(generatedCode => {
-        // Exibe o código gerado
-        document.getElementById("outputCode").textContent = generatedCode;
+    // Gerar o código com base na descrição do usuário
+    generateProgramCode(description).then(({ htmlCode, cssCode, jsCode }) => {
+        // Exibir o código gerado
+        document.getElementById("outputCode").textContent = `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}`;
     });
 });
