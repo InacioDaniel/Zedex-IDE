@@ -1,22 +1,22 @@
 [
     {
-        "input": "function soma(a, b) {",
-        "output": "  return a + b;\n}"
+        "input": [1, 1],
+        "output": [2]
     },
     {
-        "input": "const multiplicar = (a, b) => {",
-        "output": "  return a * b;\n};"
+        "input": [2, 2],
+        "output": [4]
     },
     {
-        "input": "const dividir = (a, b) => {",
-        "output": "  return a / b;\n};"
+        "input": [3, 5],
+        "output": [8]
     },
     {
-        "input": "function subtrair(x, y) {",
-        "output": "  return x - y;\n}"
+        "input": [4, 7],
+        "output": [11]
     },
     {
-        "input": "function calcularPotencia(a, b) {",
-        "output": "  return Math.pow(a, b);\n}"
+        "input": [6, 9],
+        "output": [15]
     }
 ]
