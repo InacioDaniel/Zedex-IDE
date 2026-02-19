@@ -1,0 +1,10 @@
+[
+    {
+        "input": "function soma(a, b) {",
+        "output": "  return a + b;\n}"
+    },
+    {
+        "input": "const multiplicar = (a, b) => {",
+        "output": "  return a * b;\n};"
+    }
+]
