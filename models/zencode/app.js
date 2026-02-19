@@ -1,4 +1,4 @@
-// app.js
+// app.jsH
 
 // Função para gerar código com base na descrição do usuário
 async function generateProgramCode(description) {
