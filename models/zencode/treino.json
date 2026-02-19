@@ -1,22 +1,14 @@
 [
     {
-        "input": [1, 1],
-        "output": [2]
+        "description": "Página com botão de click",
+        "html": "<button id='clickButton'>Clique em mim</button>",
+        "css": "button { background-color: #0ff; } button:hover { background-color: #fff; color: #0ff; }",
+        "js": "document.getElementById('clickButton').addEventListener('click', function() { alert('Você clicou no botão!'); });"
     },
     {
-        "input": [2, 2],
-        "output": [4]
-    },
-    {
-        "input": [3, 5],
-        "output": [8]
-    },
-    {
-        "input": [4, 7],
-        "output": [11]
-    },
-    {
-        "input": [6, 9],
-        "output": [15]
+        "description": "Página com imagem",
+        "html": "<h1>Imagem Criada</h1><img src='https://via.placeholder.com/300' alt='Imagem Exemplo' />",
+        "css": "body { background-color: #121212; text-align: center; } img { border-radius: 15px; box-shadow: 0 0 15px rgba(0, 255, 255, 0.5); }",
+        "js": ""
     }
 ]
