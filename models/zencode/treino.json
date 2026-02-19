@@ -2,7 +2,7 @@
     {
         "description": "Página com botão de click",
         "html": "<button id='clickButton'>Clique em mim</button>",
-        "css": "button { background-color: #0ff; } button:hover { background-color: #fff; color: #0ff; }",
+        "css": "button { background-color: #0ff; } button:hover { background-color: #fff; color: #0ff;}",
         "js": "document.getElementById('clickButton').addEventListener('click', function() { alert('Você clicou no botão!'); });"
     },
     {
