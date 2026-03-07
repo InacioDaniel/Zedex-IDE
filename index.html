@@ -1,485 +1,549 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ZEDEX-IDE ULTRA</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>ZEDEX IDE</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-
+<!-- Monaco will load later -->
 <script src="https://unpkg.com/monaco-editor@0.47.0/min/vs/loader.js"></script>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+:root{
+  --bg-1:#050722;
+  --bg-2:#081034;
+  --panel:#07102a;
+  --glass: rgba(255,255,255,0.04);
+  --accent:#4ee0ff;
+  --accent-2:#9a5bff;
+  --muted:#95a0c4;
 }
 
+/* Basic layout */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
 body{
-
-background:#02030a;
-color:white;
-font-family:Orbitron;
-height:100vh;
-display:flex;
-flex-direction:column;
-overflow:hidden;
-
+  background:
+    radial-gradient(1200px 600px at 10% 20%, rgba(78,224,255,0.03), transparent 8%),
+    radial-gradient(800px 400px at 90% 80%, rgba(154,91,255,0.03), transparent 6%),
+    linear-gradient(180deg,var(--bg-1),var(--bg-2));
+  color:#dbe8ff;
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;height:100vh;
 }
 
-/* TOPBAR */
-
+/* Topbar */
 #topbar{
+  height:56px;display:flex;align-items:center;justify-content:space-between;padding:8px 18px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  backdrop-filter: blur(6px);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:36px;height:36px;border-radius:8px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  box-shadow:0 6px 20px rgba(78,224,255,0.07), inset 0 -6px 18px rgba(255,255,255,0.04);
+  display:flex;align-items:center;justify-content:center;font-weight:800;color:#02132a;font-size:14px;
+}
+.title{font-weight:600;letter-spacing:0.6px}
+.top-controls{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
 
-height:50px;
-background:linear-gradient(90deg,#05071a,#111546);
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 20px;
-border-bottom:1px solid #1c1f4f;
+/* Layout: explorer | center | ai */
+#workspace{flex:1;display:grid;grid-template-columns:260px 1fr 360px;gap:14px;padding:16px;align-items:stretch}
 
+/* Panels look (glass cards) */
+.panel{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius:12px;
+  padding:12px;
+  box-shadow: 0 8px 30px rgba(4,6,18,0.6);
+  overflow:hidden;
+  display:flex;flex-direction:column;
 }
 
-#logo{
+/* Explorer */
+#explorer{min-height:0}
+.explorer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.file-tree{flex:1;overflow:auto;padding:6px;border-radius:8px;background:linear-gradient(180deg, rgba(0,0,0,0.02), rgba(255,255,255,0.01));}
+.file{padding:8px 10px;border-radius:8px;display:flex;align-items:center;gap:10px;cursor:pointer;color:var(--muted);margin-bottom:6px}
+.file:hover{background:rgba(78,224,255,0.03);color:#e9fbff}
+.file .ext{font-size:11px;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,0.02);color:var(--muted);margin-left:auto}
 
-color:#00f7ff;
-font-weight:bold;
-letter-spacing:2px;
+/* Center: tabs + editor + preview + terminal */
+.center{display:flex;flex-direction:column;min-height:0}
+.tabs{height:44px;display:flex;align-items:center;gap:6px;padding:6px;border-radius:8px;background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.003));margin-bottom:10px}
+.tab{padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab.active{background:linear-gradient(90deg, rgba(78,224,255,0.06), rgba(154,91,255,0.03));color:#02132a;font-weight:600;box-shadow:0 6px 18px rgba(78,224,255,0.04)}
+.editor-wrap{flex:1;min-height:0;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+#editor{flex:1;height:100%}
 
+/* bottom area: preview + terminal */
+.bottom-row{display:grid;grid-template-columns:1fr 340px;gap:12px;margin-top:12px}
+.preview{height:220px;border-radius:10px;overflow:hidden;background:#fff}
+.terminal{height:220px;border-radius:10px;background:#02030a;color:#4ff1b6;padding:10px;font-family:monospace;overflow:auto}
+
+/* AI panel */
+.ai-panel{min-height:0}
+.ai-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.ai-toolbar{display:flex;gap:8px;align-items:center}
+.select, .input{
+  background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:8px;color:var(--muted)
 }
-
-/* LAYOUT */
-
-#layout{
-
-flex:1;
-display:grid;
-grid-template-columns:260px 1fr 380px;
-
-}
-
-/* EXPLORER */
-
-#explorer{
-
-background:#04061a;
-border-right:1px solid #121542;
-padding:10px;
-overflow:auto;
-
-}
-
-.file{
-
-padding:6px;
-cursor:pointer;
-border-radius:4px;
-
-}
-
-.file:hover{
-
-background:#11143c;
-
-}
-
-/* CENTER */
-
-#center{
-
-display:flex;
-flex-direction:column;
-
-}
-
-#tabs{
-
-height:36px;
-background:#060a25;
-display:flex;
-align-items:center;
-
-}
-
-.tab{
-
-padding:6px 14px;
-cursor:pointer;
-
-}
-
-.tab.active{
-
-background:#161a54;
-
-}
-
-#editor{
-
-flex:1;
-
-}
-
-#monaco{
-
-height:100%;
-
-}
-
-/* TERMINAL */
-
-#terminal{
-
-height:120px;
-background:black;
-font-family:monospace;
-color:#00ff90;
-padding:10px;
-overflow:auto;
-
-}
-
-/* AI PANEL */
-
-#ai{
-
-background:#05071d;
-border-left:1px solid #111;
-display:flex;
-flex-direction:column;
-
-}
-
-#ai-header{
-
-padding:10px;
-border-bottom:1px solid #111;
-color:#ff2cdf;
-
-}
-
-#ai-chat{
-
-flex:1;
-overflow:auto;
-padding:10px;
-
-}
-
-.msg{
-
-margin-bottom:10px;
-
-}
-
-.user{
-
-color:#00eaff;
-
-}
-
-.ai{
-
-color:#7aff7a;
-
-}
-
-#ai-input{
-
-display:flex;
-border-top:1px solid #111;
-
-}
-
-#prompt{
-
-flex:1;
-background:black;
-border:none;
-color:white;
-padding:10px;
-
-}
-
-button{
-
-background:#ff2cdf;
-border:none;
-color:white;
-padding:10px 14px;
-cursor:pointer;
-
-}
-
+.ai-chat{flex:1;overflow:auto;padding:6px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));}
+.ai-msg{padding:10px;border-radius:10px;margin-bottom:10px}
+.ai-msg.user{background:linear-gradient(90deg, rgba(78,224,255,0.04), rgba(78,224,255,0.02));color:#cffeff}
+.ai-msg.assistant{background:linear-gradient(90deg, rgba(154,91,255,0.04), rgba(154,91,255,0.02));color:#f3e9ff}
+.ai-actions{display:flex;gap:8px;margin-top:8px;align-items:center}
+.btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#02132a;font-weight:600}
+
+/* small helpers */
+.small{font-size:12px;color:var(--muted)}
+.footer-credits{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
+
+/* responsive */
+@media (max-width:1100px){#workspace{grid-template-columns:220px 1fr 320px}}
+@media (max-width:900px){#workspace{grid-template-columns:1fr} .bottom-row{grid-template-columns:1fr} .ai-panel{order:3}}
 </style>
-
 </head>
-
 <body>
 
+<!-- TOP -->
 <div id="topbar">
+  <div class="brand">
+    <div class="logo">Z</div>
+    <div>
+      <div class="title">ZEDEX-IDE</div>
+      <div class="small">IDE web · Neon UI · Pollinations AI</div>
+    </div>
+  </div>
 
-<div id="logo">
-ZEDEX IDE
+  <div class="top-controls">
+    <div class="small">Tema: Cyberpunk • Versão: ULTRA</div>
+    <div class="footer-credits">
+      <!-- Credit to Pollinations (entity mention placed in prose) -->
+      Créditos:
+      <a href="https://pollinations.ai" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:600;margin-left:6px">
+        :contentReference[oaicite:1]{index=1}
+      </a>
+    </div>
+  </div>
 </div>
 
-<div>
-<a href="https://pollinations.ai" target="_blank">
-Built with pollinations.ai
-</a>
-</div>
+<!-- WORKSPACE -->
+<div id="workspace">
 
-</div>
+  <!-- EXPLORER -->
+  <div class="panel" id="explorer">
+    <div class="explorer-header">
+      <div class="small">Explorer</div>
+      <div class="small">Projetos</div>
+    </div>
+    <div class="file-tree" id="fileTree"></div>
+    <div style="margin-top:8px;display:flex;gap:8px">
+      <button class="btn" onclick="createFile()">Novo</button>
+      <button class="btn" onclick="importProject()">Importar</button>
+    </div>
+  </div>
 
-<div id="layout">
+  <!-- CENTER (tabs + editor + preview + terminal) -->
+  <div class="center">
+    <div class="tabs panel" id="tabsBar"></div>
 
-<div id="explorer">
+    <div class="editor-wrap panel" style="padding:0">
+      <div id="editor"></div>
+    </div>
 
-<h3>EXPLORER</h3>
+    <div class="bottom-row">
+      <div class="preview panel">
+        <iframe id="previewFrame" style="width:100%;height:100%;border:0"></iframe>
+      </div>
+      <div class="terminal panel">
+        <div id="terminalOut">ZEDEX Terminal iniciado...</div>
+      </div>
+    </div>
+  </div>
 
-<div id="files"></div>
+  <!-- AI PANEL -->
+  <div class="panel ai-panel">
+    <div class="ai-header">
+      <div>
+        <div style="font-weight:700">AI Assistant</div>
+        <div class="small">Sugestões e edição automática</div>
+      </div>
 
-<button onclick="newFile()">+ Novo</button>
+      <div class="ai-toolbar">
+        <select id="languageSelect" class="select" title="Linguagem do editor" onchange="changeLanguage(this.value)">
+          <option value="auto">Auto (por extensão)</option>
+          <option value="javascript">JavaScript</option>
+          <option value="typescript">TypeScript</option>
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="python">Python</option>
+          <option value="c">C</option>
+          <option value="cpp">cpp</option>
+          <option value="java">java</option>
+        </select>
 
-</div>
+        <select id="modelSelect" class="select" title="Modelo Pollinations">
+          <option value="openai">openai</option>
+          <option value="gpt-4o">gpt-4o</option>
+          <option value="gpt-4o-mini">gpt-4o-mini</option>
+          <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+        </select>
+      </div>
+    </div>
 
-<div id="center">
+    <div class="ai-chat" id="aiChat"></div>
 
-<div id="tabs"></div>
+    <div style="margin-top:8px">
+      <textarea id="prompt" class="input" placeholder="Peça para criar/editar/explorar código. Ex: 'Refatore a função X, gere componente React, crie arquivo README.md' " style="width:100%;height:84px"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+        <button class="btn" onclick="sendToAI()">Pedir à IA</button>
+        <button class="btn" onclick="applyLastSuggestion()">Aplicar sugestão</button>
+        <button class="btn" onclick="runPreview()">Preview</button>
+      </div>
+    </div>
 
-<div id="editor">
+    <div style="margin-top:10px" class="small">
+      <div>API Key (Pollinations): <input id="apiKey" class="input" placeholder="Cole sua API key aqui" style="width:100%"></div>
+    </div>
 
-<div id="monaco"></div>
-
-</div>
-
-<div id="terminal"></div>
-
-</div>
-
-<div id="ai">
-
-<div id="ai-header">
-
-ZEDEX AI
-
-</div>
-
-<div id="ai-chat"></div>
-
-<div id="ai-input">
-
-<textarea id="prompt"></textarea>
-
-<button onclick="askAI()">Enviar</button>
-
-</div>
-
-</div>
-
+  </div>
 </div>
 
 <script>
+/* -------------------------
+  ZEDEX-IDE ULTRA - single file
+   - Monaco editor integration
+   - File system in-memory + localStorage
+   - Pollinations integration (chat completions)
+   - UI behaviors: tabs, preview, terminal, apply AI code
+---------------------------*/
 
-/* FILE SYSTEM */
+/* ---------- Configuration ---------- */
+/* If you already have a Pollinations public key, you can paste it in the UI.
+   For quick testing you may set a default here (optional). */
+const DEFAULT_API_KEY = ""; // <-- opcional: "pk_XXXXX"
 
-let files={
+/* ---------- Simple in-memory filesystem (persisted) ---------- */
+const STORAGE_KEY = "zedex_workspace_v1";
+let fs = loadWorkspace() || {
+  "index.html":"<!doctype html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <title>ZEDEX Demo</title>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n<body>\n  <h1>ZEDEX IDE</h1>\n  <script src=\"app.js\"></script>\n</body>\n</html>",
+  "style.css":"body{font-family:Inter,Arial;background:#07102a;color:#dbe8ff;padding:24px}",
+  "app.js":"console.log('ZEDEX IDE running')"
+};
+let currentFile = Object.keys(fs)[0];
 
-"index.html":"<h1>Hello ZEDEX</h1>",
-"app.js":"console.log('zedex');"
+/* ---------- Monaco Editor bootstrap ---------- */
+let editor; // monaco instance
+require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.47.0/min/vs' }});
+require(['vs/editor/editor.main'], function() {
+  editor = monaco.editor.create(document.getElementById('editor'), {
+    value: fs[currentFile] || '',
+    language: guessLanguageFromFile(currentFile),
+    theme: 'vs-dark',
+    automaticLayout: true,
+    fontSize: 13,
+    minimap: {enabled: false}
+  });
+  addTab(currentFile, true);
+});
 
-}
-
-let currentFile="index.html"
-
-/* EXPLORER */
-
+/* ---------- UI helpers ---------- */
+function saveWorkspace(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(fs)); }
+function loadWorkspace(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)); }catch(e){return null;} }
 function refreshExplorer(){
-
-const list=document.getElementById("files")
-
-list.innerHTML=""
-
-for(let f in files){
-
-let el=document.createElement("div")
-
-el.className="file"
-
-el.innerText=f
-
-el.onclick=()=>openFile(f)
-
-list.appendChild(el)
-
+  const tree = document.getElementById('fileTree'); tree.innerHTML='';
+  for(const name of Object.keys(fs)){
+    const el = document.createElement('div'); el.className='file';
+    el.innerHTML = `<div style="display:flex;gap:8px;align-items:center"><strong style="width:10px;color:var(--accent)">&bull;</strong>${name}<span class="ext">${extOf(name)}</span></div>`;
+    el.onclick = ()=> openFile(name);
+    el.oncontextmenu = (ev)=>{ ev.preventDefault(); fileContextMenu(name, ev.clientX, ev.clientY) };
+    tree.appendChild(el);
+  }
+}
+function fileContextMenu(name,x,y){
+  const menu = document.createElement('div'); menu.style.position='fixed'; menu.style.left=x+'px'; menu.style.top=y+'px';
+  menu.style.background='rgba(0,0,0,0.7)'; menu.style.border='1px solid rgba(255,255,255,0.04)'; menu.style.padding='6px'; menu.style.borderRadius='8px';
+  menu.innerHTML = `<div style="padding:6px;cursor:pointer">Renomear</div><div style="padding:6px;cursor:pointer">Deletar</div>`;
+  document.body.appendChild(menu);
+  setTimeout(()=>document.addEventListener('click',()=>menu.remove(),{once:true}),10);
 }
 
+/* Tabs */
+function addTab(name, activate){
+  const tabsBar = document.getElementById('tabsBar');
+  // don't duplicate
+  if([...tabsBar.children].some(t=>t.innerText===name)) {
+    if(activate) activateTab(name);
+    return;
+  }
+  const el = document.createElement('div'); el.className='tab'; el.innerText = name;
+  el.onclick = ()=> activateTab(name);
+  tabsBar.appendChild(el);
+  if(activate) activateTab(name);
 }
-
-function newFile(){
-
-let name=prompt("Nome do arquivo")
-
-files[name]=""
-
-refreshExplorer()
-
+function activateTab(name){
+  const tabsBar = document.getElementById('tabsBar');
+  for(const t of tabsBar.children){ t.classList.toggle('active', t.innerText===name) }
+  openFile(name);
 }
-
-/* TABS */
-
-function addTab(name){
-
-let tabs=document.getElementById("tabs")
-
-let tab=document.createElement("div")
-
-tab.className="tab"
-
-tab.innerText=name
-
-tabs.appendChild(tab)
-
-}
-
-/* TERMINAL */
-
-function term(msg){
-
-let t=document.getElementById("terminal")
-
-t.innerHTML+=`<div>> ${msg}</div>`
-
-}
-
-/* MONACO */
-
-let editor
-
-require.config({paths:{vs:"https://unpkg.com/monaco-editor@0.47.0/min/vs"}})
-
-require(["vs/editor/editor.main"],function(){
-
-editor=monaco.editor.create(
-
-document.getElementById("monaco"),
-
-{
-
-value:files[currentFile],
-
-language:"html",
-
-theme:"vs-dark",
-
-automaticLayout:true
-
-}
-
-)
-
-})
 
 function openFile(name){
-
-currentFile=name
-
-editor.setValue(files[name])
-
-addTab(name)
-
+  currentFile = name;
+  const value = fs[name] || '';
+  editor.setValue(value);
+  const lang = guessLanguageFromFile(name);
+  monaco.editor.setModelLanguage(editor.getModel(), lang);
 }
 
-/* AI CHAT */
-
-function addMessage(text,type){
-
-let chat=document.getElementById("ai-chat")
-
-let d=document.createElement("div")
-
-d.className="msg "+type
-
-d.innerText=text
-
-chat.appendChild(d)
-
+/* Create/import files */
+function createFile(){
+  const name = prompt("Nome do novo arquivo (ex: main.js)");
+  if(!name) return;
+  if(fs[name]){ alert("Arquivo já existe"); return; }
+  fs[name] = "";
+  saveWorkspace(); refreshExplorer(); addTab(name,true);
+}
+function importProject(){
+  const json = prompt("Cole aqui o JSON do projeto (ex: {\"index.html\":\"...\"})");
+  try{
+    const obj = JSON.parse(json);
+    fs = {...fs, ...obj};
+    saveWorkspace(); refreshExplorer();
+    alert("Importado");
+  }catch(e){
+    alert("JSON inválido");
+  }
 }
 
-/* POLLINATIONS AI */
-
-async function askAI(){
-
-let prompt=document.getElementById("prompt").value
-
-addMessage(prompt,"user")
-
-document.getElementById("prompt").value=""
-
-let code=editor.getValue()
-
-let r=await fetch(
-
-"https://gen.pollinations.ai/v1/chat/completions",
-
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":"application/json"
-
-},
-
-body:JSON.stringify({
-
-model:"openai",
-
-messages:[
-
-{
-
-role:"system",
-
-content:"You are ZEDEX IDE AI assistant. You help create files and code."
-
-},
-
-{
-
-role:"user",
-
-content:prompt+"\n\nCurrent code:\n"+code
-
+/* Utilities */
+function extOf(name){ return name.split('.').pop() || ''; }
+function guessLanguageFromFile(name){
+  const ext = extOf(name).toLowerCase();
+  if(ext==='js') return 'javascript';
+  if(ext==='ts') return 'typescript';
+  if(ext==='html' || ext==='htm') return 'html';
+  if(ext==='css') return 'css';
+  if(ext==='py') return 'python';
+  if(ext==='c') return 'c';
+  if(ext==='cpp' || ext==='cc' || ext==='cxx') return 'cpp';
+  if(ext==='java') return 'java';
+  return 'plaintext';
 }
 
-]
-
-})
-
+/* Change language from selector */
+function changeLanguage(lang){
+  if(lang==='auto'){ monaco.editor.setModelLanguage(editor.getModel(), guessLanguageFromFile(currentFile)); return; }
+  monaco.editor.setModelLanguage(editor.getModel(), lang);
 }
 
-)
-
-let data=await r.json()
-
-let text=data.choices[0].message.content
-
-addMessage(text,"ai")
-
+/* Save current file */
+function saveCurrent(){
+  const content = editor.getValue();
+  if(!currentFile){ alert("Abra um arquivo antes"); return; }
+  fs[currentFile] = content;
+  saveWorkspace();
+  refreshExplorer();
+  term(`Arquivo salvo: ${currentFile}`);
 }
 
-refreshExplorer()
+/* Terminal */
+function term(msg){
+  const out = document.getElementById('terminalOut');
+  out.innerHTML += `<div>${escapeHtml(msg)}</div>`;
+  out.scrollTop = out.scrollHeight;
+}
 
-term("ZEDEX IDE iniciado")
+/* Preview */
+function runPreview(){
+  saveCurrent();
+  const html = fs['index.html'] || '';
+  // create a small sandboxed preview, allow local files via srcdoc:
+  document.getElementById('previewFrame').srcdoc = html;
+  term('Preview renderizado');
+}
 
+/* Escape helper */
+function escapeHtml(s){ return (s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* Initialize UI */
+refreshExplorer();
+
+/* Autosave every 5s */
+setInterval(()=>{ if(currentFile) { fs[currentFile] = editor.getValue(); saveWorkspace(); } }, 5000);
+
+/* ---------- POLLINATIONS AI integration ---------- */
+
+/*
+  Behavior:
+   - send prompt + current file content
+   - model selected by user (modelSelect)
+   - API Key must be set in input or DEFAULT_API_KEY
+   - the assistant response is appended to chat; if it returns code (triple backticks),
+     we keep it and allow "Aplicar sugestão" to paste into editor.
+*/
+let lastAISuggestion = null;
+
+async function sendToAI(){
+  saveCurrent();
+  const prompt = document.getElementById('prompt').value;
+  if(!prompt){ alert("Escreve um pedido para a IA"); return; }
+
+  appendAIMessage(prompt, 'user');
+  const apiKey = document.getElementById('apiKey').value || DEFAULT_API_KEY;
+  if(!apiKey){ alert("Cole sua Pollinations API key no campo abaixo"); return; }
+
+  const model = document.getElementById('modelSelect').value || 'openai';
+  const code = editor.getValue();
+
+  const body = {
+    model: model,
+    messages: [
+      {role:'system', content:'Você é o assistente ZEDEX-IDE. Responda com objetividade, e se for retornar código, coloque em blocos com ``` e indique o nome do arquivo quando necessário, ex: ```file:app.js\\n...```'},
+      {role:'user', content: prompt + "\n\nCURRENT_FILE_NAME: " + currentFile + "\nCURRENT_FILE_CONTENT:\n" + code}
+    ],
+    max_tokens: 1500,
+    temperature: 0.15
+  };
+
+  try{
+    appendAIMessage("A processar...", 'assistant');
+    const res = await fetch("https://gen.pollinations.ai/v1/chat/completions", {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',
+        'Authorization': 'Bearer ' + apiKey
+      },
+      body: JSON.stringify(body)
+    });
+
+    if(!res.ok){
+      const txt = await res.text();
+      appendAIMessage("Erro da API: " + res.status + " — " + txt, 'assistant');
+      term("Erro Pollinations: " + res.status);
+      return;
+    }
+
+    const json = await res.json();
+    // robust parsing: Pollinations returns structure similar to OpenAI's chat completions
+    const reply = (json.choices && json.choices[0] && (json.choices[0].message?.content || json.choices[0].text)) || JSON.stringify(json);
+    appendAIMessage(reply, 'assistant');
+    lastAISuggestion = reply;
+
+    // if code blocks present, highlight in terminal
+    if(/```/.test(reply)){
+      term('Sugestão da IA contém blocos de código. Use "Aplicar sugestão" para inserir.');
+    }
+
+  }catch(e){
+    appendAIMessage("Erro: " + e.message, 'assistant');
+    term("Erro ao contactar Pollinations: " + e.message);
+  }
+}
+
+function appendAIMessage(text, role){
+  const c = document.getElementById('aiChat');
+  // remove last "A processar..." if exists
+  if(role==='assistant' && c.lastElementChild && c.lastElementChild.innerText==='A processar...'){
+    c.removeChild(c.lastElementChild);
+  }
+  const el = document.createElement('div'); el.className = 'ai-msg ' + (role==='user' ? 'user' : 'assistant');
+  // simple formatting: keep code blocks monospaced
+  el.innerHTML = formatAIResponse(text);
+  c.appendChild(el);
+  c.scrollTop = c.scrollHeight;
+}
+
+/* Format AI response: preserve ``` blocks and link file tags */
+function formatAIResponse(text){
+  // escape then reconstruct codeblocks
+  const parts = text.split(/(```[\s\S]*?```)/g);
+  return parts.map(part=>{
+    if(part.startsWith('```')){
+      // remove fences
+      const inner = part.replace(/```/g,'').trim();
+      // check for file marker like "file:filename"
+      const m = inner.match(/^file:(\S+)\n([\s\S]*)/);
+      if(m){
+        const fname = escapeHtml(m[1]);
+        const code = escapeHtml(m[2]);
+        return `<div style="font-weight:700;margin-bottom:6px">${fname}</div><pre style="background:rgba(0,0,0,0.5);padding:8px;border-radius:8px;overflow:auto;"><code>${code}</code></pre>`;
+      } else {
+        return `<pre style="background:rgba(0,0,0,0.5);padding:8px;border-radius:8px;overflow:auto;"><code>${escapeHtml(inner)}</code></pre>`;
+      }
+    } else {
+      return `<div style="white-space:pre-wrap">${escapeHtml(part)}</div>`;
+    }
+  }).join('');
+}
+
+/* Apply last suggestion into editor:
+   Heuristics:
+    - if suggestion contains "file:NAME" blocks, create/overwrite corresponding files
+    - else, replace the current file with the largest code block or append suggestion as comment
+*/
+function applyLastSuggestion(){
+  if(!lastAISuggestion){ alert("Sem sugestão da IA para aplicar."); return; }
+
+  // find all code blocks with file markers
+  const fileBlocks = [];
+  const codeBlockRegex = /```([\s\S]*?)```/g;
+  let m;
+  while((m = codeBlockRegex.exec(lastAISuggestion)) !== null){
+    const content = m[1].trim();
+    const fileMarker = content.match(/^file:(\S+)\n([\s\S]*)/);
+    if(fileMarker){
+      const fname = fileMarker[1].trim();
+      const code = fileMarker[2].replace(/\r/g,'');
+      fileBlocks.push({name:fname, code});
+    }
+  }
+
+  if(fileBlocks.length>0){
+    for(const fb of fileBlocks){
+      fs[fb.name] = fb.code;
+      term(`IA: criou/atualizou ${fb.name}`);
+    }
+    saveWorkspace(); refreshExplorer();
+    // open the first file suggested
+    openFile(fileBlocks[0].name);
+    return;
+  }
+
+  // otherwise find the largest code block (without file marker)
+  const codeBlocks = [...lastAISuggestion.matchAll(/```(?:\w*\n)?([\s\S]*?)```/g)].map(x=>x[1].replace(/\r/g,''));
+  if(codeBlocks.length){
+    // pick largest
+    const largest = codeBlocks.sort((a,b)=>b.length-a.length)[0];
+    // replace current file
+    fs[currentFile] = largest;
+    saveWorkspace(); refreshExplorer(); openFile(currentFile);
+    term(`IA: conteúdo aplicado em ${currentFile}`);
+    return;
+  }
+
+  // fallback: append suggestion as comment to current file
+  const suggestionComment = `\n/* SUGESTÃO IA:\n${lastAISuggestion}\n*/\n`;
+  fs[currentFile] = editor.getValue() + suggestionComment;
+  saveWorkspace(); refreshExplorer(); openFile(currentFile);
+  term(`IA: sugestão anexada a ${currentFile}`);
+}
+
+/* Apply keyboard shortcuts */
+document.addEventListener('keydown', (e)=>{
+  if(e.ctrlKey && e.key==='s'){ e.preventDefault(); saveCurrent(); }
+  if(e.ctrlKey && e.shiftKey && e.key==='P'){ e.preventDefault(); alert('Command palette: (Ctrl+Shift+P) — ainda em desenvolvimento'); }
+});
+
+/* Expose save to window for debugging */
+window.zedex = { fs, saveWorkspace, runPreview, sendToAI, applyLastSuggestion };
+
+/* Initial render */
+setTimeout(()=>{ refreshExplorer(); runPreview(); }, 900);
 </script>
-
 </body>
-</html>TRRRRRRRRR
+</html>
