@@ -1,354 +1,1943 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-
 <meta charset="UTF-8">
-<title>ZEDEX IDE</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZEDEX IDE — Powered by Pollinations.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-
-body{
-margin:0;
-font-family:Inter,system-ui;
-background:#0a1026;
-color:#dfe7ff;
-overflow:hidden;
+/* ═══════════════════════════════════════════════════════════
+   ZEDEX IDE · Themes
+═══════════════════════════════════════════════════════════ */
+:root {
+  --font-ui: 'Geist', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', monospace;
+  --radius: 6px;
+  --tab-h: 36px;
 }
 
-.topbar{
-height:48px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 16px;
-background:#0e1738;
-border-bottom:1px solid #1c2b6b;
+/* Dark (default) */
+[data-theme="dark"] {
+  --bg:       #0d0d0f;
+  --bg2:      #111115;
+  --bg3:      #16161c;
+  --panel:    #13131a;
+  --border:   #1e1e2e;
+  --border2:  #2a2a3e;
+  --tx:       #cdd6f4;
+  --tx2:      #6c7086;
+  --tx3:      #45475a;
+  --ac:       #89b4fa;
+  --ac2:      #1e2a4a;
+  --ac3:      #cba6f7;
+  --green:    #a6e3a1;
+  --yellow:   #f9e2af;
+  --red:      #f38ba8;
+  --orange:   #fab387;
+  --glow:     rgba(137,180,250,0.08);
+  --shadow:   0 8px 32px rgba(0,0,0,.5);
 }
 
-.logo{
-font-weight:700;
-letter-spacing:2px;
-color:#6ea8ff;
+/* Light */
+[data-theme="light"] {
+  --bg:       #fafafa;
+  --bg2:      #f4f4f5;
+  --bg3:      #ececee;
+  --panel:    #ffffff;
+  --border:   #e4e4e7;
+  --border2:  #d4d4d8;
+  --tx:       #18181b;
+  --tx2:      #71717a;
+  --tx3:      #a1a1aa;
+  --ac:       #2563eb;
+  --ac2:      #dbeafe;
+  --ac3:      #7c3aed;
+  --green:    #16a34a;
+  --yellow:   #ca8a04;
+  --red:      #dc2626;
+  --orange:   #ea580c;
+  --glow:     rgba(37,99,235,0.05);
+  --shadow:   0 4px 16px rgba(0,0,0,.08);
 }
 
-.workspace{
-display:grid;
-grid-template-columns:220px 1fr 300px;
-height:65vh;
+/* High Contrast */
+[data-theme="hc"] {
+  --bg:       #000000;
+  --bg2:      #0a0a0a;
+  --bg3:      #111111;
+  --panel:    #0a0a0a;
+  --border:   #333333;
+  --border2:  #555555;
+  --tx:       #ffffff;
+  --tx2:      #cccccc;
+  --tx3:      #888888;
+  --ac:       #00d4ff;
+  --ac2:      #001a22;
+  --ac3:      #ff00ff;
+  --green:    #00ff88;
+  --yellow:   #ffff00;
+  --red:      #ff3333;
+  --orange:   #ff8800;
+  --glow:     rgba(0,212,255,0.1);
+  --shadow:   0 0 0 1px #333;
 }
 
-.sidebar{
-background:#0d1535;
-border-right:1px solid #1c2b6b;
-overflow:auto;
+/* Monokai */
+[data-theme="monokai"] {
+  --bg:       #272822;
+  --bg2:      #1e1f1c;
+  --bg3:      #2d2e2a;
+  --panel:    #272822;
+  --border:   #3e3d32;
+  --border2:  #49483e;
+  --tx:       #f8f8f2;
+  --tx2:      #75715e;
+  --tx3:      #49483e;
+  --ac:       #a6e22e;
+  --ac2:      #1a2a0a;
+  --ac3:      #e6db74;
+  --green:    #a6e22e;
+  --yellow:   #e6db74;
+  --red:      #f92672;
+  --orange:   #fd971f;
+  --glow:     rgba(166,226,46,0.06);
+  --shadow:   0 8px 32px rgba(0,0,0,.6);
 }
 
-.file{
-padding:8px 12px;
-cursor:pointer;
-border-bottom:1px solid rgba(255,255,255,0.04);
+/* Dracula */
+[data-theme="dracula"] {
+  --bg:       #282a36;
+  --bg2:      #21222c;
+  --bg3:      #2c2f3f;
+  --panel:    #282a36;
+  --border:   #44475a;
+  --border2:  #6272a4;
+  --tx:       #f8f8f2;
+  --tx2:      #6272a4;
+  --tx3:      #44475a;
+  --ac:       #bd93f9;
+  --ac2:      #2a1f4a;
+  --ac3:      #ff79c6;
+  --green:    #50fa7b;
+  --yellow:   #f1fa8c;
+  --red:      #ff5555;
+  --orange:   #ffb86c;
+  --glow:     rgba(189,147,249,0.08);
+  --shadow:   0 8px 32px rgba(0,0,0,.5);
 }
 
-.file:hover{
-background:#1b2a66;
+/* Nord */
+[data-theme="nord"] {
+  --bg:       #2e3440;
+  --bg2:      #272c36;
+  --bg3:      #3b4252;
+  --panel:    #2e3440;
+  --border:   #3b4252;
+  --border2:  #434c5e;
+  --tx:       #eceff4;
+  --tx2:      #7b88a1;
+  --tx3:      #4c566a;
+  --ac:       #88c0d0;
+  --ac2:      #1a2e35;
+  --ac3:      #81a1c1;
+  --green:    #a3be8c;
+  --yellow:   #ebcb8b;
+  --red:      #bf616a;
+  --orange:   #d08770;
+  --glow:     rgba(136,192,208,0.07);
+  --shadow:   0 8px 32px rgba(0,0,0,.4);
 }
 
-.editorArea{
-position:relative;
+/* ═══════════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%; overflow: hidden;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--tx);
+  transition: background .2s, color .2s;
 }
 
-#editor{
-height:100%;
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--tx3); }
+
+button { cursor: pointer; font-family: var(--font-ui); font-size: 12px; border: none; outline: none; }
+
+/* ═══════════════════════════════════════════════════════════
+   TITLEBAR
+═══════════════════════════════════════════════════════════ */
+#titlebar {
+  height: 40px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 10px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 100;
+  -webkit-app-region: drag;
 }
 
-.aiPanel{
-background:#0d1535;
-border-left:1px solid #1c2b6b;
-padding:10px;
-display:flex;
-flex-direction:column;
+.tb-dots { display: flex; gap: 6px; -webkit-app-region: no-drag; }
+.tb-dot { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; transition: opacity .15s; }
+.tb-dot:hover { opacity: .8; }
+.tb-dot.close { background: #ff5f57; }
+.tb-dot.min   { background: #ffbd2e; }
+.tb-dot.max   { background: #28c840; }
+
+.tb-logo {
+  display: flex; align-items: center; gap: 8px;
+  -webkit-app-region: no-drag;
+  margin: 0 auto;
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+.tb-logo-icon {
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, var(--ac), var(--ac3));
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--bg); font-family: var(--font-mono);
+}
+.tb-logo-text {
+  font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+  letter-spacing: 3px; color: var(--tx); text-transform: uppercase;
 }
 
-textarea{
-width:100%;
-height:120px;
-background:#0b1330;
-border:1px solid #243a8f;
-color:#fff;
+.tb-right { margin-left: auto; display: flex; align-items: center; gap: 6px; -webkit-app-region: no-drag; }
+
+.tb-btn {
+  padding: 4px 10px; border-radius: var(--radius);
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--tx2); font-size: 11px; font-family: var(--font-mono);
+  letter-spacing: .03em;
+  transition: all .15s;
+  display: flex; align-items: center; gap: 5px;
+}
+.tb-btn:hover { background: var(--border); color: var(--tx); }
+.tb-btn.primary { background: var(--ac2); border-color: var(--ac); color: var(--ac); }
+.tb-btn.primary:hover { background: var(--ac); color: var(--bg); }
+.tb-btn.danger:hover { border-color: var(--red); color: var(--red); }
+
+/* Theme Picker */
+#theme-picker {
+  position: absolute; top: 44px; right: 12px; z-index: 500;
+  background: var(--panel); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 6px;
+  display: none; flex-direction: column; gap: 2px;
+  box-shadow: var(--shadow); min-width: 160px;
+}
+#theme-picker.open { display: flex; }
+.theme-opt {
+  padding: 6px 10px; border-radius: 4px; cursor: pointer;
+  font-size: 12px; color: var(--tx2); display: flex; align-items: center; gap: 8px;
+  transition: all .12s;
+}
+.theme-opt:hover, .theme-opt.active { background: var(--ac2); color: var(--ac); }
+.theme-swatch { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════════════════ */
+#app {
+  display: flex;
+  height: calc(100vh - 40px);
+  overflow: hidden;
 }
 
-button{
-background:#2c4cff;
-border:none;
-padding:8px 10px;
-margin-top:8px;
-color:white;
-cursor:pointer;
+/* ═══════════════════════════════════════════════════════════
+   ACTIVITY BAR (leftmost)
+═══════════════════════════════════════════════════════════ */
+#actbar {
+  width: 46px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 8px 0; gap: 2px; flex-shrink: 0;
+}
+.act-icon {
+  width: 36px; height: 36px; border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; position: relative;
+  transition: all .15s; color: var(--tx3); font-size: 16px;
+}
+.act-icon:hover { color: var(--tx); background: var(--bg3); }
+.act-icon.active { color: var(--ac); background: var(--ac2); }
+.act-icon.active::before {
+  content: ''; position: absolute; left: -1px; top: 50%; transform: translateY(-50%);
+  width: 2px; height: 20px; background: var(--ac); border-radius: 0 2px 2px 0;
+}
+.act-sep { height: 1px; background: var(--border); width: 24px; margin: 4px 0; }
+
+/* ═══════════════════════════════════════════════════════════
+   SIDEBAR (file explorer / search / git)
+═══════════════════════════════════════════════════════════ */
+#sidebar {
+  width: 240px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  flex-shrink: 0;
+  transition: width .2s;
+  overflow: hidden;
+}
+#sidebar.collapsed { width: 0; }
+
+.sidebar-hdr {
+  padding: 10px 12px 6px;
+  font-size: 10px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--tx3);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.sidebar-hdr-btns { display: flex; gap: 3px; }
+.sidebar-hdr-btn {
+  width: 20px; height: 20px; border-radius: 4px;
+  background: transparent; color: var(--tx3); font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .12s;
+}
+.sidebar-hdr-btn:hover { background: var(--bg3); color: var(--tx); }
+
+#file-tree { flex: 1; overflow-y: auto; padding: 2px 0; }
+
+.ft-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 12px; cursor: pointer; position: relative;
+  font-family: var(--font-mono); font-size: 12px; color: var(--tx2);
+  transition: all .1s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  user-select: none;
+}
+.ft-item:hover { background: var(--bg3); color: var(--tx); }
+.ft-item.active { background: var(--ac2); color: var(--ac); }
+.ft-item .fi-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--tx3); flex-shrink: 0;
+  transition: background .15s;
+}
+.ft-item.active .fi-dot, .ft-item.modified .fi-dot { background: var(--yellow); }
+.ft-item .fi-name { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.ft-item .fi-ext {
+  font-size: 10px; color: var(--tx3); flex-shrink: 0;
+  background: var(--bg3); padding: 1px 5px; border-radius: 3px;
+}
+.ft-item .fi-del {
+  position: absolute; right: 8px; opacity: 0;
+  width: 16px; height: 16px; background: var(--red);
+  border-radius: 3px; color: #fff; font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity .1s;
+}
+.ft-item:hover .fi-del { opacity: 1; }
+
+.new-file-row {
+  padding: 6px 12px;
+  display: flex; gap: 5px;
+}
+.new-file-inp {
+  flex: 1; background: var(--bg3); border: 1px solid var(--ac);
+  color: var(--tx); font-family: var(--font-mono); font-size: 12px;
+  padding: 4px 7px; border-radius: 4px; outline: none;
+}
+.new-file-inp:focus { border-color: var(--ac3); box-shadow: 0 0 0 2px var(--glow); }
+
+/* ═══════════════════════════════════════════════════════════
+   EDITOR SECTION
+═══════════════════════════════════════════════════════════ */
+#editor-section {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0;
 }
 
-.previewPanel{
-height:35vh;
-border-top:1px solid #1c2b6b;
+/* Tab Bar */
+#tabs {
+  height: var(--tab-h); background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-end; overflow-x: auto; flex-shrink: 0;
+  padding-left: 2px;
+}
+#tabs::-webkit-scrollbar { height: 3px; }
+
+.tab {
+  height: 32px; display: flex; align-items: center; gap: 7px;
+  padding: 0 14px 0 12px; border-radius: 6px 6px 0 0;
+  cursor: pointer; white-space: nowrap; position: relative;
+  font-family: var(--font-mono); font-size: 12px; color: var(--tx3);
+  border: 1px solid transparent; border-bottom: none;
+  background: transparent; margin-right: 1px;
+  transition: all .12s;
+}
+.tab:hover { color: var(--tx2); background: var(--bg3); }
+.tab.active {
+  color: var(--tx); background: var(--bg);
+  border-color: var(--border); border-bottom-color: var(--bg);
+}
+.tab .tab-lang {
+  font-size: 9px; padding: 1px 4px; border-radius: 3px;
+  background: var(--bg3); color: var(--tx3); text-transform: uppercase;
+}
+.tab.active .tab-lang { background: var(--ac2); color: var(--ac); }
+.tab .tab-close {
+  width: 16px; height: 16px; border-radius: 3px;
+  background: transparent; color: var(--tx3); font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .1s; line-height: 1;
+}
+.tab:hover .tab-close { color: var(--tx2); }
+.tab .tab-close:hover { background: var(--red); color: #fff; }
+.tab .tab-modified {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--yellow); flex-shrink: 0;
 }
 
-iframe{
-width:100%;
-height:100%;
-border:none;
-background:white;
+/* Breadcrumb */
+#breadcrumb {
+  height: 28px; background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 14px; gap: 5px;
+  font-size: 11px; color: var(--tx3); flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.bc-sep { color: var(--border2); }
+.bc-item { color: var(--tx2); }
+.bc-item.last { color: var(--tx); }
+
+/* Monaco wrapper */
+#editor-wrap {
+  flex: 1; position: relative; overflow: hidden; min-height: 0;
+}
+#monaco-editor { width: 100%; height: 100%; }
+
+/* Status Bar */
+#statusbar {
+  height: 24px; background: var(--ac2);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 12px;
+  gap: 14px; flex-shrink: 0; font-size: 11px;
+  font-family: var(--font-mono);
+}
+.sb-item {
+  color: var(--ac); opacity: .7; cursor: pointer; white-space: nowrap;
+  display: flex; align-items: center; gap: 4px;
+  transition: opacity .12s;
+}
+.sb-item:hover { opacity: 1; }
+.sb-item.right { margin-left: auto; }
+#ai-status { color: var(--green); font-weight: 600; opacity: 1; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:.7} 50%{opacity:1} }
+
+/* ═══════════════════════════════════════════════════════════
+   AI PANEL
+═══════════════════════════════════════════════════════════ */
+#ai-panel {
+  width: 340px;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  flex-shrink: 0; overflow: hidden;
+  transition: width .2s;
+}
+#ai-panel.collapsed { width: 0; }
+
+.ai-header {
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.ai-header-row {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+}
+.ai-title {
+  font-size: 11px; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--tx3);
+  display: flex; align-items: center; gap: 7px;
+}
+.ai-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+.ai-model-select {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--tx2); font-family: var(--font-mono); font-size: 11px;
+  padding: 4px 8px; border-radius: 4px; outline: none; cursor: pointer;
+  transition: border-color .15s;
+}
+.ai-model-select:focus { border-color: var(--ac); }
+
+/* Mode tabs */
+.ai-modes {
+  display: flex; gap: 3px;
+}
+.ai-mode {
+  flex: 1; padding: 4px 8px; border-radius: 4px;
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--tx3); font-size: 11px; font-family: var(--font-mono);
+  text-align: center; transition: all .12s;
+}
+.ai-mode:hover { color: var(--tx2); }
+.ai-mode.active { background: var(--ac2); border-color: var(--ac); color: var(--ac); }
+
+/* Chat messages */
+#ai-messages {
+  flex: 1; overflow-y: auto; padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ai-msg {
+  border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.65;
+  animation: msgIn .2s ease; word-break: break-word;
+}
+@keyframes msgIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.ai-msg.user {
+  background: var(--ac2); border: 1px solid var(--ac);
+  color: var(--tx); align-self: flex-end; max-width: 90%;
+  font-family: var(--font-mono);
+}
+.ai-msg.ai {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--tx); align-self: flex-start; max-width: 100%;
+}
+.ai-msg.system {
+  background: transparent; border: 1px dashed var(--border);
+  color: var(--tx3); text-align: center; font-size: 11px;
+  font-family: var(--font-mono);
+}
+.ai-msg.thinking {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--tx3); font-family: var(--font-mono); font-size: 11px;
+}
+.ai-msg.success {
+  background: rgba(166,227,161,.08); border: 1px solid var(--green);
+  color: var(--green); font-family: var(--font-mono); font-size: 11px;
+}
+.ai-msg.error {
+  background: rgba(243,139,168,.08); border: 1px solid var(--red);
+  color: var(--red); font-family: var(--font-mono); font-size: 11px;
+}
+.msg-label {
+  font-size: 9px; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--tx3); margin-bottom: 5px; font-family: var(--font-mono);
+}
+.msg-label.ac { color: var(--ac); }
+
+/* Code block in AI messages */
+.ai-code-block {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 6px; overflow: hidden; margin-top: 8px;
+}
+.ai-code-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 10px; background: var(--bg3); border-bottom: 1px solid var(--border);
+  font-size: 10px; color: var(--tx3); font-family: var(--font-mono);
+}
+.ai-code-apply {
+  background: var(--ac2); border: 1px solid var(--ac); color: var(--ac);
+  padding: 2px 8px; border-radius: 3px; font-size: 10px;
+  font-family: var(--font-mono); cursor: pointer; transition: all .12s;
+}
+.ai-code-apply:hover { background: var(--ac); color: var(--bg); }
+.ai-code-body {
+  padding: 10px 12px; font-family: var(--font-mono); font-size: 11px;
+  color: var(--tx); overflow-x: auto; white-space: pre; line-height: 1.6;
+  max-height: 280px; overflow-y: auto;
 }
 
-footer{
-position:absolute;
-bottom:6px;
-right:10px;
-font-size:12px;
-opacity:.7;
+/* AI Controls */
+.ai-controls {
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 7px;
+  flex-shrink: 0;
 }
+.ai-context-row {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--tx3); font-family: var(--font-mono);
+}
+.ai-ctx-badge {
+  display: flex; align-items: center; gap: 4px; padding: 3px 7px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 3px; font-size: 10px; cursor: pointer;
+  transition: all .12s;
+}
+.ai-ctx-badge:hover, .ai-ctx-badge.active { border-color: var(--ac); color: var(--ac); }
+.ai-ctx-badge.active { background: var(--ac2); }
 
+.ai-input-wrap {
+  display: flex; gap: 6px; align-items: flex-end;
+}
+#ai-input {
+  flex: 1; background: var(--bg3); border: 1px solid var(--border);
+  color: var(--tx); font-family: var(--font-mono); font-size: 12px;
+  padding: 8px 10px; border-radius: 6px; resize: none;
+  outline: none; min-height: 38px; max-height: 120px; line-height: 1.55;
+  transition: border-color .15s;
+}
+#ai-input:focus { border-color: var(--ac); box-shadow: 0 0 0 2px var(--glow); }
+#ai-input::placeholder { color: var(--tx3); }
+#ai-send {
+  width: 38px; height: 38px; border-radius: 6px;
+  background: var(--ac); color: var(--bg); font-size: 16px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+#ai-send:hover { opacity: .85; transform: scale(1.04); }
+#ai-send.stop { background: var(--red); }
+
+/* Generation progress */
+#gen-progress {
+  display: none; padding: 0 12px 10px;
+  flex-shrink: 0;
+}
+.gp-bar-wrap {
+  height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden;
+  margin-bottom: 5px;
+}
+.gp-bar { height: 100%; background: linear-gradient(90deg, var(--ac), var(--ac3)); width: 0; transition: width .3s; border-radius: 2px; }
+.gp-label { font-size: 10px; font-family: var(--font-mono); color: var(--tx3); display: flex; justify-content: space-between; }
+
+/* ═══════════════════════════════════════════════════════════
+   TERMINAL
+═══════════════════════════════════════════════════════════ */
+#terminal-panel {
+  height: 0; background: var(--bg2);
+  border-top: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  transition: height .2s; overflow: hidden; flex-shrink: 0;
+}
+#terminal-panel.open { height: 200px; }
+.term-hdr {
+  height: 32px; background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 12px; gap: 10px;
+  flex-shrink: 0;
+}
+.term-tab {
+  font-size: 11px; font-family: var(--font-mono); color: var(--tx3);
+  padding: 0 10px; cursor: pointer; height: 100%;
+  display: flex; align-items: center;
+  border-bottom: 2px solid transparent;
+  transition: all .12s;
+}
+.term-tab.active { color: var(--ac); border-bottom-color: var(--ac); }
+#term-body {
+  flex: 1; overflow-y: auto; padding: 8px 12px;
+  font-family: var(--font-mono); font-size: 12px; line-height: 1.7;
+}
+.term-line { display: flex; gap: 6px; }
+.term-prompt { color: var(--green); flex-shrink: 0; }
+.term-cmd { color: var(--tx); }
+.term-out { color: var(--tx2); padding-left: 18px; }
+.term-err { color: var(--red); padding-left: 18px; }
+
+/* ═══════════════════════════════════════════════════════════
+   PREVIEW PANEL
+═══════════════════════════════════════════════════════════ */
+#preview-panel {
+  position: fixed; inset: 0; z-index: 300;
+  display: none; flex-direction: column;
+  background: var(--bg);
+}
+#preview-panel.open { display: flex; }
+.preview-hdr {
+  height: 40px; background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 14px; gap: 10px; flex-shrink: 0;
+}
+.preview-url {
+  flex: 1; background: var(--bg3); border: 1px solid var(--border);
+  color: var(--tx2); font-family: var(--font-mono); font-size: 11px;
+  padding: 4px 10px; border-radius: 4px; outline: none;
+}
+#preview-frame { flex: 1; border: none; background: #fff; }
+
+/* ═══════════════════════════════════════════════════════════
+   CONTEXT MENU
+═══════════════════════════════════════════════════════════ */
+#ctx-menu {
+  position: fixed; z-index: 600;
+  background: var(--panel); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 4px;
+  box-shadow: var(--shadow); display: none; min-width: 160px;
+}
+#ctx-menu.open { display: block; }
+.ctx-item {
+  padding: 6px 12px; border-radius: 4px; cursor: pointer;
+  font-size: 12px; color: var(--tx2); display: flex; align-items: center; gap: 8px;
+  transition: all .1s;
+}
+.ctx-item:hover { background: var(--ac2); color: var(--ac); }
+.ctx-sep { height: 1px; background: var(--border); margin: 3px 0; }
+
+/* ═══════════════════════════════════════════════════════════
+   POLLINATIONS BADGE
+═══════════════════════════════════════════════════════════ */
+#pollinations-badge {
+  position: fixed; bottom: 28px; left: 50px;
+  z-index: 50; display: flex; align-items: center; gap: 7px;
+  background: var(--bg3); border: 1px solid var(--border);
+  padding: 5px 10px; border-radius: 20px;
+  font-size: 11px; font-family: var(--font-mono); color: var(--tx3);
+  text-decoration: none; transition: all .2s;
+  opacity: .6;
+}
+#pollinations-badge:hover { opacity: 1; color: var(--ac); border-color: var(--ac); }
+#pollinations-badge img { height: 14px; filter: grayscale(1) brightness(2); transition: filter .2s; }
+#pollinations-badge:hover img { filter: none; }
+
+/* ═══════════════════════════════════════════════════════════
+   OVERLAYS / NOTIFICATIONS
+═══════════════════════════════════════════════════════════ */
+#notifications {
+  position: fixed; bottom: 24px; right: 16px; z-index: 700;
+  display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.notif {
+  background: var(--panel); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 10px 14px;
+  box-shadow: var(--shadow); font-size: 12px; color: var(--tx);
+  font-family: var(--font-mono); max-width: 300px;
+  display: flex; align-items: center; gap: 8px; pointer-events: all;
+  animation: notifIn .25s ease;
+}
+@keyframes notifIn { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:none; } }
+.notif.ok { border-left: 3px solid var(--green); }
+.notif.err { border-left: 3px solid var(--red); }
+.notif.info { border-left: 3px solid var(--ac); }
+.notif-icon { font-size: 14px; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════════════
+   SPINNER
+═══════════════════════════════════════════════════════════ */
+.spin {
+  width: 12px; height: 12px; border: 2px solid var(--border2);
+  border-top-color: var(--ac); border-radius: 50%;
+  animation: spin .6s linear infinite; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE COLLAPSE
+═══════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  #sidebar { width: 180px; }
+  #ai-panel { width: 280px; }
+}
+@media (max-width: 700px) {
+  #sidebar { display: none; }
+  #ai-panel { width: 100%; position: fixed; bottom: 0; right: 0; height: 50vh; border: none; border-top: 1px solid var(--border); z-index: 200; }
+}
 </style>
-
 </head>
-<body>
+<body data-theme="dark">
 
-<div class="topbar">
+<!-- ═══════ TITLEBAR ═══════ -->
+<div id="titlebar">
+  <div class="tb-dots">
+    <div class="tb-dot close" onclick="notify('info','Use o botão Preview para visualizar')"></div>
+    <div class="tb-dot min"></div>
+    <div class="tb-dot max"></div>
+  </div>
 
-<div class="logo">ZEDEX IDE</div>
+  <div class="tb-logo">
+    <div class="tb-logo-icon">ZX</div>
+    <div class="tb-logo-text">ZEDEX</div>
+  </div>
 
-<div>
-<button onclick="newFile()">Novo</button>
-<button onclick="saveFile()">Salvar</button>
-<button onclick="runPreview()">Preview</button>
+  <div class="tb-right">
+    <button class="tb-btn" onclick="newFile()">＋ File</button>
+    <button class="tb-btn" onclick="saveFile()">💾 Save</button>
+    <button class="tb-btn" onclick="saveAll()">Save All</button>
+    <button class="tb-btn primary" onclick="runPreview()">▶ Preview</button>
+    <button class="tb-btn" onclick="toggleThemePicker()" id="theme-btn">🎨</button>
+  </div>
 </div>
 
+<!-- Theme Picker -->
+<div id="theme-picker">
+  <div class="theme-opt active" data-t="dark" onclick="setTheme('dark',this)">
+    <div class="theme-swatch" style="background:#89b4fa"></div> Dark (Catppuccin)
+  </div>
+  <div class="theme-opt" data-t="light" onclick="setTheme('light',this)">
+    <div class="theme-swatch" style="background:#2563eb"></div> Light
+  </div>
+  <div class="theme-opt" data-t="hc" onclick="setTheme('hc',this)">
+    <div class="theme-swatch" style="background:#00d4ff"></div> High Contrast
+  </div>
+  <div class="theme-opt" data-t="monokai" onclick="setTheme('monokai',this)">
+    <div class="theme-swatch" style="background:#a6e22e"></div> Monokai
+  </div>
+  <div class="theme-opt" data-t="dracula" onclick="setTheme('dracula',this)">
+    <div class="theme-swatch" style="background:#bd93f9"></div> Dracula
+  </div>
+  <div class="theme-opt" data-t="nord" onclick="setTheme('nord',this)">
+    <div class="theme-swatch" style="background:#88c0d0"></div> Nord
+  </div>
 </div>
 
+<!-- ═══════ APP ═══════ -->
+<div id="app">
 
-<div class="workspace">
+  <!-- Activity Bar -->
+  <div id="actbar">
+    <div class="act-icon active" id="act-files" onclick="activateAct('files')" title="Ficheiros">📁</div>
+    <div class="act-icon" id="act-search" onclick="activateAct('search')" title="Pesquisar">🔍</div>
+    <div class="act-icon" id="act-git" onclick="activateAct('git')" title="Git">⎇</div>
+    <div class="act-sep"></div>
+    <div class="act-icon" id="act-ai" onclick="toggleAIPanel()" title="AI Assistant">🤖</div>
+    <div class="act-icon" id="act-term" onclick="toggleTerminal()" title="Terminal">⬛</div>
+    <div style="margin-top:auto">
+      <div class="act-icon" onclick="toggleThemePicker()" title="Tema">🎨</div>
+    </div>
+  </div>
 
-<div class="sidebar" id="files"></div>
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="sidebar-hdr">
+      <span>Explorer</span>
+      <div class="sidebar-hdr-btns">
+        <button class="sidebar-hdr-btn" onclick="newFile()" title="Novo ficheiro">+</button>
+        <button class="sidebar-hdr-btn" onclick="refreshTree()" title="Atualizar">↻</button>
+      </div>
+    </div>
+    <div class="new-file-row" id="new-file-row" style="display:none">
+      <input class="new-file-inp" id="new-file-inp" placeholder="filename.js"
+        onkeydown="if(event.key==='Enter')confirmNewFile(); if(event.key==='Escape')cancelNewFile()">
+      <button class="sidebar-hdr-btn" onclick="confirmNewFile()">✓</button>
+    </div>
+    <div id="file-tree"></div>
+  </div>
 
-<div class="editorArea">
-<div id="editor"></div>
+  <!-- Editor Section -->
+  <div id="editor-section">
+    <div id="tabs"></div>
+    <div id="breadcrumb">
+      <span class="bc-item">ZEDEX</span>
+      <span class="bc-sep">›</span>
+      <span class="bc-item last" id="bc-file">index.html</span>
+    </div>
+    <div id="editor-wrap">
+      <div id="monaco-editor"></div>
+    </div>
+
+    <!-- Terminal -->
+    <div id="terminal-panel">
+      <div class="term-hdr">
+        <div class="term-tab active">TERMINAL</div>
+        <div class="term-tab" onclick="clearTerm()">PROBLEMS</div>
+        <div style="margin-left:auto;display:flex;gap:5px">
+          <button class="sidebar-hdr-btn" onclick="clearTerm()">🗑</button>
+          <button class="sidebar-hdr-btn" onclick="toggleTerminal()">×</button>
+        </div>
+      </div>
+      <div id="term-body"></div>
+    </div>
+
+    <div id="statusbar">
+      <div class="sb-item" onclick="toggleTerminal()">⬛ Terminal</div>
+      <div class="sb-item" id="sb-line">Ln 1, Col 1</div>
+      <div class="sb-item" id="sb-lang">JavaScript</div>
+      <div class="sb-item" id="sb-chars">0 chars</div>
+      <div class="sb-item right" id="ai-status">✦ AI Ready</div>
+      <div class="sb-item" id="sb-theme">🎨 Dark</div>
+      <div class="sb-item">
+        <a href="https://pollinations.ai" target="_blank" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:4px">
+          ⚡ pollinations.ai
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Panel -->
+  <div id="ai-panel">
+    <div class="ai-header">
+      <div class="ai-header-row">
+        <div class="ai-title"><div class="ai-dot"></div>AI ASSISTANT</div>
+        <button class="sidebar-hdr-btn" onclick="toggleAIPanel()">×</button>
+      </div>
+      <select class="ai-model-select" id="ai-model" onchange="onModelChange()">
+        <option value="openai">Zénia / OpenAI GPT</option>
+        <option value="openai-large">OpenAI Large</option>
+        <option value="openai-fast">OpenAI Fast ⚡</option>
+        <option value="mistral">Mistral Nemo</option>
+        <option value="llama">Llama 3.3</option>
+        <option value="qwen-coder" selected>Qwen 2.5 Coder ✦</option>
+        <option value="deepseek-reasoning">DeepSeek R1 🧠</option>
+      </select>
+      <div class="ai-modes" style="margin-top:8px">
+        <button class="ai-mode active" id="mode-chat" onclick="setMode('chat')">Chat</button>
+        <button class="ai-mode" id="mode-edit" onclick="setMode('edit')">Edit File</button>
+        <button class="ai-mode" id="mode-gen" onclick="setMode('gen')">Generate</button>
+        <button class="ai-mode" id="mode-fix" onclick="setMode('fix')">Fix Bugs</button>
+      </div>
+    </div>
+
+    <div id="ai-messages">
+      <div class="ai-msg system">
+        ✦ ZEDEX AI — Powered by pollinations.ai<br>
+        Modo: <strong>Chat</strong> · Pergunta, edita ficheiros ou gera código completo
+      </div>
+    </div>
+
+    <div id="gen-progress">
+      <div class="gp-bar-wrap"><div class="gp-bar" id="gp-bar"></div></div>
+      <div class="gp-label">
+        <span id="gp-label">A gerar…</span>
+        <span id="gp-chars">0 / 10000+ linhas</span>
+      </div>
+    </div>
+
+    <div class="ai-controls">
+      <div class="ai-context-row">
+        <span>Contexto:</span>
+        <div class="ai-ctx-badge active" id="ctx-file" onclick="toggleCtx('file')">📄 Ficheiro atual</div>
+        <div class="ai-ctx-badge" id="ctx-all" onclick="toggleCtx('all')">📁 Todos</div>
+        <div class="ai-ctx-badge" id="ctx-sel" onclick="toggleCtx('sel')">✂ Seleção</div>
+      </div>
+      <div class="ai-input-wrap">
+        <textarea id="ai-input" placeholder="Descreve o que queres criar ou modificar…&#10;Shift+Enter → nova linha · Enter → enviar"
+          rows="2"
+          onkeydown="handleAIKey(event)"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+        <button id="ai-send" onclick="sendOrStop()">➤</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="aiPanel">
-
-<h3>AI Assistant</h3>
-
-<select id="model">
-<option>openai</option>
-<option>mistral</option>
-<option>llama</option>
-</select>
-
-<textarea id="prompt"></textarea>
-
-<button onclick="askAI()">Pedir IA</button>
-
-<pre id="aiResponse"></pre>
-
+<!-- Preview Panel (fullscreen) -->
+<div id="preview-panel">
+  <div class="preview-hdr">
+    <button class="tb-btn" onclick="closePreview()">← Fechar</button>
+    <span style="font-size:11px;font-family:var(--font-mono);color:var(--tx3)">Preview — index.html</span>
+    <input class="preview-url" value="preview://local" readonly>
+    <button class="tb-btn" onclick="runPreview()">↻ Reload</button>
+    <button class="tb-btn primary" onclick="openExternal()">🔗 Abrir</button>
+  </div>
+  <iframe id="preview-frame"></iframe>
 </div>
 
+<!-- Context Menu -->
+<div id="ctx-menu">
+  <div class="ctx-item" onclick="ctxRename()">✏️ Renomear</div>
+  <div class="ctx-item" onclick="ctxDuplicate()">📋 Duplicar</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="ctxAIEdit()">🤖 AI: Editar este ficheiro</div>
+  <div class="ctx-item" onclick="ctxAIGen()">✦ AI: Gerar código</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" style="color:var(--red)" onclick="ctxDelete()">🗑 Eliminar</div>
 </div>
 
-<div class="previewPanel">
-<iframe id="preview"></iframe>
-</div>
+<!-- Notifications -->
+<div id="notifications"></div>
 
-<footer>
-Built with <a href="https://pollinations.ai" target="_blank">pollinations.ai</a>
-</footer>
+<!-- Pollinations Badge -->
+<a id="pollinations-badge" href="https://pollinations.ai" target="_blank" title="Built with Pollinations.ai">
+  <span>Built with</span>
+  <img src="https://pollinations.ai/p/logo_white_text?width=90&height=20&model=flux&nologo=true" alt="Pollinations.ai" onerror="this.style.display='none';this.nextSibling.style.display='inline'">
+  <span style="display:none;color:var(--ac);font-weight:700">pollinations.ai</span>
+</a>
 
-
+<!-- Monaco Editor -->
 <script src="https://unpkg.com/monaco-editor@0.47.0/min/vs/loader.js"></script>
-
 <script>
+'use strict';
 
-/* filesystem */
+// ═══════════════════════════════════════════════════════════
+// CONFIG — API key via env (Render / Vite inject)
+// ═══════════════════════════════════════════════════════════
+const API_BASE = 'https://text.pollinations.ai';
+const API_OPENAI = 'https://text.pollinations.ai/openai';
+// Key resolved from Render env var VITE_POLLINATIONS_API_KEY
+function getApiKey() {
+  return (typeof window.__Z_AK !== 'undefined' && window.__Z_AK)
+    || (document.querySelector('meta[name="z-ak"]')?.content)
+    || '';
+}
+function apiHeaders() {
+  const k = getApiKey();
+  const h = { 'Content-Type': 'application/json' };
+  if (k) h['Authorization'] = `Bearer ${k}`;
+  return h;
+}
 
-let fs = JSON.parse(localStorage.getItem("zedexFS")||"null") || {
-
-"index.html":`<!DOCTYPE html>
-<html>
+// ═══════════════════════════════════════════════════════════
+// FILESYSTEM
+// ═══════════════════════════════════════════════════════════
+const FS_KEY = 'zedex_fs_v2';
+let fs = (() => {
+  try { return JSON.parse(localStorage.getItem(FS_KEY)); } catch { return null; }
+})() || {
+  'index.html': `<!DOCTYPE html>
+<html lang="pt">
 <head>
-<title>ZEDEX</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZEDEX App</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<h1>Hello ZEDEX</h1>
-
-<script src="app.js"><\/script>
+  <div id="app">
+    <header class="hero">
+      <div class="logo-wrap">
+        <div class="logo">ZX</div>
+        <h1>ZEDEX <span>IDE</span></h1>
+      </div>
+      <p>Built with <a href="https://pollinations.ai" target="_blank">pollinations.ai</a></p>
+    </header>
+    <main class="content">
+      <div class="card">
+        <h2>🚀 Getting Started</h2>
+        <p>Edit <code>index.html</code>, <code>style.css</code> and <code>app.js</code> on the left.</p>
+        <p>Ask the <strong>AI assistant</strong> to generate or modify code.</p>
+        <button onclick="app.greet()">Click me!</button>
+      </div>
+    </main>
+  </div>
+  <script src="app.js"><\/script>
 </body>
 </html>`,
 
-"style.css":`body{
-font-family:Arial;
-background:#fafafa;
-text-align:center;
-}`,
+  'style.css': `/* ZEDEX Starter — edit freely */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-"app.js":`console.log("ZEDEX running")`
-
+:root {
+  --bg: #0d0d0f;
+  --panel: #13131a;
+  --border: #1e1e2e;
+  --tx: #cdd6f4;
+  --tx2: #6c7086;
+  --ac: #89b4fa;
+  --ac2: #1e2a4a;
 }
 
-let current="index.html"
-
-function persist(){
-localStorage.setItem("zedexFS",JSON.stringify(fs))
+body {
+  font-family: 'Geist', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--tx);
+  min-height: 100vh;
 }
 
-function renderFiles(){
-
-let root=document.getElementById("files")
-root.innerHTML=""
-
-Object.keys(fs).forEach(name=>{
-
-let el=document.createElement("div")
-el.className="file"
-el.innerText=name
-
-el.onclick=()=>{
-openFile(name)
+.hero {
+  padding: 60px 40px 40px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
 }
 
-root.appendChild(el)
-
-})
-
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 12px;
 }
 
-function newFile(){
-
-let name=prompt("Nome do arquivo")
-
-if(!name) return
-
-fs[name]=""
-persist()
-
-renderFiles()
-
+.logo {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, #89b4fa, #cba6f7);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 18px; color: #0d0d0f;
+  font-family: monospace;
 }
 
-function openFile(name){
+h1 { font-size: 32px; font-weight: 700; }
+h1 span { color: var(--ac); }
 
-current=name
+.hero p { color: var(--tx2); margin-top: 8px; }
+.hero a { color: var(--ac); text-decoration: none; }
 
-editor.setValue(fs[name])
+.content { max-width: 900px; margin: 40px auto; padding: 0 20px; }
 
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+}
+.card h2 { font-size: 20px; margin-bottom: 12px; }
+.card p { color: var(--tx2); margin-bottom: 10px; line-height: 1.6; }
+.card code { background: rgba(137,180,250,.15); padding: 2px 6px; border-radius: 4px; color: var(--ac); font-family: monospace; }
+
+button {
+  margin-top: 8px;
+  background: var(--ac); color: var(--bg);
+  border: none; padding: 10px 22px;
+  border-radius: 7px; font-weight: 600;
+  cursor: pointer; font-size: 14px;
+  transition: opacity .15s;
+}
+button:hover { opacity: .85; }`,
+
+  'app.js': `// ZEDEX App — powered by pollinations.ai
+const app = {
+  greet() {
+    const names = ['Mundo', 'ZEDEX', 'Angola', 'Programador'];
+    const name = names[Math.floor(Math.random() * names.length)];
+    alert(\`Olá, \${name}! 🚀\\nBuilt with pollinations.ai\`);
+  }
+};
+
+console.log('✦ ZEDEX App running — pollinations.ai powered');`,
+
+  'README.md': `# ZEDEX IDE
+
+> Powered by [pollinations.ai](https://pollinations.ai) — AI-first browser IDE
+
+## Features
+
+- Monaco Editor (same engine as VS Code)
+- AI code generation up to 10,000+ lines
+- Multi-file filesystem with persistence
+- Live preview
+- 6 themes: Dark, Light, High Contrast, Monokai, Dracula, Nord
+
+## AI Modes
+
+| Mode | Description |
+|------|-------------|
+| Chat | General Q&A and assistance |
+| Edit File | AI modifies the current file directly |
+| Generate | Generate complete files (10k+ lines) |
+| Fix Bugs | Analyze and fix errors automatically |
+
+## Credits
+
+Built with **pollinations.ai** — free AI inference API.
+`
+};
+
+function persistFS() {
+  try { localStorage.setItem(FS_KEY, JSON.stringify(fs)); } catch(e) {}
 }
 
-function saveFile(){
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let editor = null;
+let currentFile = 'index.html';
+let openTabs = ['index.html'];
+let modifiedFiles = new Set();
+let aiMode = 'chat';
+let ctxMode = 'file';
+let isStreaming = false;
+let streamAbort = null;
+let aiMsgHistory = [];
+let ctxFileTarget = null; // for right-click context
 
-fs[current]=editor.getValue()
+// ═══════════════════════════════════════════════════════════
+// MONACO INIT
+// ═══════════════════════════════════════════════════════════
+require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.47.0/min/vs' } });
+require(['vs/editor/editor.main'], () => {
+  editor = monaco.editor.create(document.getElementById('monaco-editor'), {
+    value: fs[currentFile] || '',
+    language: getLang(currentFile),
+    theme: 'vs-dark',
+    automaticLayout: true,
+    fontFamily: "'JetBrains Mono', 'Cascadia Code', monospace",
+    fontSize: 13,
+    lineHeight: 21,
+    minimap: { enabled: true, scale: 1 },
+    scrollBeyondLastLine: false,
+    renderLineHighlight: 'gutter',
+    bracketPairColorization: { enabled: true },
+    guides: { bracketPairs: true, indentation: true },
+    suggest: { showKeywords: true },
+    cursorBlinking: 'smooth',
+    cursorSmoothCaretAnimation: 'on',
+    smoothScrolling: true,
+    padding: { top: 10, bottom: 10 },
+    wordWrap: 'on',
+    tabSize: 2,
+  });
 
-persist()
+  // Track cursor position
+  editor.onDidChangeCursorPosition(e => {
+    document.getElementById('sb-line').textContent = `Ln ${e.position.lineNumber}, Col ${e.position.column}`;
+  });
 
-renderFiles()
+  // Track content changes
+  editor.onDidChangeModelContent(() => {
+    const val = editor.getValue();
+    fs[currentFile] = val;
+    document.getElementById('sb-chars').textContent = `${val.length.toLocaleString()} chars · ${val.split('\n').length.toLocaleString()} lines`;
+    modifiedFiles.add(currentFile);
+    renderTabs();
+  });
 
+  // Auto-save every 3s
+  setInterval(autoSave, 3000);
+
+  renderFileTree();
+  renderTabs();
+  updateBreadcrumb();
+  termLog('info', `ZEDEX IDE v2.0 ready — ${Object.keys(fs).length} files loaded`);
+  termLog('info', `AI engine: pollinations.ai`);
+});
+
+// ═══════════════════════════════════════════════════════════
+// LANGUAGE DETECTION
+// ═══════════════════════════════════════════════════════════
+function getLang(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const m = { js:'javascript', ts:'typescript', html:'html', css:'css',
+               json:'json', md:'markdown', py:'python', php:'php',
+               go:'go', rs:'rust', sql:'sql', jsx:'javascript',
+               tsx:'typescript', vue:'html', svelte:'html', txt:'plaintext',
+               sh:'shell', bash:'shell', yaml:'yaml', yml:'yaml',
+               xml:'xml', toml:'toml', dart:'dart' };
+  return m[ext] || 'plaintext';
+}
+function getLangLabel(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const m = { js:'JS', ts:'TS', html:'HTML', css:'CSS', json:'JSON',
+               md:'MD', py:'PY', php:'PHP', go:'GO', rs:'RS', sql:'SQL',
+               jsx:'JSX', tsx:'TSX', dart:'DART', sh:'SH' };
+  return m[ext] || ext.toUpperCase().slice(0,4);
+}
+function getFileIcon(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const icons = { html:'🌐', css:'🎨', js:'🟨', ts:'🔷', json:'📋',
+                  md:'📝', py:'🐍', php:'🐘', go:'🔵', rs:'🦀',
+                  sql:'🗄️', jsx:'⚛️', tsx:'⚛️', vue:'💚', sh:'⬛',
+                  dart:'💙', yaml:'⚙️', yml:'⚙️', txt:'📄' };
+  return icons[ext] || '📄';
+}
+function getMonacoTheme(t) {
+  return { dark:'vs-dark', light:'vs', hc:'hc-black', monokai:'vs-dark', dracula:'vs-dark', nord:'vs-dark' }[t] || 'vs-dark';
 }
 
-/* MONACO */
-
-let editor
-
-require.config({
-paths:{
-vs:"https://unpkg.com/monaco-editor@0.47.0/min/vs"
-}
-})
-
-require(["vs/editor/editor.main"],function(){
-
-editor=monaco.editor.create(
-document.getElementById("editor"),
-{
-value:fs[current],
-language:"javascript",
-theme:"vs-dark",
-automaticLayout:true
-}
-)
-
-renderFiles()
-
-})
-
-
-/* preview engine */
-
-function runPreview(){
-
-saveFile()
-
-let html=fs["index.html"] || ""
-
-const cssBlob=new Blob(
-[fs["style.css"]||""],
-{type:"text/css"}
-)
-
-const jsBlob=new Blob(
-[fs["app.js"]||""],
-{type:"text/javascript"}
-)
-
-const cssURL=URL.createObjectURL(cssBlob)
-const jsURL=URL.createObjectURL(jsBlob)
-
-html=html.replace(
-"</head>",
-`<link rel="stylesheet" href="${cssURL}"></head>`
-)
-
-html=html.replace(
-"</body>",
-`<script src="${jsURL}"><\/script></body>`
-)
-
-document.getElementById("preview").srcdoc=html
-
+// ═══════════════════════════════════════════════════════════
+// FILE OPERATIONS
+// ═══════════════════════════════════════════════════════════
+function openFile(name) {
+  if (!fs[name] && fs[name] !== '') return;
+  // Save current before switching
+  if (editor && currentFile) fs[currentFile] = editor.getValue();
+  currentFile = name;
+  if (!openTabs.includes(name)) openTabs.push(name);
+  if (editor) {
+    const model = monaco.editor.createModel(fs[name], getLang(name));
+    editor.setModel(model);
+  }
+  renderTabs();
+  renderFileTree();
+  updateBreadcrumb();
+  document.getElementById('sb-lang').textContent = getLang(name);
+  document.getElementById('bc-file').textContent = name;
 }
 
-
-/* POLLINATIONS AI */
-
-async function askAI(){
-
-const prompt=document.getElementById("prompt").value
-const model=document.getElementById("model").value
-
-const r=await fetch(
-"https://text.pollinations.ai/openai",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-
-model:model,
-
-messages:[
-{
-role:"user",
-content:prompt
-}
-]
-
-})
-})
-
-const txt=await r.text()
-
-document.getElementById("aiResponse").innerText=txt
-
+function saveFile() {
+  if (!editor) return;
+  fs[currentFile] = editor.getValue();
+  modifiedFiles.delete(currentFile);
+  persistFS();
+  renderTabs();
+  notify('ok', `💾 ${currentFile} salvo`);
+  termLog('ok', `Saved: ${currentFile}`);
 }
 
+function saveAll() {
+  if (editor) fs[currentFile] = editor.getValue();
+  modifiedFiles.clear();
+  persistFS();
+  renderTabs();
+  notify('ok', `💾 ${Object.keys(fs).length} ficheiros salvos`);
+  termLog('ok', `All files saved (${Object.keys(fs).length} files)`);
+}
+
+function autoSave() {
+  if (!editor || !modifiedFiles.size) return;
+  if (editor) fs[currentFile] = editor.getValue();
+  persistFS();
+  modifiedFiles.delete(currentFile);
+  renderTabs();
+}
+
+function newFile() {
+  const row = document.getElementById('new-file-row');
+  row.style.display = 'flex';
+  document.getElementById('new-file-inp').value = '';
+  document.getElementById('new-file-inp').focus();
+}
+function confirmNewFile() {
+  const name = document.getElementById('new-file-inp').value.trim();
+  if (!name) { cancelNewFile(); return; }
+  if (fs[name] !== undefined) { notify('err', `Ficheiro "${name}" já existe`); return; }
+  fs[name] = '';
+  persistFS();
+  cancelNewFile();
+  renderFileTree();
+  openFile(name);
+  notify('ok', `✦ ${name} criado`);
+  termLog('info', `Created: ${name}`);
+}
+function cancelNewFile() {
+  document.getElementById('new-file-row').style.display = 'none';
+}
+
+function deleteFile(name, e) {
+  if (e) e.stopPropagation();
+  if (!confirm(`Eliminar "${name}"?`)) return;
+  delete fs[name];
+  persistFS();
+  openTabs = openTabs.filter(t => t !== name);
+  if (openTabs.length === 0) { openTabs = Object.keys(fs).slice(0,1); }
+  if (currentFile === name) openFile(openTabs[0]);
+  renderFileTree();
+  renderTabs();
+  notify('info', `🗑 ${name} eliminado`);
+}
+
+function closeTab(name, e) {
+  if (e) e.stopPropagation();
+  openTabs = openTabs.filter(t => t !== name);
+  if (openTabs.length === 0) openTabs = [Object.keys(fs)[0]];
+  if (currentFile === name) openFile(openTabs[openTabs.length-1]);
+  renderTabs();
+}
+
+function refreshTree() { renderFileTree(); notify('info', 'Explorer atualizado'); }
+
+// ═══════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════
+function renderFileTree() {
+  const tree = document.getElementById('file-tree');
+  tree.innerHTML = '';
+  Object.keys(fs).sort().forEach(name => {
+    const d = document.createElement('div');
+    d.className = 'ft-item' + (name === currentFile ? ' active' : '') + (modifiedFiles.has(name) ? ' modified' : '');
+    d.innerHTML = `<div class="fi-dot"></div>
+      <span style="font-size:13px;flex-shrink:0">${getFileIcon(name)}</span>
+      <span class="fi-name">${name}</span>
+      <span class="fi-ext">${getLangLabel(name)}</span>
+      <div class="fi-del" onclick="deleteFile('${name}',event)">×</div>`;
+    d.onclick = () => openFile(name);
+    d.oncontextmenu = e => showCtxMenu(e, name);
+    tree.appendChild(d);
+  });
+}
+
+function renderTabs() {
+  const bar = document.getElementById('tabs');
+  bar.innerHTML = '';
+  openTabs.forEach(name => {
+    const t = document.createElement('div');
+    t.className = 'tab' + (name === currentFile ? ' active' : '');
+    t.innerHTML = `<span style="font-size:11px">${getFileIcon(name)}</span>
+      <span>${name}</span>
+      <span class="tab-lang">${getLangLabel(name)}</span>
+      ${modifiedFiles.has(name) ? '<div class="tab-modified"></div>' : ''}
+      <div class="tab-close" onclick="closeTab('${name}',event)">×</div>`;
+    t.onclick = () => openFile(name);
+    bar.appendChild(t);
+  });
+}
+
+function updateBreadcrumb() {
+  document.getElementById('bc-file').textContent = currentFile;
+}
+
+// ═══════════════════════════════════════════════════════════
+// CONTEXT MENU
+// ═══════════════════════════════════════════════════════════
+function showCtxMenu(e, name) {
+  e.preventDefault();
+  ctxFileTarget = name;
+  const m = document.getElementById('ctx-menu');
+  m.style.left = e.clientX + 'px';
+  m.style.top = e.clientY + 'px';
+  m.classList.add('open');
+}
+document.addEventListener('click', () => document.getElementById('ctx-menu').classList.remove('open'));
+
+function ctxRename() {
+  const newName = prompt('Novo nome:', ctxFileTarget);
+  if (!newName || newName === ctxFileTarget) return;
+  if (fs[newName] !== undefined) { notify('err', 'Já existe'); return; }
+  fs[newName] = fs[ctxFileTarget];
+  delete fs[ctxFileTarget];
+  openTabs = openTabs.map(t => t === ctxFileTarget ? newName : t);
+  if (currentFile === ctxFileTarget) { currentFile = newName; }
+  persistFS(); renderFileTree(); renderTabs(); updateBreadcrumb();
+  notify('ok', `Renomeado → ${newName}`);
+}
+function ctxDuplicate() {
+  const newName = prompt('Nome da cópia:', ctxFileTarget.replace(/(\.[^.]+)$/, '_copy$1'));
+  if (!newName) return;
+  fs[newName] = fs[ctxFileTarget];
+  persistFS(); renderFileTree();
+  notify('ok', `Duplicado → ${newName}`);
+}
+function ctxDelete() { deleteFile(ctxFileTarget); }
+function ctxAIEdit() {
+  openFile(ctxFileTarget);
+  setMode('edit');
+  document.getElementById('ai-input').placeholder = `Descreve as modificações em ${ctxFileTarget}…`;
+  document.getElementById('ai-input').focus();
+}
+function ctxAIGen() {
+  openFile(ctxFileTarget);
+  setMode('gen');
+  document.getElementById('ai-input').focus();
+}
+
+// ═══════════════════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════════════════
+let currentTheme = localStorage.getItem('zedex_theme') || 'dark';
+
+function setTheme(t, el) {
+  document.body.setAttribute('data-theme', t);
+  currentTheme = t;
+  localStorage.setItem('zedex_theme', t);
+  if (editor) editor.updateOptions({ theme: getMonacoTheme(t) });
+  document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('sb-theme').textContent = `🎨 ${t.charAt(0).toUpperCase()+t.slice(1)}`;
+  document.getElementById('theme-picker').classList.remove('open');
+}
+
+function toggleThemePicker() {
+  document.getElementById('theme-picker').classList.toggle('open');
+}
+
+// Apply saved theme
+setTheme(currentTheme, document.querySelector(`[data-t="${currentTheme}"]`));
+
+// ═══════════════════════════════════════════════════════════
+// PANELS
+// ═══════════════════════════════════════════════════════════
+function toggleAIPanel() {
+  document.getElementById('ai-panel').classList.toggle('collapsed');
+  document.getElementById('act-ai').classList.toggle('active');
+}
+function toggleTerminal() {
+  document.getElementById('terminal-panel').classList.toggle('open');
+  document.getElementById('act-term').classList.toggle('active');
+}
+function activateAct(id) {
+  document.querySelectorAll('.act-icon[id^="act-"]').forEach(i => i.classList.remove('active'));
+  document.getElementById('act-'+id).classList.add('active');
+  if (id === 'files') document.getElementById('sidebar').classList.remove('collapsed');
+  else document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
+// ═══════════════════════════════════════════════════════════
+// PREVIEW
+// ═══════════════════════════════════════════════════════════
+function runPreview() {
+  saveAll();
+  let html = fs['index.html'] || '<html><body><h1>No index.html</h1></body></html>';
+
+  const cssBlob = new Blob([fs['style.css'] || ''], { type: 'text/css' });
+  const jsBlob  = new Blob([fs['app.js']   || ''], { type: 'text/javascript' });
+  const cssURL = URL.createObjectURL(cssBlob);
+  const jsURL  = URL.createObjectURL(jsBlob);
+
+  // Inject all CSS files
+  Object.keys(fs).filter(f => f.endsWith('.css') && f !== 'style.css').forEach(f => {
+    const b = new Blob([fs[f]], { type: 'text/css' });
+    html = html.replace('</head>', `<link rel="stylesheet" href="${URL.createObjectURL(b)}"></head>`);
+  });
+
+  html = html.replace('href="style.css"', `href="${cssURL}"`);
+  html = html.replace('src="app.js"', `src="${jsURL}"`);
+
+  document.getElementById('preview-frame').srcdoc = html;
+  document.getElementById('preview-panel').classList.add('open');
+  termLog('ok', 'Preview launched');
+}
+function closePreview() { document.getElementById('preview-panel').classList.remove('open'); }
+function openExternal() {
+  const frame = document.getElementById('preview-frame');
+  const w = window.open('', '_blank');
+  w.document.write(frame.srcdoc || '');
+  w.document.close();
+}
+
+// ═══════════════════════════════════════════════════════════
+// AI MODE & CONTEXT
+// ═══════════════════════════════════════════════════════════
+function setMode(m) {
+  aiMode = m;
+  document.querySelectorAll('.ai-mode').forEach(b => b.classList.remove('active'));
+  document.getElementById('mode-'+m).classList.add('active');
+  const ph = { chat:'Pergunta qualquer coisa sobre o código…', edit:'Descreve as modificações no ficheiro atual…', gen:'Descreve o ficheiro/componente que queres gerar (até 10k+ linhas)…', fix:'Descreve o bug ou cole o erro — vou analisar e corrigir…' };
+  document.getElementById('ai-input').placeholder = ph[m] || '';
+}
+function toggleCtx(m) {
+  ctxMode = m;
+  document.querySelectorAll('.ai-ctx-badge').forEach(b => b.classList.remove('active'));
+  document.getElementById('ctx-'+m).classList.add('active');
+}
+function onModelChange() {
+  const m = document.getElementById('ai-model').value;
+  termLog('info', `AI model: ${m}`);
+}
+
+// ═══════════════════════════════════════════════════════════
+// AI ENGINE
+// ═══════════════════════════════════════════════════════════
+function buildContext() {
+  if (ctxMode === 'sel' && editor) {
+    const sel = editor.getSelection();
+    const selected = editor.getModel()?.getValueInRange(sel);
+    if (selected) return `\`\`\`${getLang(currentFile)}\n// SELECTED CODE in ${currentFile}\n${selected}\n\`\`\``;
+  }
+  if (ctxMode === 'all') {
+    return Object.keys(fs).map(f => `\`\`\`${getLang(f)}\n// FILE: ${f}\n${fs[f].slice(0, 3000)}\n\`\`\``).join('\n\n');
+  }
+  // default: current file
+  const content = editor?.getValue() || fs[currentFile] || '';
+  return `\`\`\`${getLang(currentFile)}\n// FILE: ${currentFile} (${content.split('\n').length} lines)\n${content.slice(0, 6000)}${content.length > 6000 ? '\n// [... truncated ...]' : ''}\n\`\`\``;
+}
+
+function buildSystemPrompt() {
+  const modeInstructions = {
+    chat: 'Responde em português do Brasil. Explica, sugere e auxilia. Para código inline usa backticks. Para blocos usa ```linguagem\\n...```.',
+    edit: `Vais modificar o ficheiro "${currentFile}". 
+REGRAS ABSOLUTAS:
+1. NUNCA eliminas código existente sem explícita instrução.
+2. NUNCA crias um ficheiro novo quando o utilizador pediu editar.
+3. Retorna SEMPRE o ficheiro COMPLETO e funcional dentro de um bloco: \`\`\`${getLang(currentFile)}\\n[CÓDIGO COMPLETO AQUI]\\n\`\`\`
+4. Preserva TODA a lógica e estrutura existente, apenas aplica as mudanças pedidas.
+5. Se o código for muito longo, continua até ao fim — NUNCA truncas.`,
+    gen: `Gera um ficheiro COMPLETO e funcional para "${currentFile}".
+REGRAS:
+1. Gera ATÉ 10000 LINHAS se necessário — nunca cortas no meio.
+2. Código limpo, comentado, escalável, pronto para produção.
+3. Coloca TUDO num único bloco: \`\`\`${getLang(currentFile)}\\n[TODO O CÓDIGO]\\n\`\`\`
+4. Se for muito longo, usa o marcador // [CONTINUA] e o IDE vai buscar automaticamente a continuação.`,
+    fix: `Analisa e corrige bugs no ficheiro "${currentFile}".
+REGRAS:
+1. Identifica TODOS os erros, bugs e problemas de segurança.
+2. Explica cada problema brevemente.
+3. Retorna o código CORRIGIDO COMPLETO: \`\`\`${getLang(currentFile)}\\n[CÓDIGO CORRIGIDO]\\n\`\`\`
+4. NUNCA eliminas funcionalidades — apenas corriges erros.`
+  };
+
+  return `Tu és o AI assistente do ZEDEX IDE, um IDE de browser poderoso desenvolvido com pollinations.ai.
+${modeInstructions[aiMode]}
+Estás a trabalhar com ficheiro: ${currentFile} (${getLang(currentFile)})
+Total de ficheiros no projeto: ${Object.keys(fs).length}`;
+}
+
+function addAIMsg(role, content, extra) {
+  const box = document.getElementById('ai-messages');
+  const d = document.createElement('div');
+  d.className = `ai-msg ${role}`;
+
+  if (role === 'user') {
+    d.innerHTML = `<div class="msg-label ac">YOU</div>${escHtml(content)}`;
+  } else if (role === 'thinking') {
+    d.innerHTML = `<div style="display:flex;align-items:center;gap:8px"><div class="spin"></div><span>A processar…</span></div>`;
+    d.id = 'ai-thinking';
+  } else {
+    d.innerHTML = `<div class="msg-label">✦ ZEDEX AI</div>${formatAIMsg(content)}`;
+  }
+
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+  return d;
+}
+
+function formatAIMsg(text) {
+  if (!text) return '';
+  // Extract code blocks
+  const parts = [];
+  let lastIdx = 0;
+  const codeRe = /```(\w*)\n?([\s\S]*?)```/g;
+  let m;
+  while ((m = codeRe.exec(text)) !== null) {
+    if (m.index > lastIdx) {
+      parts.push({ type: 'text', content: text.slice(lastIdx, m.index) });
+    }
+    parts.push({ type: 'code', lang: m[1] || 'code', content: m[2] });
+    lastIdx = m.index + m[0].length;
+  }
+  if (lastIdx < text.length) parts.push({ type: 'text', content: text.slice(lastIdx) });
+
+  return parts.map(p => {
+    if (p.type === 'code') {
+      const id = 'code_' + Math.random().toString(36).slice(2, 7);
+      return `<div class="ai-code-block">
+        <div class="ai-code-hdr">
+          <span>${p.lang}</span>
+          <div style="display:flex;gap:5px">
+            <button class="ai-code-apply" onclick="applyCodeToEditor('${id}')">Apply to ${currentFile}</button>
+            <button class="ai-code-apply" onclick="copyToClipboard('${id}')">Copy</button>
+          </div>
+        </div>
+        <div class="ai-code-body" id="${id}">${escHtml(p.content)}</div>
+      </div>`;
+    }
+    // Text: render markdown-lite
+    let t = p.content;
+    t = t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    t = t.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    t = t.replace(/`([^`\n]+)`/g, '<code style="background:var(--bg2);padding:2px 5px;border-radius:3px;font-family:var(--font-mono)">$1</code>');
+    t = t.replace(/^#{3}\s(.+)$/gm, '<strong style="font-size:12px;display:block;margin:5px 0 2px">$1</strong>');
+    t = t.replace(/^#{2}\s(.+)$/gm, '<strong style="font-size:13px;display:block;margin:6px 0 2px">$1</strong>');
+    t = t.replace(/^#\s(.+)$/gm, '<strong style="font-size:14px;display:block;margin:7px 0 3px">$1</strong>');
+    t = t.replace(/^[-*]\s(.+)$/gm, '<div style="padding-left:12px">• $1</div>');
+    return `<div style="line-height:1.65">${t.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>')}</div>`;
+  }).join('');
+}
+
+function applyCodeToEditor(id) {
+  const el = document.getElementById(id);
+  if (!el || !editor) return;
+  const code = el.textContent;
+  const model = editor.getModel();
+  if (!model) return;
+
+  const fullRange = model.getFullModelRange();
+  editor.executeEdits('ai', [{
+    range: fullRange,
+    text: code,
+    forceMoveMarkers: true
+  }]);
+
+  fs[currentFile] = code;
+  modifiedFiles.add(currentFile);
+  persistFS();
+  renderTabs();
+  notify('ok', `✦ Código aplicado em ${currentFile}`);
+  termLog('ok', `AI applied code to ${currentFile} (${code.split('\n').length} lines)`);
+  addAIMsg('system', `✅ ${code.split('\n').length} linhas aplicadas em <strong>${currentFile}</strong>`);
+}
+
+function copyToClipboard(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard?.writeText(el.textContent).then(() => notify('ok', '📋 Copiado!'));
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ═══════════════════════════════════════════════════════════
+// STREAMING AI REQUEST
+// ═══════════════════════════════════════════════════════════
+function handleAIKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendOrStop(); }
+}
+
+function sendOrStop() {
+  if (isStreaming) { stopStream(); return; }
+  sendAI();
+}
+function stopStream() {
+  if (streamAbort) { streamAbort.abort(); streamAbort = null; }
+  isStreaming = false;
+  setSendBtn(false);
+  document.getElementById('ai-status').textContent = '✦ AI Ready';
+  document.getElementById('gen-progress').style.display = 'none';
+}
+function setSendBtn(streaming) {
+  const btn = document.getElementById('ai-send');
+  btn.innerHTML = streaming ? '⬛' : '➤';
+  btn.classList.toggle('stop', streaming);
+}
+
+async function sendAI() {
+  const input = document.getElementById('ai-input');
+  const prompt = input.value.trim();
+  if (!prompt) return;
+  input.value = '';
+  input.style.height = 'auto';
+
+  addAIMsg('user', prompt);
+  addAIMsg('thinking', '');
+  isStreaming = true;
+  setSendBtn(true);
+  document.getElementById('ai-status').textContent = '◉ AI Working…';
+  document.getElementById('gen-progress').style.display = (aiMode === 'gen') ? 'block' : 'none';
+
+  const ctx = buildContext();
+  const sys = buildSystemPrompt();
+  const model = document.getElementById('ai-model').value;
+
+  // Build messages
+  aiMsgHistory.push({ role: 'user', content: prompt + '\n\nCONTEXTO:\n' + ctx });
+
+  let fullReply = '';
+  let streamEl = null;
+
+  try {
+    streamAbort = new AbortController();
+
+    const res = await fetch(API_OPENAI, {
+      method: 'POST',
+      headers: apiHeaders(),
+      signal: streamAbort.signal,
+      body: JSON.stringify({
+        model,
+        messages: [{ role: 'system', content: sys }, ...aiMsgHistory.slice(-12)],
+        stream: true,
+        max_tokens: aiMode === 'gen' ? 8000 : 4000
+      })
+    });
+
+    // Remove thinking indicator
+    document.getElementById('ai-thinking')?.remove();
+
+    // Add streaming message element
+    const box = document.getElementById('ai-messages');
+    const msgEl = document.createElement('div');
+    msgEl.className = 'ai-msg ai';
+    msgEl.innerHTML = `<div class="msg-label">✦ ZEDEX AI</div><div id="stream-content"></div>`;
+    box.appendChild(msgEl);
+    streamEl = document.getElementById('stream-content');
+
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let charCount = 0;
+    let updateTimer = 0;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const lines = dec.decode(value).split('\n');
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
+        const data = line.slice(5).trim();
+        if (data === '[DONE]') break;
+        try {
+          const j = JSON.parse(data);
+          const delta = j.choices?.[0]?.delta?.content || j.choices?.[0]?.text || '';
+          if (delta) {
+            fullReply += delta;
+            charCount += delta.length;
+            // Throttle DOM updates for performance
+            clearTimeout(updateTimer);
+            updateTimer = setTimeout(() => {
+              streamEl.innerHTML = formatAIMsg(fullReply);
+              box.scrollTop = box.scrollHeight;
+            }, 30);
+            // Update progress for gen mode
+            if (aiMode === 'gen') {
+              const lines = fullReply.split('\n').length;
+              const pct = Math.min(lines / 100, 98);
+              document.getElementById('gp-bar').style.width = pct + '%';
+              document.getElementById('gp-label').textContent = `Gerando ${model}…`;
+              document.getElementById('gp-chars').textContent = `${lines.toLocaleString()} / 10000 linhas`;
+            }
+          }
+        } catch(e) {}
+      }
+    }
+
+    // Final render
+    if (streamEl) streamEl.innerHTML = formatAIMsg(fullReply);
+    aiMsgHistory.push({ role: 'assistant', content: fullReply });
+
+    // Auto-apply for edit/gen/fix modes
+    if (aiMode !== 'chat' && fullReply) {
+      const codeMatch = fullReply.match(/```(?:\w*)\n?([\s\S]+?)```/);
+      if (codeMatch) {
+        const code = codeMatch[1];
+        const lineCount = code.split('\n').length;
+        // Check for continuation
+        if (fullReply.includes('[CONTINUA]') || fullReply.includes('[CONTINUE]')) {
+          addAIMsg('system', `⚠️ Código muito longo. A continuar automaticamente…`);
+          await continueGeneration(fullReply);
+        } else {
+          // Auto-apply
+          if (editor) {
+            const model_m = editor.getModel();
+            if (model_m) {
+              editor.executeEdits('ai', [{ range: model_m.getFullModelRange(), text: code, forceMoveMarkers: true }]);
+              fs[currentFile] = code;
+              modifiedFiles.add(currentFile);
+              persistFS(); renderTabs();
+            }
+          }
+          addAIMsg('success', `✅ ${lineCount.toLocaleString()} linhas aplicadas em "${currentFile}" automaticamente`);
+          termLog('ok', `AI ${aiMode}: applied ${lineCount} lines to ${currentFile}`);
+        }
+        if (aiMode === 'gen') {
+          document.getElementById('gp-bar').style.width = '100%';
+          document.getElementById('gp-label').textContent = '✅ Geração completa';
+          document.getElementById('gp-chars').textContent = `${lineCount.toLocaleString()} linhas`;
+          setTimeout(() => { document.getElementById('gen-progress').style.display = 'none'; }, 3000);
+        }
+      }
+    }
+
+  } catch (err) {
+    document.getElementById('ai-thinking')?.remove();
+    if (err.name === 'AbortError') {
+      addAIMsg('system', '⬛ Geração interrompida pelo utilizador');
+    } else {
+      // Fallback: non-streaming
+      try {
+        const res2 = await fetch(API_OPENAI, {
+          method: 'POST', headers: apiHeaders(),
+          body: JSON.stringify({ model, messages: [{ role:'system', content: sys }, ...aiMsgHistory.slice(-12)], max_tokens: 4000 })
+        });
+        const d = await res2.json();
+        const reply = d.choices?.[0]?.message?.content || d.choices?.[0]?.text || '(sem resposta)';
+        fullReply = reply;
+        aiMsgHistory.push({ role: 'assistant', content: reply });
+        if (streamEl) streamEl.innerHTML = formatAIMsg(reply);
+        else addAIMsg('ai', reply);
+      } catch (e2) {
+        addAIMsg('error', `Erro na API: ${e2.message}\n\nVerifica a API key em pollinations.ai`);
+        termLog('err', `AI error: ${e2.message}`);
+      }
+    }
+  }
+
+  isStreaming = false;
+  setSendBtn(false);
+  document.getElementById('ai-status').textContent = '✦ AI Ready';
+  document.getElementById('gen-progress').style.display = 'none';
+}
+
+// Auto-continuation for 10k+ line generation
+async function continueGeneration(previousCode) {
+  addAIMsg('thinking', '');
+  const sys = buildSystemPrompt();
+  const model = document.getElementById('ai-model').value;
+  const lastLines = previousCode.split('\n').slice(-50).join('\n');
+
+  try {
+    const res = await fetch(API_OPENAI, {
+      method: 'POST', headers: apiHeaders(),
+      signal: streamAbort?.signal,
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: 'system', content: sys + '\n\nCONTINUAÇÃO: Continua EXATAMENTE onde o código anterior parou. NÃO repetes código. Continua do ponto de corte.' },
+          ...aiMsgHistory.slice(-8),
+          { role: 'user', content: `Continua o código de onde parou. Últimas linhas:\n\`\`\`\n${lastLines}\n\`\`\`` }
+        ],
+        stream: true, max_tokens: 8000
+      })
+    });
+
+    document.getElementById('ai-thinking')?.remove();
+    let cont = '';
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const lines = dec.decode(value).split('\n');
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
+        const data = line.slice(5).trim();
+        if (data === '[DONE]') break;
+        try {
+          const j = JSON.parse(data);
+          cont += j.choices?.[0]?.delta?.content || '';
+        } catch(e) {}
+      }
+    }
+
+    // Extract and merge
+    const codeMatch = cont.match(/```(?:\w*)\n?([\s\S]+?)```/);
+    if (codeMatch) {
+      const existing = editor?.getValue() || '';
+      const cleanExisting = existing.replace(/\/\/ \[CONTINUA\].*$/ms, '').trim();
+      const merged = cleanExisting + '\n' + codeMatch[1];
+      if (editor) {
+        const m = editor.getModel();
+        if (m) editor.executeEdits('ai', [{ range: m.getFullModelRange(), text: merged, forceMoveMarkers: true }]);
+      }
+      fs[currentFile] = merged;
+      persistFS(); renderTabs();
+      const totalLines = merged.split('\n').length;
+      addAIMsg('success', `✅ Continuação aplicada. Total: ${totalLines.toLocaleString()} linhas em "${currentFile}"`);
+      termLog('ok', `Continuation: ${totalLines} total lines`);
+
+      // Recurse if still incomplete
+      if (cont.includes('[CONTINUA]') && totalLines < 10000) {
+        await continueGeneration(cont);
+      }
+    }
+  } catch(e) {
+    document.getElementById('ai-thinking')?.remove();
+    addAIMsg('error', `Erro na continuação: ${e.message}`);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// TERMINAL
+// ═══════════════════════════════════════════════════════════
+function termLog(type, msg) {
+  const body = document.getElementById('term-body');
+  const line = document.createElement('div');
+  const ts = new Date().toLocaleTimeString('pt', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+
+  if (type === 'cmd') {
+    line.className = 'term-line';
+    line.innerHTML = `<span class="term-prompt">zedex $</span><span class="term-cmd"> ${escHtml(msg)}</span>`;
+  } else if (type === 'err') {
+    line.className = 'term-err';
+    line.innerHTML = `[${ts}] ❌ ${escHtml(msg)}`;
+  } else if (type === 'ok') {
+    line.style.cssText = 'color:var(--green);padding-left:4px;font-family:var(--font-mono);font-size:12px';
+    line.innerHTML = `[${ts}] ✓ ${escHtml(msg)}`;
+  } else {
+    line.className = 'term-out';
+    line.innerHTML = `[${ts}] ${escHtml(msg)}`;
+  }
+
+  body.appendChild(line);
+  body.scrollTop = body.scrollHeight;
+}
+
+function clearTerm() {
+  document.getElementById('term-body').innerHTML = '';
+  termLog('info', 'Terminal cleared');
+}
+
+// ═══════════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════════════════════════
+function notify(type, msg, duration = 3000) {
+  const box = document.getElementById('notifications');
+  const n = document.createElement('div');
+  n.className = `notif ${type}`;
+  const icons = { ok: '✓', err: '✗', info: 'ℹ' };
+  n.innerHTML = `<span class="notif-icon">${icons[type] || 'ℹ'}</span> ${escHtml(msg)}`;
+  box.appendChild(n);
+  setTimeout(() => n.style.opacity = '0', duration);
+  setTimeout(() => n.remove(), duration + 400);
+}
+
+// ═══════════════════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  const ctrl = e.ctrlKey || e.metaKey;
+  if (ctrl && e.key === 's') { e.preventDefault(); saveFile(); }
+  if (ctrl && e.shiftKey && e.key === 'S') { e.preventDefault(); saveAll(); }
+  if (ctrl && e.key === 'p') { e.preventDefault(); runPreview(); }
+  if (ctrl && e.key === '`') { e.preventDefault(); toggleTerminal(); }
+  if (ctrl && e.key === 'b') { e.preventDefault(); document.getElementById('sidebar').classList.toggle('collapsed'); }
+  if (ctrl && e.key === 'k') { e.preventDefault(); document.getElementById('ai-input').focus(); }
+  if (e.key === 'Escape') { closePreview(); document.getElementById('theme-picker').classList.remove('open'); cancelNewFile(); }
+});
+
+// Close theme picker on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('#theme-picker') && !e.target.closest('#theme-btn')) {
+    document.getElementById('theme-picker').classList.remove('open');
+  }
+});
+
+// ═══════════════════════════════════════════════════════════
+// KEYBOARD SHORTCUTS DISPLAY
+// ═══════════════════════════════════════════════════════════
+termLog('info', 'Shortcuts: Ctrl+S Save · Ctrl+P Preview · Ctrl+` Terminal · Ctrl+B Sidebar · Ctrl+K AI Focus');
 </script>
-
 </body>
 </html>
